@@ -1,0 +1,519 @@
+/* client/src/pages/common/ 폴더 내부 컴포넌트들의 공통 스타일 */
+
+/* Topbar */
+.topbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.topbar-category {
+  font-weight: 500;
+  cursor: pointer;
+  color: #555;
+}
+
+.topbar-actions button {
+  background-color: transparent;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 20px;
+  color: #555;
+}
+
+.topbar-actions button:hover {
+  color: #868e96;
+}
+
+/* SearchBar */
+.searchbar-container {
+  padding: 15px 20px 0px 20px; /* 변경: 하단 패딩 0으로 수정 */
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.searchbar-location {
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.searchbar-location svg {
+  margin-left: 5px;
+  width: 12px;
+  height: 12px;
+}
+
+.searchbar-input-wrapper {
+  flex-grow: 1;
+  position: relative;
+}
+
+.searchbar-input {
+  width: 1370px;
+  height: 50px;
+  border: 2px solid #B57EDC;
+  border-radius: 24px;
+  padding-left: 15px;
+  padding-right: 40px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.searchbar-input::placeholder {
+  font-size: 18px;
+  margin-left: 20px;
+  color: #adb5bd;
+}
+
+
+.searchbar-button {
+  width: 150px;
+  height: 50px;
+  padding: 10px 0px;
+  padding-left: 20px;
+  border: 1px solid #F5F3F3;
+  border-radius: 24px;
+  background-color: #F5F3F3;
+  color: #555;
+  cursor: pointer;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.searchbar-button:hover {
+  background-color: #e9ecef;
+}
+
+/* 추가: 검색창 드롭다운 스타일 */
+.searchbar-dropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 24px;
+  margin-right: 50px;
+}
+
+.selected-trade-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+}
+
+.selected-trade-type svg {
+  margin-left: 8px;
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  right: 0;
+  width: 150px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 24px;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.option-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.option-item:hover {
+  background-color: #f0f0f0;
+}
+.dropdown-options .option-item:first-child:hover {
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+.dropdown-options .option-item:last-child:hover {
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+/* 변경: 검색창 드롭다운용 점 스타일로 수정 */
+.searchbar-button-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-left: 8px;
+  margin-right: auto;
+  flex-shrink: 0;
+}
+
+.popular-keywords {
+  padding: 0px 20px;
+  color: #868e96;
+  background-color: #fff;
+  text-align: left;
+  margin-left: 250px;
+  margin-top: 1rem; /* 추가 */
+}
+
+.popular-keywords span {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.popular-keywords span:hover {
+  text-decoration: underline;
+}
+
+/* 추가: 전체 상품 레이아웃 */
+.all-product-container {
+  display: flex;
+  flex-direction: row;
+}
+
+/* FilterSidebar */
+.filter-sidebar-container {
+  width: 15px; /* 변경 */
+  min-width: 274px; /* 추가 */
+  padding: 25px 20px;
+  background-color: #fff;
+}
+
+.filter-section {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f5f5f5;
+}
+.filter-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.filter-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.filter-title {
+  text-align: left;
+  font-weight: 700;
+  color: #222;
+}
+
+.filter-reset-button {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 0;
+}
+.filter-reset-button:hover {
+  text-decoration: underline;
+}
+
+.filter-checkbox-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #333;
+  cursor: pointer;
+}
+
+.filter-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  accent-color: #8A2BE2;
+}
+
+.filter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filter-list-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.filter-list-item:last-child {
+  margin-bottom: 0;
+}
+
+.filter-radio {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  accent-color: #8A2BE2;
+  cursor: pointer;
+}
+
+.filter-label {
+  color: #333;
+  cursor: pointer;
+}
+
+.filter-more-button {
+  background: none;
+  border: none;
+  color: #6f42c1;
+  cursor: pointer;
+  padding: 5px 0;
+  margin-top: 5px;
+}
+.filter-more-button:hover {
+  text-decoration: underline;
+}
+
+/* 가격 입력 부분*/
+.price-input-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.price-input {
+  width: 70px;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: right;
+}
+.price-input::placeholder {
+  color: #aaa;
+  text-align: center;
+}
+
+.price-input-separator {
+  color: #555;
+}
+
+.price-apply-button {
+  padding: 8px 12px;
+  background-color: #6f42c1;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.price-apply-button:hover {
+  background-color: #5a37a0;
+}
+
+/* RecentViewed */
+.recent-viewed-container {
+  width: 310px;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 5rem; /* 추가 */
+}
+
+.recent-viewed-box{
+  width: 160px;
+  height: 630px;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: #f8f9fa;
+  justify-items: center;
+  position: fixed; /* 추가: 스크롤 따라 고정 */
+}
+
+.recent-viewed-title {
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.recent-viewed-items {
+
+}
+
+.recent-item-placeholder {
+  width: 120px;
+  height: 120px;
+  background-color: #E0E0E0;
+  border-radius: 7px;
+  margin-bottom: 10px;
+}
+
+.recent-viewed-more-button {
+  color: #868e96;
+  margin-top: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.recent-viewed-more-button:hover {
+  text-decoration: underline;
+}
+
+/* 변경 및 추가: 로그인 후 헤더 & 카테고리 드롭다운 css */
+.loginHeader {
+  display: flex;
+  justify-content: space-around;
+  gap: 2rem;
+  font-size: 1rem;
+}
+
+.logoButton {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: inline-block;
+  background-image: url("/image/딜온로고.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 120px;
+  height: 60px;
+  font-size: 0;
+  line-height: 0;
+  color: transparent;
+}
+
+.signIn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.left-header-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.category-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.category-text {
+  font-weight: bold;
+}
+
+.category-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  white-space: nowrap;
+}
+
+.dropdown-item {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+  text-align: center;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+
+/* 유지: 판매하기 모달 */
+.sell-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.sell-modal-content {
+  width: 560px;
+  height: 200px;
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  outline: none;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.sell-modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  color: #aaa;
+  padding: 0;
+}
+.sell-modal-close-btn:hover {
+  color: #333;
+}
+
+
+.sell-modal-title {
+  font-weight: bold;
+  color: #333;
+}
+
+.sell-modal-buttons {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+}
+
+.sell-option-button {
+  width: 245px;
+  height: 90px;
+  border-radius: 23px;
+  font-weight: bold;
+  cursor: pointer;
+  border: 2px solid #f2f2f2;
+  transition: all 0.2s ease-in-out;
+  background-color: #f2f2f2;
+  color: #555;
+}
+
+.sell-option-button:hover {
+  background-color: #F4F0FF;
+  border-color: #B57EDC;
+  color: #673AB7;
+}

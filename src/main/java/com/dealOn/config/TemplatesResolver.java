@@ -6,17 +6,32 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 @Configuration
+
 public class TemplatesResolver{
 	
 	@Bean
-	public ClassLoaderTemplateResolver commResolver() {
-		ClassLoaderTemplateResolver commResolver = new ClassLoaderTemplateResolver();
-		commResolver.setPrefix("templates/views/Community/");
-		commResolver.setSuffix(".html");
-		commResolver.setTemplateMode(TemplateMode.HTML);
-		commResolver.setCharacterEncoding("UTF-8");
-		commResolver.setCacheable(false);
-		commResolver.setCheckExistence(true);
-		return commResolver;
+	public ClassLoaderTemplateResolver userResolver() {
+		ClassLoaderTemplateResolver uResolver = new ClassLoaderTemplateResolver();
+		
+		uResolver.setPrefix("templates/user/");
+		uResolver.setSuffix(".html");
+		uResolver.setTemplateMode(TemplateMode.HTML);
+		uResolver.setCharacterEncoding("UTF-8");
+		uResolver.setCacheable(false);
+		uResolver.setCheckExistence(true);
+		return uResolver;
+	}
+		
+		@Bean
+		public ClassLoaderTemplateResolver productResolver() {
+			ClassLoaderTemplateResolver pResolver = new ClassLoaderTemplateResolver();
+			
+			pResolver.setPrefix("templates/product/");
+			pResolver.setSuffix(".html");
+			pResolver.setTemplateMode(TemplateMode.HTML);
+			pResolver.setCharacterEncoding("UTF-8");
+			pResolver.setCacheable(false);
+			pResolver.setCheckExistence(true);
+			return pResolver;
 	}
 }

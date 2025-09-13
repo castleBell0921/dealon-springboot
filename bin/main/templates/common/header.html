@@ -1,58 +1,26 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
-<!--
-<header class="signIn" th:fragment="header">
-    <div class="left-header-section">
-        <a th:href="@{/}" class="logoButton"></a>
-        <div class="category-container">
-            <span class="category-text">카테고리</span>
-            <div class="category-dropdown">
-                <a class="dropdown-item" th:href="@{/products/allProduct}">전체 상품</a>
-                <a class="dropdown-item" th:href="@{/products/normalProduct}">중고 상품</a>
-                <a class="dropdown-item" th:href="@{/products/auctionProduct}">경매 상품</a>
-            </div>
-        </div>
+
+<header class="topbar-container text-20px" th:fragment="headerFragment">
+<!--    <button class="logoButton" th:href="@{/}">-->
+<!--        <img src="/image/딜온로고.png" alt="메인페이지이동" class="home" />-->
+<!--    </button>-->
+    <div class="topbar-category">
+        <a th:href="@{/}">카테고리</a>
     </div>
 
-    <span class="join">
-            <div th:unless="${session.isLoggedIn}">
-                <a th:href="@{/login}">로그인 | 회원가입</a>
-            </div>
-            <div class="loginHeader" th:if="${session.isLoggedIn}">
-                <p><a th:href="@{/chat}">채팅하기</a></p>
-                <p><a href="javascript:void(0);" id="sell-button">판매하기</a></p>
-                <p><a th:href="@{/myPage}">마이페이지</a></p>
-                <p><a th:href="@{/api/logout}">로그아웃</a></p>
-            </div>
-        </span>
+    <div class="topbar-actions">
+        <a th:href="@{/chat}"><button>채팅하기</button></a>
+        <a th:href="@{/products/new}"><button>판매하기</button></a>
+        <a th:href="@{/mypage}"><button>마이페이지</button></a>
+        <a th:href="@{/login}"><button>로그인 / 회원가입</button></a>
+    </div>
+
 </header>
 
-<div id="sell-modal" class="sell-modal-overlay" style="display: none;">
-    <div class="sell-modal-content">
-        <button id="close-sell-modal" class="sell-modal-close-btn">&times;</button>
-        <h2 class="sell-modal-title">
-            <span style="color: #673AB7;">판매 방식</span> 선택하기
-        </h2>
-        <div class="sell-modal-buttons">
-            <a th:href="@{/productForm}" class="sell-option-button">일반 판매</a>
-            <a th:href="@{/auctionForm}" class="sell-option-button">경매 판매</a>
-        </div>
-    </div>
-</div>
--->
-
-<div className="topbar-container text-20px">
-    <div className="topbar-category">카테고리</div>
-    <div className="topbar-actions">
-        <button>채팅하기</button>
-        <button>판매하기</button>
-        <button>마이페이지</button>
-        <button>로그아웃</button>
-    </div>
-</div>
 </body>
 </html>

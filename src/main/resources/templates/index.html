@@ -10,49 +10,16 @@
     <link rel="stylesheet" th:href="@{/css/font.css}">
 </head>
 <body>
-
 <div class="app-container">
-
-    <header class="signIn">
-        <div class="left-header-section">
-            <a th:href="@{/}" class="logoButton"></a>
-            <div class="category-container">
-                <span class="category-text">카테고리</span>
-                <div class="category-dropdown">
-                    <a class="dropdown-item" th:href="@{/products/allProduct}">전체 상품</a>
-                    <a class="dropdown-item" th:href="@{/products/normalProduct}">중고 상품</a>
-                    <a class="dropdown-item" th:href="@{/products/auctionProduct}">경매 상품</a>
-                </div>
-            </div>
-        </div>
-        <span class="join">
-                 <p><a href="/login">로그인 | 회원가입</a></p>
-            </span>
-    </header>
-
-    <div>
-        <div class="searchbar-container">
-            <div class="searchbar-location text-20px">
-                <span>이태원동</span>
-            </div>
-            <div class="searchbar-input-wrapper">
-                <input type="text" placeholder=" 상품명을 입력해주세요" class="searchbar-input text-14px" />
-            </div>
-        </div>
-        <div class="popular-keywords text-14px">
-            인기검색어: <span>굿즈</span> <span>플스</span> <span>냉장고</span> <span>다이슨</span>
-            <span>자전거</span> <span>노트북</span> <span>의자</span> <span>책상</span>
-            <span>아이패드</span> <span>에어팟</span>
-        </div>
-    </div>
-
+    <div th:replace="~{common/header :: header}"></div>
+    <div th:replace="~{common/searchBar :: searchBar}"></div>
     <div class="home-page-container">
         <div class="home-content-layout">
             <main class="home-main-content">
                 <section class="product-section">
-                    <h2 class="section-title text-46px">인기 상품</h2>
+                    <h2 class="section-title text-46px">전체 상품</h2>
                     <div class="product-list">
-                        <div class="product-item" th:each="i : ${#numbers.sequence(1, 5)}">
+                        <div class="product-item">
                             <div class="product-image-placeholder"></div>
                             <div class="product-details">
                                 <div class="product-title text-16px">[90] 칩스토어 뉴욕 항공점퍼</div>
@@ -65,12 +32,32 @@
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="more-button text-16px">더보기</a>
+                    <a href="/products" class="more-button-link"><button class="more-button text-16px">더보기</button></a>
                 </section>
+
+                <section class="product-section">
+                    <h2 class="section-title text-46px">인기 상품</h2>
+                    <div class="product-list">
+                        <div class="product-item">
+                            <div class="product-image-placeholder"></div>
+                            <div class="product-details">
+                                <div class="product-title text-16px">[90] 칩스토어 뉴욕 항공점퍼</div>
+                                <div class="product-price text-16px">5,900 원</div>
+                                <div class="product-meta text-12px">
+                                    <span>이태원동</span>
+                                    <span>1일 전</span>
+                                    <span class="meta-likes">찜 8</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/products/popular" class="more-button-link"><button class="more-button text-16px">더보기</button></a>
+                </section>
+
                 <section class="product-section">
                     <h2 class="section-title text-46px">최신 등록 상품</h2>
                     <div class="product-list">
-                        <div class="product-item" th:each="i : ${#numbers.sequence(1, 5)}">
+                        <div class="product-item">
                             <div class="product-image-placeholder"></div>
                             <div class="product-details">
                                 <div class="product-title text-16px">[90] 칩스토어 뉴욕 항공점퍼</div>
@@ -83,21 +70,14 @@
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="more-button text-16px">더보기</a>
+                    <a href="/products/recent" class="more-button-link"><button class="more-button text-16px">더보기</button></a>
                 </section>
             </main>
 
-            <aside class="recent-viewed-container">
-                <div class="recent-viewed-box">
-                    <h2 class="recent-viewed-title text-20px">최근 본 상품</h2>
-                    <div class="recent-viewed-items">
-                        <div class="recent-item-placeholder" th:each="i : ${#numbers.sequence(1, 4)}"></div>
-                    </div>
-                    <button class="recent-viewed-more-button text-12px">더 보러가기</button>
-                </div>
-            </aside>
+            <div th:replace="~{common/RecentViewed :: RecentViewed}"></div>
         </div>
     </div>
 </div>
+
 </body>
 </html>

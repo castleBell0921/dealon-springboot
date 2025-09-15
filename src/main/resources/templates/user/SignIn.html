@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Deal-On</title>
+
+<link rel="stylesheet" th:href="@{/css/App.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/Home.css}">
+<link rel="stylesheet" th:href="@{/css/font.css}">
+<link rel="stylesheet" th:href="@{/css/SignIn.css}">
+</head>
+<body>
+	<div class="app-container">
+		<div th:replace="~{common/header :: header}"></div>
+		<div th:replace="~{common/searchBar :: searchBar}"></div>
+	</div>
+
+	<div class="signup-container">
+		<h2>회원가입</h2>
+		<form action="/signup" method="post">
+			<div class="input-group">
+				<label for="username">아이디</label> <input type="text" id="username"
+					name="username">
+			</div>
+			<div class="input-group">
+				<label for="password">비밀번호</label> <input type="password"
+					id="password" name="password">
+			</div>
+			<div class="input-group">
+				<label for="password-confirm">비밀번호 확인</label> <input type="password"
+					id="password-confirm" name="password-confirm">
+			</div>
+			<div class="input-group">
+				<label for="email">이메일 주소</label> <input type="email" id="email"
+					name="email">
+			</div>
+			<div class="input-group">
+				<label for="name">이름</label> <input type="text" id="name"
+					name="name">
+			</div>
+			<div class="input-group">
+				<label for="nickname">닉네임</label> <input type="text" id="nickname"
+					name="nickname">
+			</div>
+			<div class="input-group phone-group">
+				<label for="phone">휴대전화번호</label>
+				<div class="phone-input-row">
+					<input type="tel" id="phone" name="phone">
+					<button type="button" class="verify-btn">본인인증</button>
+				</div>
+			</div>
+			<div class="input-group auth-group" id="authSection" style="display: none;">
+				<label for="authCode">인증번호</label>
+				<div class="auth-input-row">
+					<input type="text" id="authCode" name="authCode"
+						placeholder="인증번호 입력">
+					<button type="button" class="auth-check-btn" id="checkAuthBtn">확인하기</button>
+				</div>
+			</div>
+			<button type="submit" class="signup-btn">가입하기</button>
+		</form>
+	</div>
+	<script th:src="@{/js/user/header.js}"></script>
+</body>
+</html>

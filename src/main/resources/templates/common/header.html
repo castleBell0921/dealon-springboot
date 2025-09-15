@@ -1,26 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
 
-<header class="topbar-container text-20px" th:fragment="headerFragment">
-<!--    <button class="logoButton" th:href="@{/}">-->
-<!--        <img src="/image/딜온로고.png" alt="메인페이지이동" class="home" />-->
-<!--    </button>-->
-    <div class="topbar-category">
-        <a th:href="@{/}">카테고리</a>
-    </div>
+	<header class="topbar-container text-20px" th:fragment="headerFragment">
+		<!--    <button class="logoButton" th:href="@{/}">-->
+		<!--        <img src="/image/딜온로고.png" alt="메인페이지이동" class="home" />-->
+		<!--    </button>-->
+		<div class="topbar-category">
+			<a th:href="@{/}">카테고리</a>
+		</div>
 
-    <div class="topbar-actions">
-        <a th:href="@{/chat}"><button>채팅하기</button></a>
-        <a th:href="@{/products/new}"><button>판매하기</button></a>
-        <a th:href="@{/mypage}"><button>마이페이지</button></a>
-        <a th:href="@{/login}"><button>로그인 / 회원가입</button></a>
-    </div>
+		<div class="topbar-actions">
+			<a th:href="@{/chat}"><button>채팅하기</button></a> <a
+				th:href="@{/products/new}"><button>판매하기</button></a> <a
+				th:href="@{/mypage}"><button>마이페이지</button></a>
+			<button id="loginButton">로그인 / 회원가입</button>
+		</div>
+		<div id="loginModal" class="modal">
+			<div class="modal-content">
+				<div>
+					<p class="logo">LOGO</p>
+				</div>
+				<input type="text" placeholder="아이디를 입력하세요..." class="input-field">
+				<input type="password" placeholder="비밀번호를 입력하세요..."
+					class="input-field">
+				<button class="login-btn">로그인</button>
 
-</header>
+				<div class="links">
+					<a href="#">아이디 찾기</a> | <a href="#">비밀번호 찾기</a> | <a href="user/signIn">회원가입</a>
+				</div>
+
+				<button class="social-btn kakao">카카오 로그인</button>
+				<button class="social-btn google">구글 로그인</button>
+			</div>
+		</div>
+	</header>
+
 
 </body>
 </html>

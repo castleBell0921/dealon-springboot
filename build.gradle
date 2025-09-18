@@ -30,6 +30,9 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	/*developmentOnly 'org.springframework.boot:spring-boot-devtools'*/
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+    implementation 'com.oracle.database.security:osdt_cert:21.5.0.0'
+	implementation 'com.oracle.database.security:oraclepki:21.5.0.0'   
+	implementation 'com.oracle.database.security:osdt_core:21.5.0.0'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
@@ -42,6 +45,8 @@ dependencies {
 	implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 	implementation 'software.amazon.awssdk:s3:2.21.0'
 	implementation 'com.solapi:sdk:1.0.3'
+	
+	
 
 
 }

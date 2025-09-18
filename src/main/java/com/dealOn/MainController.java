@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MainController {
 	
-
+@GetMapping("/")
+public String home() {
+	return "index";
+}
 	
 
 

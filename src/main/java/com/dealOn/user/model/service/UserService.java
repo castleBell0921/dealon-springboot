@@ -34,4 +34,5 @@ public class UserService {
 	public int insertUser(User user) {
 		return mapper.insertUser(user);
 	}
+
 }

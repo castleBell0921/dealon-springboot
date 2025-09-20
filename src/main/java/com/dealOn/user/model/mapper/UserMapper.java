@@ -15,4 +15,6 @@ public interface UserMapper {
 
 	User login(User user);
 
+	int phoneCheck(String phone);
+
 }

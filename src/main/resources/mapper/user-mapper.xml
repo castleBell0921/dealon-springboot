@@ -19,4 +19,7 @@
 <select id="login">
 	select * from users where id=#{id} and state='Y'
 </select>
+<select id="phoneCheck">
+	select count(*) from users where phone=#{phone}
+</select>
 </mapper>

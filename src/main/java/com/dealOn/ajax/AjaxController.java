@@ -47,34 +47,45 @@ public class AjaxController {
 	@PostMapping("/send-auth")
 	public Map<String, Object> sendAuth(@RequestBody Map<String, String> request, HttpSession session) {
 		String phone = request.get("phone");
+
+		boolean phoneCheck = uService.phoneCheck(phone);
+
 		String authNumber = generateAuthNumber();
-
-		DefaultMessageService messageService = SolapiClient.INSTANCE.createInstance(apiKey, apiSecret);
-
-		Message message = new Message();
-		message.setFrom(fromPhone);
-		message.setTo(phone);
-		message.setText("[DealOn] 인증번호 [" + authNumber + "]를 입력해주세요.");
-
 		Map<String, Object> resp = new HashMap<>();
+		if (phoneCheck) {
+			DefaultMessageService messageService = SolapiClient.INSTANCE.createInstance(apiKey, apiSecret);
 
-		try {
-			messageService.send(message);
+			Message message = new Message();
+			message.setFrom(fromPhone);
+			message.setTo(phone);
+			message.setText("[DealOn] 인증번호 [" + authNumber + "]를 입력해주세요.");
 
-			session.setAttribute("authNumber", authNumber);
-			session.setAttribute("authPhone", phone);
+			
 
-			resp.put("success", true);
-			resp.put("message", "인증번호를 발송했습니다.");
-		} catch (SolapiMessageNotReceivedException exception) {
-			// 발송에 실패한 메시지 목록을 확인할 수 있습니다!
-			System.out.println(exception.getFailedMessageList());
-			System.out.println(exception.getMessage());
-		} catch (Exception exception) {
-			System.out.println(exception.getMessage());
+			try {
+				messageService.send(message);
+
+				session.setAttribute("authNumber", authNumber);
+				session.setAttribute("authPhone", phone);
+
+				resp.put("success", true);
+				resp.put("message", "인증번호를 발송했습니다.");
+			} catch (SolapiMessageNotReceivedException exception) {
+				// 발송에 실패한 메시지 목록을 확인할 수 있습니다!
+				System.out.println(exception.getFailedMessageList());
+				System.out.println(exception.getMessage());
+			} catch (Exception exception) {
+				System.out.println(exception.getMessage());
+			}
+
+			return resp;
+		} else {
+			resp.put("success", false);
+			resp.put("message", "이미 가입되어있는 번호입니다.");
+			
+			return resp;
+			
 		}
-
-		return resp;
 	}
 
 	// 인증번호 확인 API

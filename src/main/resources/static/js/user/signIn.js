@@ -1,4 +1,4 @@
-const form = document.querySelector('form');
+const signUpForm = document.getElementById('signUpForm');
 
 let isVerify = false;
 let isIdCheck = false;
@@ -27,15 +27,13 @@ verifyBtn.addEventListener('click', async (e) => {
 				body: JSON.stringify({ phone: phoneNum.value })
 			});
 
-			if (response.ok) {
-				const data = await response.json();
-				// console.log(data);
-				if (data.success) {
-					alert('인증번호가 발송되었습니다.');
-					verifyInput.style.display = 'block';
-				}
+			const data = await response.json(); // 먼저 JSON 파싱
+			if (data.success) {
+				alert('인증번호가 발송되었습니다.');
+				verifyInput.style.display = 'block';
 			} else {
-				alert('인증번호 전송 오류');
+				alert(data.message || '인증번호 전송 오류');
+				verifyInput.style.display = 'none';
 			}
 		} catch (err) {
 			console.error(err);
@@ -129,7 +127,7 @@ pwd.addEventListener('input', (e) => {
 
 // 비밀번호 확인 (blur 시 최종 확인)
 pwdCheck.addEventListener('blur', (e) => {
-	if (pwd.value !== e.target.value || pwd.value =='') {
+	if (pwd.value !== e.target.value || pwd.value == '') {
 		pwdCheck.style.borderColor = "red";
 	} else {
 		pwdCheck.style.borderColor = "green";
@@ -148,17 +146,17 @@ nickname.addEventListener('blur', async () => {
 			},
 			body: JSON.stringify({ nickname: nickname.value })
 		});
-		
-		if(response.ok) {
+
+		if (response.ok) {
 			const data = await response.json();
-			if(data) {
+			if (data) {
 				isNicknameAvailable = true;
 				nickname.style.borderColor = "green";
 			} else {
 				nickname.style.borderColor = "red";
 			}
 		}
-	} catch(err) {
+	} catch (err) {
 		console.error(err);
 	}
 });
@@ -204,16 +202,17 @@ signupBtn.addEventListener('click', (e) => {
 		return;
 	}
 
-	if(!isIdCheck) {
+	if (!isIdCheck) {
 		alert('아이디가 중복되었습니다.');
 		return;
 	}
-	if(!isVerify) {
+	if (!isVerify) {
 		alert('본인인증을 해주시기 바랍니다.');
 		return;
 	}
 
 	// 모두 통과하면 폼 전송
-	form.submit();
+	signUpForm.submit();
 });
+
 

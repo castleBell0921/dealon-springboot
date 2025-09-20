@@ -18,7 +18,7 @@
 
 	<div class="signup-container">
 		<h2>회원가입</h2>
-		<form action="/user/signUp" method="post">
+		<form action="/user/signUp" method="post" id="signUpForm">
 			<div class="input-group">
 				<label for="username">아이디</label> <input type="text" id="id"
 					name="id">
@@ -66,6 +66,12 @@
 			</div>
 			<button type="button" class="signup-btn">가입하기</button>
 		</form>
+	</div>
+	<!-- 회원가입 실패 메시지 -->
+	<div th:if="${errorMessage}">
+		<script th:inline="javascript">
+			alert('[[${errorMessage}]]');
+		</script>
 	</div>
 	<script th:src="@{/js/user/signIn.js}"></script>
 </body>

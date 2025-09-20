@@ -23,3 +23,20 @@ if(logoutBtn){
 		alert('로그아웃되었습니다.');
 	});
 }
+
+const loginForm = document.querySelector('.login-form');
+const signUpBtn = document.querySelector('.login-btn');
+signUpBtn.addEventListener('click', () => {
+	console.log('click');
+	loginForm.submit();
+});
+
+
+// '키보드' 이벤트 리스너: 엔터키 입력 시 폼 제출
+loginForm.addEventListener('keypress', (event) => {
+    // 사용자가 누른 키가 'Enter'인지 확인
+    if (event.key === 'Enter') {
+        console.log('엔터키 입력');
+        loginForm.submit();
+    }
+});

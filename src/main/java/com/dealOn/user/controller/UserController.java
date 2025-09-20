@@ -52,13 +52,13 @@ public class UserController {
 				ra.addFlashAttribute("errorMessage", "회원가입에 실패했습니다. 다시 시도해 주세요.");
 
 				// 회원가입 페이지로 리다이렉트
-				return "redirect:/user/signIp";
+				return "redirect:user/signIn";
 			}
 		} catch (Exception e) {
 			// 예외 발생 시 처리 (DB 오류 등)
 			ra.addFlashAttribute("errorMessage", "회원가입 처리 중 오류가 발생했습니다.");
 
-			return "redirect:/user/signIp";
+			return "redirect:user/signIn";
 		}
 	}
 

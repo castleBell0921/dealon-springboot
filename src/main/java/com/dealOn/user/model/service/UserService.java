@@ -24,7 +24,7 @@ public class UserService {
 
 	public boolean nicknameService(String nickname) {
 		int result = mapper.nicknameCheck(nickname);
-		if(result==0) {
+		if (result == 0) {
 			return true;
 		} else {
 			return false;
@@ -37,5 +37,14 @@ public class UserService {
 
 	public User login(User user) {
 		return mapper.login(user);
+	}
+
+	public boolean phoneCheck(String phone) {
+		int result = mapper.phoneCheck(phone);
+		if (result == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

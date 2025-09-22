@@ -20,6 +20,9 @@
 		<h2>회원가입</h2>
 		<form action="/user/signUp" method="post" id="signUpForm">
 			<div class="input-group">
+				<input type="hidden" name="socialId" th:value= "${socialId != null ? socialId : ''}">
+			</div>
+			<div class="input-group">
 				<label for="username">아이디</label> <input type="text" id="id"
 					name="id">
 				<p id="idCheck" style="display: none; color: green">사용 가능한
@@ -46,7 +49,7 @@
 			</div>
 			<div class="input-group">
 				<label for="nickname">닉네임</label> <input type="text" id="nickname"
-					name="nickname">
+					name="nickname" th:value="${nickname != null ? nickname : ''}">
 			</div>
 			<div class="input-group phone-group">
 				<label for="phone">휴대전화번호</label>
@@ -71,6 +74,11 @@
 	<div th:if="${errorMessage}">
 		<script th:inline="javascript">
 			alert('[[${errorMessage}]]');
+		</script>
+	</div>
+	<div th:if="${param.msg}">
+		<script th:inline="javascript">
+			alert('소셜 로그인 최초 이용 시 간단한 회원가입이 필요합니다.');
 		</script>
 	</div>
 	<script th:src="@{/js/user/signIn.js}"></script>

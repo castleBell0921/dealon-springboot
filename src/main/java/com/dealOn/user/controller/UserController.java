@@ -1,7 +1,5 @@
 package com.dealOn.user.controller;
 
-
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -27,7 +26,12 @@ public class UserController {
 	private final BCryptPasswordEncoder bcrypt;
 
 	@GetMapping("signIn")
-	public String SignIn() {
+	public String SignIn(@RequestParam(name = "nickname", required = false) String nickname,
+			@RequestParam(name = "profileImage", required = false) String profileImage,
+			@RequestParam(name = "socialId", required = false) String socialId, Model model) {
+		model.addAttribute("nickname", nickname);
+		model.addAttribute("profileImage", profileImage);
+		model.addAttribute("socialId", socialId);
 		return "/SignIn";
 	}
 
@@ -63,21 +67,32 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public String Login(@ModelAttribute User user, Model model, RedirectAttributes ra) {
-	    User loginUser = uService.login(user);
-	    if(loginUser != null && bcrypt.matches(user.getPwd(), loginUser.getPwd())) {
-	        // 세션에 로그인 정보 저장
-	        model.addAttribute("loginUser", loginUser);
-	        ra.addFlashAttribute("loginSuccessMessage", "로그인 성공!");
-	        // 로그인 성공 시 메인페이지로 리다이렉트
-	        return "redirect:/";
-	    } else {
-	        ra.addFlashAttribute("loginFailMessage", "아이디 또는 비밀번호가 잘못되었습니다.");
-	        // 로그인 실패 시 로그인 페이지로 다시 이동
-	        return "redirect:/";
-	    }
+	public String login(@ModelAttribute User user, Model model, RedirectAttributes ra) {
+		User loginUser = uService.login(user);
+
+		if (loginUser == null) {
+			ra.addFlashAttribute("loginFailMessage", "아이디 또는 비밀번호가 잘못되었습니다.");
+			return "redirect:/";
+		}
+
+		// 소셜 로그인 유저
+		if (loginUser.getSocialId() != null) {
+			model.addAttribute("loginUser", loginUser);
+			ra.addFlashAttribute("loginSuccessMessage", "로그인 성공!");
+			return "redirect:/";
+		}
+
+		// 일반 로그인 유저
+		if (bcrypt.matches(user.getPwd(), loginUser.getPwd())) {
+			model.addAttribute("loginUser", loginUser);
+			ra.addFlashAttribute("loginSuccessMessage", "로그인 성공!");
+			return "redirect:/";
+		} else {
+			ra.addFlashAttribute("loginFailMessage", "아이디 또는 비밀번호가 잘못되었습니다.");
+			return "redirect:/";
+		}
 	}
-	
+
 	@GetMapping("/logout")
 	public String logout(SessionStatus session) {
 		session.setComplete();

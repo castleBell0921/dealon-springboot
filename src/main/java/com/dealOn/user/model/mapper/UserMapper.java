@@ -17,4 +17,6 @@ public interface UserMapper {
 
 	int phoneCheck(String phone);
 
+	User findBySocialId(String socialId);
+
 }

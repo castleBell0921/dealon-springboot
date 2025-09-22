@@ -10,10 +10,10 @@
 	</select>
 	<insert id="insertUser">
     INSERT INTO users (
-    	id,pwd,phone,email,nickname,trust,region,badge,name
+    	id,pwd,phone,email,nickname,trust,region,badge,name, social_id
     ) 
     VALUES (
-    	#{id},#{pwd},#{phone},#{email},#{nickname},0, 'default', 'default', #{name}
+    	#{id},#{pwd},#{phone},#{email},#{nickname},0, 'default', 'default', #{name}, #{socialId}
     )
 </insert>
 <select id="login">
@@ -21,5 +21,8 @@
 </select>
 <select id="phoneCheck">
 	select count(*) from users where phone=#{phone}
+</select>
+<select id="findBySocialId">
+	select * from users where social_id=#{socialId}
 </select>
 </mapper>

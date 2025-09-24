@@ -1,0 +1,99 @@
+<!-- src/main/resources/templates/user/profile.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>내 정보 수정</title>
+<link rel="stylesheet" th:href="@{/css/App.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
+<link rel="stylesheet" th:href="@{/css/myInfo.css}">
+</head>
+<body>
+	<div class="app-container">
+		<div th:replace="~{common/header :: header}"></div>
+		<div th:replace="~{common/searchBar :: searchBar}"></div>
+
+		<main class="main-wrap">
+			<!-- 사이드바 -->
+			<div th:replace="~{user/sidebar :: sidebar}"></div>
+
+			<!-- 프로필/폼 영역 -->
+			<section class="profile-area">
+				<!-- 프로필 카드 (아바타 + 트러스트 + 간단정보) -->
+				<div class="profile-card">
+					<div class="avatar-wrap">
+						<img class="avatar" src='/image/default-avatar.png' alt="프로필 이미지">
+					</div>
+
+					<div class="profile-meta">
+
+
+						<div class="trust">
+							<div class="trust-label">
+								<span>Trust Guage</span> <span class="trust-percent">92%</span>
+							</div>
+							<div class="trust-bar">
+								<div class="trust-fill" style="width: 92%"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 내 정보 수정 폼 -->
+				<div class="profile-form-card">
+					<h1>내 정보 수정</h1>
+					<form th:action="@{/user/update}" method="post"
+						class="profile-form">
+						<div class="form-row">
+							<label for="name">이름</label> <input id="name" name="name"
+								type="text" th:value="${loginUser.name}" required>
+						</div>
+
+						<div class="form-row">
+							<label for="nickname">닉네임</label> <input id="nickname"
+								name="nickname" type="text" th:value="${loginUser.nickname}">
+						</div>
+
+						<div class="form-row horizontal">
+							<label for="email">Email</label> <input id="email" name="email"
+								type="email" th:value="${loginUser.email}" required>
+							<div class="col-col">
+								<button type="button" class="btn-small">Email 인증</button>
+							</div>
+						</div>
+
+						<div class="form-row horizontal">
+							<label for="phone">휴대폰 번호</label> <input id="phone" name="phone"
+								type="text" th:value="${loginUser.phone}">
+							<div class="col-col">
+								<button type="button" class="btn-small">휴대폰 인증</button>
+							</div>
+						</div>
+
+						<hr class="divider">
+
+						<div class="form-row">
+							<label for="currentPwd">현재 비밀번호</label> <input id="currentPwd"
+								name="currentPwd" type="password" placeholder="현재 비밀번호">
+						</div>
+
+						<div class="form-row">
+							<label for="newPwd">새 비밀번호</label> <input id="newPwd"
+								name="newPwd" type="password" placeholder="변경할 비밀번호">
+						</div>
+
+						<div class="form-row">
+							<label for="confirmPwd">비밀번호 확인</label> <input id="confirmPwd"
+								name="confirmPwd" type="password" placeholder="비밀번호 확인">
+						</div>
+
+						<button type="submit" class="btn-primary full">변경하기</button>
+					</form>
+				</div>
+			</section>
+		</main>
+	</div>
+	<script th:src="@{/js/user/header.js}"></script>
+</body>
+</html>

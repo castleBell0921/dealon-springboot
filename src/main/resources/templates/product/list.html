@@ -3,41 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>전체 상품</title>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/App.css}">
-  <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
-  <link rel="stylesheet" type="text/css" th:href="@{/css/Home.css}">
+  <link rel="stylesheet" th:href="@{/css/App.css}">
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/Home.css}">
+  <link rel="stylesheet" th:href="@{/css/font.css}">
 </head>
 <body>
-<div th:replace="~{common/header :: header}"></div>
-<div th:replace="~{common/searchBar :: searchBar}"></div>
+<div class="app-container">
+  <div th:replace="~{common/header :: header}"></div>
+  <div th:replace="~{common/searchBar :: searchBar}"></div>
 
-<div class="all-product-container">
-  <div th:replace="~{common/filterSidebar :: filterSidebar(categories=${categories}, filters=${filters})}"></div>
+  <div class="all-product-container">
+    <div th:replace="~{common/filterSidebar :: filterSidebar(categories=${categories}, filters=${filters})}"></div>
 
-  <main class="list-main-content">
-    <section class="product-section">
-      <h2 class="section-title text-46px">상품 목록</h2>
-      <div class="product-list">
-        <div th:each="product : ${products}" class="product-item">
-          <div class="product-image-placeholder" th:style="'background-image:url(' + ${product.imageUrl} + '); background-size:cover;'">
-                            <span class="product-type"
-                                  th:styleappend="${product.productType == 'USED'} ? 'background-color:blue;' : 'background-color:red;'"
-                                  th:text="${product.productType == 'USED' ? '중고' : '경매'}"></span>
-          </div>
-          <div class="product-details">
-            <div class="product-title text-16px" th:text="${product.name}">상품명</div>
-            <div class="product-price text-16px" th:text="${#numbers.formatInteger(product.currentPriceUnified, 3, 'COMMA')} + ' 원'">가격</div>
-            <div class="product-meta text-12px">
-              <span th:text="${product.location}">위치</span>
-              <span th:text="${product.createDate}">등록일</span>
-              <span class="meta-likes" th:text="'찜 ' + ${product.views}">찜 0</span>
+    <main class="list-main-content">
+      <section class="product-section">
+        <h2 class="section-title text-36px">상품 목록</h2>
+        <div class="product-list">
+          <div th:each="product : ${products}" class="product-item">
+            <div class="product-image-placeholder" th:style="'background-image:url(' + ${product.imageUrl} + '); background-size:cover;'">
+                              <span class="product-type"
+                                    th:styleappend="${product.productType == 'USED'} ? 'background-color:blue;' : 'background-color:red;'"
+                                    th:text="${product.productType == 'USED' ? '중고' : '경매'}"></span>
+            </div>
+            <div class="product-details">
+              <div class="product-title text-16px" th:text="${product.name}">상품명</div>
+              <div class="product-price text-16px" th:text="${#numbers.formatInteger(product.currentPriceUnified, 3, 'COMMA')} + ' 원'">가격</div>
+              <div class="product-meta text-12px">
+                <span th:text="${product.location}">위치</span>
+                <span th:text="${product.createDate}">등록일</span>
+                <span class="meta-likes" th:text="'찜 ' + ${product.views}">찜 0</span>
+              </div>
             </div>
           </div>
+          <p th:if="${#lists.isEmpty(products)}" style="width:100%; text-align:center; margin-top: 50px;">해당 조건에 맞는 상품이 없습니다.</p>
         </div>
-        <p th:if="${#lists.isEmpty(products)}" style="width:100%; text-align:center; margin-top: 50px;">해당 조건에 맞는 상품이 없습니다.</p>
-      </div>
-    </section>
-  </main>
+      </section>
+    </main>
+  </div>
 </div>
 </body>
 </html>

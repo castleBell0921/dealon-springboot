@@ -6,11 +6,17 @@
 <body>
 
 	<header class="topbar-container text-20px" th:fragment="header">
-		<!--    <button class="logoButton" th:href="@{/}">-->
-		<!--        <img src="/image/딜온로고.png" alt="메인페이지이동" class="home" />-->
-		<!--    </button>-->
-		<div class="topbar-category">
-			<a th:href="@{/}">카테고리</a>
+		<div class="left-header-section">
+			<a th:href="@{/}" class="logoButton"></a>
+
+			<div class="category-container">
+				<span class="category-text">카테고리</span>
+				<div class="category-dropdown">
+					<a class="dropdown-item" th:href="@{/product/list}">전체 상품</a>
+					<a class="dropdown-item" th:href="@{/products/normalProduct}">중고 상품</a>
+					<a class="dropdown-item" th:href="@{/products/auctionProduct}">경매 상품</a>
+				</div>
+			</div>
 		</div>
 		<th:block th:if="${session.loginUser == null}">
 			<div class="topbar-actions">

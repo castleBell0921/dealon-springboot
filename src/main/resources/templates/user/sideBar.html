@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<!-- src/main/resources/templates/common/sidebar.html -->
+<!-- src/main/resources/templates/common/sidebar.html -->
+<div th:fragment="sidebar">
+    <aside class="my-sidebar">
+        <h3 class="sidebar-title">마이 페이지</h3>
+
+        <nav class="sidebar-section">
+            <h4 class="section-title">거래 정보</h4>
+            <ul class="sidebar-menu">
+                <li><a th:href="@{/user/sell-history}">판매내역</a></li>
+                <li><a th:href="@{/user/buy-history}">구매내역</a></li>
+                <li><a th:href="@{/user/favorites}">찜한상품</a></li>
+            </ul>
+        </nav>
+        
+        <hr/>
+
+        <nav class="sidebar-section">
+            <h4 class="section-title">내 정보</h4>
+            <ul class="sidebar-menu">
+                <li><a th:href="@{/user/profile}" class="active">내 정보 수정</a></li>
+            </ul>
+        </nav>
+    </aside>
+</div>
+	
+</body>
+</html>

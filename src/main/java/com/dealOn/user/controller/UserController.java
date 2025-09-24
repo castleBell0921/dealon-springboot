@@ -114,4 +114,9 @@ public class UserController {
 			return "redirect:/";
 		}
 	}
+	
+	@GetMapping("/myInfo")
+	public String myInfo() {
+		return "/myInfo";
+	}
 }

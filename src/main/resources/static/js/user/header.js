@@ -20,7 +20,7 @@ if (logoutBtn) {
 	logoutBtn.addEventListener('click', () => {
 		console.log('로그아웃 클릭');
 		location.href = "/user/logout";
-		alert('로그아웃되었습니다.');
+		
 	});
 }
 
@@ -58,3 +58,11 @@ kakaoBtn.addEventListener('click', async () => {
 	}
 });
 
+/*// 구글 로그인
+const googleBtn = document.querySelector('google_button');
+
+googleBtn.addEventListener('click', async () => {
+	try {
+		const response = await fetch("/auth/google/auth-url");
+	}
+});*/

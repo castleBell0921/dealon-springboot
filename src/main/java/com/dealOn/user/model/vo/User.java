@@ -15,6 +15,7 @@ public class User {
 	private String pwd;
 	private String id;
 	private String socialId;
+	private String accessToken;
 	
 
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.dealOn.Auth.service.AuthService;
+import com.dealOn.Auth.service.KakaoAuthService;
 import com.dealOn.user.model.service.UserService;
 import com.dealOn.user.model.vo.User;
 
@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final UserService uService;
 	private final BCryptPasswordEncoder bcrypt;
-	private final AuthService authService;
+	private final KakaoAuthService authService;
 
 	@GetMapping("signIn")
 	public String SignIn(@RequestParam(name = "nickname", required = false) String nickname,

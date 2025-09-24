@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.dealOn.Auth.service.AuthService;
+import com.dealOn.Auth.service.KakaoAuthService;
 import com.dealOn.user.controller.UserController;
 import com.dealOn.user.model.vo.User;
 
@@ -20,9 +20,9 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-public class AuthController {
+public class KakaoAuthController {
 
-	private final AuthService authService;
+	private final KakaoAuthService authService;
 	private final UserController userController;
 
 	@GetMapping("/auth/kakao/auth-url")

@@ -58,11 +58,9 @@ kakaoBtn.addEventListener('click', async () => {
 	}
 });
 
-/*// 구글 로그인
-const googleBtn = document.querySelector('google_button');
+// 구글 로그인 버튼
+const googleBtn = document.querySelector('.google_button'); // id면 # 붙여야 해요!
 
-googleBtn.addEventListener('click', async () => {
-	try {
-		const response = await fetch("/auth/google/auth-url");
-	}
-});*/
+googleBtn.addEventListener('click',  () => {
+		window.location.href = "/auth/google/auth-url";
+});

@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class KakaoAuthService {
 
     private final UserMapper userMapper;
     @Value("${KAKAO_CLIENT_ID}")

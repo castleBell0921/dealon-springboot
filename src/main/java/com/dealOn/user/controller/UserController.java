@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dealOn.Auth.service.AuthService;
 import com.dealOn.user.model.service.UserService;
 import com.dealOn.user.model.vo.User;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final UserService uService;
 	private final BCryptPasswordEncoder bcrypt;
+	private final AuthService authService;
 
 	@GetMapping("signIn")
 	public String SignIn(@RequestParam(name = "nickname", required = false) String nickname,
@@ -77,6 +80,7 @@ public class UserController {
 
 		// 소셜 로그인 유저
 		if (loginUser.getSocialId() != null) {
+			// accessToken session 저장
 			model.addAttribute("loginUser", loginUser);
 			ra.addFlashAttribute("loginSuccessMessage", "로그인 성공!");
 			return "redirect:/";
@@ -94,8 +98,20 @@ public class UserController {
 	}
 
 	@GetMapping("/logout")
-	public String logout(SessionStatus session) {
-		session.setComplete();
-		return "redirect:/";
+	public String logout(SessionStatus session, HttpSession httpSession, RedirectAttributes ra) {
+		User loginUser = (User) httpSession.getAttribute("loginUser");
+
+		// 소셜 로그인 유저면 카카오 로그아웃 URL로 redirect
+		if (loginUser != null && loginUser.getSocialId() != null) {
+			return "redirect:" + authService.getKakaoLogoutUrl();
+		} else {
+
+			// 세션 초기화
+			session.setComplete();
+			httpSession.invalidate();
+			
+			ra.addFlashAttribute("logoutSuccessMessage", "로그아웃 성공!");
+			return "redirect:/";
+		}
 	}
 }

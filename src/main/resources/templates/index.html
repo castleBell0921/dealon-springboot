@@ -91,6 +91,11 @@
     	alert('[[${loginFailMessage}]]');
     </script>
 </div>
+<div th:if="${logoutSuccessMessage}">
+    <script th:if="logoutSuccessMessage">
+    	alert('[[${logoutSuccessMessage}]]');
+    </script>
+</div>
 
 <script th:src="@{/js/user/header.js}"></script>	
 </body>

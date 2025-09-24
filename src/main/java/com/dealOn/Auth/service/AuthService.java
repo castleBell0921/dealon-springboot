@@ -1,13 +1,15 @@
 package com.dealOn.Auth.service;
 
-import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,18 +23,21 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
 
     private final UserMapper userMapper;
-
     @Value("${KAKAO_CLIENT_ID}")
     private String clientId;
 
     @Value("${KAKAO_REDIRECT_URL}")
     private String redirectUri;
+    
+    @Value("${KAKAO_LOGOUT_REDIRECT_URL}")
+    private String logoutRedirectUri;
 
     // 1. 카카오 인가 코드 요청 URL
     public String getAuthCodeUrl() {
         return "https://kauth.kakao.com/oauth/authorize?response_type=code"
                 + "&client_id=" + clientId
-                + "&redirect_uri=" + redirectUri;
+                + "&redirect_uri=" + redirectUri
+                + "&prompt=login"; 
     }
     
     // 2. 인가 코드 -> 토큰 -> 사용자 정보
@@ -77,6 +82,7 @@ public class AuthService {
         result.put("id", userInfo.get("id"));
         result.put("nickname", properties != null ? properties.getOrDefault("nickname", "") : "");
         result.put("profileImage", properties != null ? properties.getOrDefault("profile_image", "") : "");
+        result.put("accessToken", accessToken);
         
 
         return result;
@@ -86,9 +92,15 @@ public class AuthService {
     public User findUserBySocialId(String socialId) {
         return userMapper.findBySocialId(socialId);
     }
+    
 
-    // 4. 세션 생성 (예시)
-    public void createSession(User user) {
-        // SecurityContextHolder 또는 직접 세션 구현 가능
+
+    
+    public String getKakaoLogoutUrl() {
+        return "https://kauth.kakao.com/oauth/logout?client_id=" + clientId
+               + "&logout_redirect_uri=" + logoutRedirectUri;
     }
+    
+    
+
 }

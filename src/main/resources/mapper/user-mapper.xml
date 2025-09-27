@@ -25,4 +25,29 @@
 <select id="findBySocialId">
 	select * from users where social_id=#{socialId}
 </select>
+<update id="updateUser">
+	UPDATE users 
+	SET nickname = #{nickname},
+	    email = #{email},
+	    imageUrl = #{imageUrl}
+	WHERE id = #{id}
+</update>
+<insert id="insertUserProfileImage">
+    INSERT INTO images (
+        ENTITY_TYPE, 
+        ENTITY_ID, 
+        IMAGE_URL, 
+        DISPLAY_ORDER, 
+        UPLOAD_DATE, 
+        STATUS
+    )
+    VALUES (
+        'USER', 
+        #{userNo},    
+        #{imageUrl}, 
+        1,               
+        SYSDATE,         
+        'Y'              
+    )
+</insert>
 </mapper>

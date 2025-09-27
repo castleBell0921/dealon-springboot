@@ -21,15 +21,16 @@
     gap: 20px; /* avatar와 meta 간격 */
     align-items: center;
     background: #fff;
-    padding: 25px;
+    padding: 24px;
     border-radius: 12px;
+    
 }
 
 
 /* 아바타 */
 .avatar-wrap {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
@@ -55,6 +56,7 @@
 /* trust bar */
 .trust {
     width: 300px;
+    margin-left: 2rem;
 }
 
 .trust-label {
@@ -197,4 +199,9 @@
     border-bottom: none;
     padding-bottom: 0;
     margin-bottom: 12px; /* 간격 축소 */
+}
+
+.profile-form .avatar-wrap {
+    margin-left: 13px; /* label과 간격 */
+    cursor: pointer;   /* 손가락 모양 */
 }

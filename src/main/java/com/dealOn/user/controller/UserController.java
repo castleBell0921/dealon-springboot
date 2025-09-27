@@ -1,5 +1,7 @@
 package com.dealOn.user.controller;
 
+import java.io.IOException;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dealOn.Auth.service.KakaoAuthService;
+import com.dealOn.common.S3Service;
 import com.dealOn.user.model.service.UserService;
 import com.dealOn.user.model.vo.User;
 
@@ -27,6 +31,7 @@ public class UserController {
 	private final UserService uService;
 	private final BCryptPasswordEncoder bcrypt;
 	private final KakaoAuthService authService;
+	private final S3Service s3Service;
 
 	@GetMapping("signIn")
 	public String SignIn(@RequestParam(name = "nickname", required = false) String nickname,
@@ -109,14 +114,36 @@ public class UserController {
 			// 세션 초기화
 			session.setComplete();
 			httpSession.invalidate();
-			
+
 			ra.addFlashAttribute("logoutSuccessMessage", "로그아웃 성공!");
 			return "redirect:/";
 		}
 	}
-	
+
 	@GetMapping("/myInfo")
 	public String myInfo() {
-		return "/myInfo";
+		return "user/myInfo";
+	}
+	
+	@PostMapping("/update")
+	public String updateUser(@RequestParam("imageUrl") MultipartFile avatar, @RequestParam("nickname") String nickname,
+			@RequestParam("email") String email, HttpSession session, RedirectAttributes ra) {
+
+		User loginUser = (User) session.getAttribute("loginUser");
+		
+		// 파일이 있으면 S3에 업로드
+		String avatarUrl = null;
+		if (!avatar.isEmpty()) {
+			try {
+				avatarUrl = s3Service.uploadFile(avatar);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		// 서비스 레이어에 전달
+		uService.updateUserProfile(loginUser, loginUser.getId(), nickname, email, avatarUrl);
+
+		ra.addFlashAttribute("msg", "프로필이 수정되었습니다.");
+		return "redirect:/user/myInfo";
 	}
 }

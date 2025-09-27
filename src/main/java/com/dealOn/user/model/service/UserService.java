@@ -1,7 +1,11 @@
 package com.dealOn.user.model.service;
 
-import org.springframework.stereotype.Service;
+import java.io.IOException;
 
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.dealOn.common.S3Service;
 import com.dealOn.user.model.mapper.UserMapper;
 import com.dealOn.user.model.vo.User;
 
@@ -12,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
 	private final UserMapper mapper;
+	private final S3Service s3Service;
 
 	public boolean idCheckService(String id) {
 		int result = mapper.idCheck(id);
@@ -47,4 +52,39 @@ public class UserService {
 			return false;
 		}
 	}
+
+	public void updateUser(User user, MultipartFile imageFile, String nickname, String email) {
+		String imageUrl = null;
+
+		// 이미지 업로드
+		if (imageFile != null && !imageFile.isEmpty()) {
+			try {
+				imageUrl = s3Service.uploadFile(imageFile);
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+		}
+
+		// 유저 정보 업데이트
+		user.setNickname(nickname);
+		user.setEmail(email);
+		if (imageUrl != null) {
+			user.setImageUrl(imageUrl);
+		}
+
+		mapper.updateUser(user);
+	}
+	
+
+    public void updateUserProfile(User user, String id, String nickname, String email, String avatarUrl) {
+        user.setNickname(nickname);
+        user.setEmail(email);
+
+        if (avatarUrl != null) {
+            user.setImageUrl(avatarUrl); // DB 컬럼에 URL 저장
+        }
+        mapper.updateUser(user);
+        mapper.insertUserProfileImage(user);
+    }
 }

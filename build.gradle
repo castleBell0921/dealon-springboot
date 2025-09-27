@@ -18,9 +18,12 @@ repositories {
 	mavenCentral()
 }
 
+dependencyManagement {
+	imports {
+		mavenBom "org.glassfish.jersey:jersey-bom:2.41"
+	}
+}
 dependencies {
-	
-	
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -28,10 +31,9 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	compileOnly 'org.projectlombok:lombok'
-	/*developmentOnly 'org.springframework.boot:spring-boot-devtools'*/
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
-    implementation 'com.oracle.database.security:osdt_cert:21.5.0.0'
-	implementation 'com.oracle.database.security:oraclepki:21.5.0.0'   
+	implementation 'com.oracle.database.security:osdt_cert:21.5.0.0'
+	implementation 'com.oracle.database.security:oraclepki:21.5.0.0'
 	implementation 'com.oracle.database.security:osdt_core:21.5.0.0'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -45,10 +47,17 @@ dependencies {
 	implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 	implementation 'software.amazon.awssdk:s3:2.21.0'
 	implementation 'com.solapi:sdk:1.0.3'
-	
-	
 
+	// OCI 및 Jersey 의존성
+	implementation 'com.oracle.oci.sdk:oci-java-sdk-objectstorage:3.35.0'
+	implementation 'com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey:3.35.0'
+	implementation 'org.glassfish.jersey.core:jersey-client'
+	implementation 'org.glassfish.jersey.inject:jersey-hk2'
 
+	// Java 11+ 환경에서 Jersey 2.x 사용 시 필수 의존성
+	implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
+	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+	runtimeOnly 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
 }
 
 tasks.named('test') {

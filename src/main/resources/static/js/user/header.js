@@ -64,3 +64,5 @@ const googleBtn = document.querySelector('.google_button'); // id면 # 붙여야
 googleBtn.addEventListener('click',  () => {
 		window.location.href = "/auth/google/auth-url";
 });
+
+

@@ -19,4 +19,7 @@ public interface UserMapper {
 
 	User findBySocialId(String socialId);
 
+	int updateUser(User user);
+	int insertUserProfileImage(User user);
+
 }

@@ -28,7 +28,7 @@
 					<h1>내 정보 수정</h1>
 					<form th:action="@{/user/update}" method="post"
 						enctype="multipart/form-data" class="profile-form">
-
+						<input type="hidden" id="userNo" th:value="${loginUser.userNo}" name="userNo">
 						<!-- 프로필 아바타 (form 안으로 이동) -->
 						<div class="form-row">
 							<label>프로필 이미지</label>
@@ -88,7 +88,7 @@
 								name="confirmPwd" type="password" placeholder="비밀번호 확인">
 						</div>
 
-						<button type="submit" class="btn-primary full">변경하기</button>
+						<button type="button" class="btn-primary full changeInfoBtn">변경하기</button>
 					</form>
 				</div>
 

@@ -1,6 +1,8 @@
 package com.dealOn.user.model.service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,8 +29,13 @@ public class UserService {
 		}
 	}
 
-	public boolean nicknameService(String nickname) {
-		int result = mapper.nicknameCheck(nickname);
+	public boolean nicknameService(User user, String nickname) {
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("nickname", nickname);
+		if(user != null) {
+			data.put("userNo", user.getUserNo());
+		}
+		int result = mapper.nicknameCheck(data);
 		if (result == 0) {
 			return true;
 		} else {
@@ -75,16 +82,28 @@ public class UserService {
 
 		mapper.updateUser(user);
 	}
-	
 
-    public void updateUserProfile(User user, String id, String nickname, String email, String avatarUrl) {
-        user.setNickname(nickname);
-        user.setEmail(email);
+	public void updateUserProfile(User user, String id, String nickname, String email, String avatarUrl) {
+		user.setNickname(nickname);
+		user.setEmail(email);
 
-        if (avatarUrl != null) {
-            user.setImageUrl(avatarUrl); // DB 컬럼에 URL 저장
-        }
-        mapper.updateUser(user);
-        mapper.insertUserProfileImage(user);
-    }
+		if (avatarUrl != null) {
+			user.setImageUrl(avatarUrl); // DB 컬럼에 URL 저장
+		}
+		mapper.updateUser(user);
+		mapper.insertUserProfileImage(user);
+	}
+
+	public boolean emailCheck(User user,String email) {
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("email", email);
+		if(user != null) {
+			data.put("userNo", user.getUserNo());
+		}
+		if (mapper.emailCheck(data) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

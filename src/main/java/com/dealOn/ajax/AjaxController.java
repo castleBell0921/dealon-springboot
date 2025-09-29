@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dealOn.Auth.service.EmailService;
 import com.dealOn.user.model.service.UserService;
+import com.dealOn.user.model.vo.User;
 import com.solapi.sdk.SolapiClient;
 import com.solapi.sdk.message.exception.SolapiMessageNotReceivedException;
 import com.solapi.sdk.message.model.Message;
@@ -27,9 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api")
 @Slf4j
 public class AjaxController {
-	 private final EmailService emailService;
-	 private final Map<String, String> authStore = new HashMap<>();
-	 
+	private final EmailService emailService;
+	private final Map<String, String> authStore = new HashMap<>();
+
 	@Value("${coolsms.api.key}")
 	private String apiKey;
 
@@ -65,8 +66,6 @@ public class AjaxController {
 			message.setTo(phone);
 			message.setText("[DealOn] 인증번호 [" + authNumber + "]를 입력해주세요.");
 
-			
-
 			try {
 				messageService.send(message);
 
@@ -87,9 +86,9 @@ public class AjaxController {
 		} else {
 			resp.put("success", false);
 			resp.put("message", "이미 가입되어있는 번호입니다.");
-			
+
 			return resp;
-			
+
 		}
 	}
 
@@ -124,27 +123,47 @@ public class AjaxController {
 	}
 
 	@PostMapping("/nicknameCheck")
-	public boolean nicknameCheck(@RequestBody Map<String, Object> request) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		String nickname = (String) request.get("nickname");
-		boolean nicknameCheck = uService.nicknameService(nickname);
-		return nicknameCheck;
-	}
-	
-	// 	이메일 인증	
-	 // 인증번호 요청
-    @PostMapping("/email/send")
-    public String sendEmail(@RequestParam("email") String email) {
-        String code = emailService.createAuthCode();
-        emailService.sendAuthMail(email, code);
-        authStore.put(email, code); 
-        return "메일 발송 완료";
-    }
+	public Map<String, Object> nicknameCheck(@RequestBody Map<String, Object> request, HttpSession session) {
+	    User user = (User) session.getAttribute("loginUser");
+	    String nickname = (String) request.get("nickname");
+	    String email = (String) request.get("email");
 
-    // 인증번호 확인
-    @PostMapping("/email/verify")
-    public boolean verifyCode(@RequestParam("email") String email, @RequestParam("code") String code) {
-        return code.equals(authStore.get(email));
-    }
-	
+	    boolean nicknameAvailable = uService.nicknameService(user, nickname);
+	    boolean emailUnchanged = (user != null && email.equals(user.getEmail()));
+
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("nicknameAvailable", nicknameAvailable);
+	    result.put("emailUnchanged", emailUnchanged);
+	    return result;
+	}
+
+
+	// 이메일 인증
+	// 인증번호 요청
+	@PostMapping("/email/send")
+	public String sendEmail(@RequestParam("email") String email, HttpSession session) {
+		User user = (User) session.getAttribute("loginUser");
+		boolean emailCheck = uService.emailCheck(user, email);
+		
+		
+		if (emailCheck) {
+			String code = emailService.createAuthCode();
+			emailService.sendAuthMail(email, code);
+			authStore.put(email, code);
+			return "메일 발송 완료";
+		} else {
+			return "중복된 이메일입니다.";
+		}
+	}
+
+	// 인증번호 확인
+	@PostMapping("/email/verify")
+	public boolean verifyCode(@RequestParam("email") String email, @RequestParam("code") String code, HttpSession session) {
+		boolean isVerified = code.equals(authStore.get(email));
+        if (isVerified) {
+            authStore.remove(email); 
+        }
+        return isVerified;
+	}
+
 }

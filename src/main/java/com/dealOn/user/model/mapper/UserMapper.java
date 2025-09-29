@@ -1,15 +1,19 @@
 package com.dealOn.user.model.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.dealOn.user.model.vo.User;
+
+
 
 @Mapper
 public interface UserMapper {
 
 	int idCheck(String id);
 
-	int nicknameCheck(String nickname);
+	int nicknameCheck(Map<String, String> data);
 
 	int insertUser(User user);
 
@@ -20,6 +24,9 @@ public interface UserMapper {
 	User findBySocialId(String socialId);
 
 	int updateUser(User user);
+	
 	int insertUserProfileImage(User user);
+
+	int emailCheck(Map<String,String> data);
 
 }

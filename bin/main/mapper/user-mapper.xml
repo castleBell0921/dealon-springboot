@@ -6,7 +6,12 @@
 		select count(*) from users where id=#{id}
 	</select>
 	<select id="nicknameCheck">
-		select count(*) from users where nickname=#{nickname}
+		select count(*) 
+		from users 
+		where nickname=#{nickname}
+		<if test="userNo != null">
+	        AND user_no != #{userNo}
+	    </if>
 	</select>
 	<insert id="insertUser">
     INSERT INTO users (
@@ -50,4 +55,11 @@
         'Y'              
     )
 </insert>
+<select id="emailCheck">
+	select count(*)
+	from users
+	where email=#{email} and
+		  user_no!=#{userNo}
+		  
+</select>
 </mapper>

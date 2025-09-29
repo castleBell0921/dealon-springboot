@@ -7,12 +7,20 @@
         <result property="name" column="NAME"/>
         <result property="detail" column="DETAIL"/>
         <result property="createDate" column="CREATE_DATE"/>
-        <result property="category" column="CATEGORY"/>
         <result property="location" column="LOCATION"/>
         <result property="currentPriceUnified" column="CURRENT_PRICE_UNIFIED"/>
         <result property="views" column="VIEWS"/>
         <result property="productType" column="PRODUCT_TYPE"/>
-        <result property="imageUrl" column="IMAGE_URL"/>
+        <result property="thumbnailUrl" column="THUMBNAIL_URL"/>
+        <result property="categoryName" column="CATEGORY_NAME"/>
+        <result property="sellerNickname" column="SELLER_NICKNAME"/>
+        <result property="sellerProfileImage" column="SELLER_PROFILE_IMAGE"/>
+        <result property="sellerTrust" column="SELLER_TRUST"/>
+        <result property="productState" column="PRODUCT_STATE"/>
+        <result property="price" column="PRICE"/>
+        <result property="startPrice" column="START_PRICE"/>
+        <result property="currentPrice" column="CURRENT_PRICE"/>
+        <result property="endDate" column="END_DATE"/>
     </resultMap>
 
     <resultMap id="categoryResultMap" type="com.dealOn.common.model.vo.CategoryVO">
@@ -23,22 +31,19 @@
         SELECT
         P.NO AS PRODUCT_NO,
         P.NAME,
-        P.DETAIL,
-        TO_CHAR(P.CREATE_DATE, 'YYYY-MM-DD') AS CREATE_DATE,
-        P.CATEGORY,
         P.SALES_LOCATION AS LOCATION,
+        TO_CHAR(P.CREATE_DATE, 'YYYY-MM-DD') AS CREATE_DATE,
         COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) AS CURRENT_PRICE_UNIFIED,
         COALESCE(TO_NUMBER(N.VIEWS), TO_NUMBER(A.VIEWS)) AS VIEWS,
         CASE
         WHEN N.NO IS NOT NULL THEN 'USED'
-        WHEN A.NO IS NOT NULL THEN 'AUCTION'
-        ELSE 'UNKNOWN'
+        ELSE 'AUCTION'
         END AS PRODUCT_TYPE,
         (SELECT IM.IMAGE_URL
         FROM IMAGES IM
         WHERE IM.ENTITY_TYPE = 'PRODUCT' AND IM.ENTITY_ID = P.NO
-        ORDER BY IM.DISPLAY_ORDER ASC, IM.UPLOAD_DATE DESC
-        FETCH FIRST 1 ROW ONLY) AS IMAGE_URL
+        ORDER BY IM.IMAGE_ID ASC
+        FETCH FIRST 1 ROW ONLY) AS THUMBNAIL_URL
         FROM PRODUCT P
         LEFT JOIN NORMAL N ON P.NO = N.NO2
         LEFT JOIN AUCTION A ON P.NO = A.NO2
@@ -60,6 +65,40 @@
             </if>
         </where>
         ORDER BY P.CREATE_DATE DESC
+    </select>
+
+    <select id="findProductDetailById" parameterType="int" resultMap="productResultMap">
+        SELECT
+            P.NO AS PRODUCT_NO,
+            P.NAME,
+            P.DETAIL,
+            TO_CHAR(P.CREATE_DATE, 'YYYY-MM-DD HH24:MI') AS CREATE_DATE,
+            P.SALES_LOCATION AS LOCATION,
+            COALESCE(TO_NUMBER(N.VIEWS), TO_NUMBER(A.VIEWS)) AS VIEWS,
+            C.NAME AS CATEGORY_NAME,
+            U.NICKNAME AS SELLER_NICKNAME,
+            U.IMAGEURL AS SELLER_PROFILE_IMAGE,
+            U.TRUST AS SELLER_TRUST,
+            N.PRICE AS price,
+            N.STATE AS PRODUCT_STATE,
+            A.START_PRICE,
+            A.CURRENT_PRICE AS currentPrice,
+            A.END_DATE,
+            CASE WHEN N.NO IS NOT NULL THEN 'NORMAL' ELSE 'AUCTION' END AS PRODUCT_TYPE
+        FROM PRODUCT P
+                 LEFT JOIN NORMAL N ON P.NO = N.NO2
+                 LEFT JOIN AUCTION A ON P.NO = A.NO2
+                 LEFT JOIN USERS U ON P.USER_NO = U.USER_NO
+                 LEFT JOIN CATEGORY C ON P.CATEGORY = C.NO
+        WHERE P.NO = #{productNo}
+    </select>
+
+    <select id="findImagesByProductNo" parameterType="int" resultType="string">
+        SELECT IMAGE_URL
+        FROM IMAGES
+        WHERE ENTITY_TYPE = 'PRODUCT'
+          AND ENTITY_ID = #{productNo}
+        ORDER BY IMAGE_ID ASC
     </select>
 
     <select id="findAllCategories" resultMap="categoryResultMap">

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.name}">경매 상품 상세</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/App.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/productDetail.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/font.css}">
+</head>
+<body>
+<div class="app-container">
+    <div th:replace="~{common/header :: header}"></div>
+    <div th:replace="~{common/searchBar :: searchBar}"></div>
+    <div class="product-detail-page-container">
+        <div class="product-detail-layout">
+            <main class="product-main-content">
+                <div class="breadcrumb text-13px" th:text="'홈 > ' + ${product.categoryName}"></div>
+                <div class="product-info-container">
+                    <section class="product-image-section">
+                        <div class="image-slider-container">
+                            <div class="slider-images">
+                                <div class="slider-image" th:each="imgUrl : ${product.imageUrls}">
+                                    <img th:src="${imgUrl}" th:alt="${product.name}" />
+                                </div>
+                            </div>
+                            <button class="slider-btn prev-btn" th:if="${#lists.size(product.imageUrls) > 1}">&lt;</button>
+                            <button class="slider-btn next-btn" th:if="${#lists.size(product.imageUrls) > 1}">&gt;</button>
+                            <div class="image-counter" th:if="${!#lists.isEmpty(product.imageUrls)}">
+                                <span class="current-image-index">1</span> / <span th:text="${#lists.size(product.imageUrls)}"></span>
+                            </div>
+                        </div>
+                        <div class="product-seller-info">
+                            <div class="seller-profile">
+                                <div class="seller-avatar-placeholder">
+                                    <img th:if="${product.sellerProfileImage != null}" th:src="${product.sellerProfileImage}" alt="판매자 프로필"/>
+                                </div>
+                                <div class="seller-name text-15px" th:text="${product.sellerNickname}"></div>
+                            </div>
+                            <div class="trust-gauge-container">
+                                <div class="trust-label">
+                                    <span>Trust Gauge</span>
+                                    <span class="trust-percent" th:text="${product.sellerTrust} + '%'"></span>
+                                </div>
+                                <div class="trust-bar">
+                                    <div class="trust-fill" th:style="'width:' + ${product.sellerTrust} + '%;'"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="product-details-section">
+                        <div class="product-location text-18px" th:text="${product.location}"></div>
+                        <h1 class="product-title text-24px" th:text="${product.name}"></h1>
+                        <div class="product-meta-info" th:text="${product.createDate} + '·조회 ' + ${product.views}"></div>
+                        <div class="product-price text-28px" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + ' 원'"></div>
+                        <div class="product-description text-15px" th:text="${product.detail}"></div>
+                        <button class="chat-button text-16px">판매자에게 채팅하기</button>
+                    </section>
+                </div>
+
+                <div class="trade-location-title text-20px">거래 희망 장소</div>
+                <div class="product-map-container">
+                    <iframe
+                            width="100%" height="100%" style="border:0; border-radius: 8px;"
+                            th:src="@{'https://map.naver.com/p/search/' + ${product.location}}">
+                    </iframe>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/product/productDetail.js}"></script>
+</body>
+</html>

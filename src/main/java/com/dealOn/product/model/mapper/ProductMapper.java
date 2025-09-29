@@ -11,4 +11,6 @@ import java.util.Map;
 public interface ProductMapper {
     List<ProductVO> findProducts(Map<String, Object> params);
     List<CategoryVO> findAllCategories();
+    List<String> findImagesByProductNo(int productNo);
+    ProductVO findProductDetailById(int productNo);
 }

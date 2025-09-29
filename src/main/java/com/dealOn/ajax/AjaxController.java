@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dealOn.Auth.service.EmailService;
 import com.dealOn.user.model.service.UserService;
 import com.solapi.sdk.SolapiClient;
 import com.solapi.sdk.message.exception.SolapiMessageNotReceivedException;
@@ -25,6 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api")
 @Slf4j
 public class AjaxController {
+	 private final EmailService emailService;
+	 private final Map<String, String> authStore = new HashMap<>();
+	 
 	@Value("${coolsms.api.key}")
 	private String apiKey;
 
@@ -125,4 +130,21 @@ public class AjaxController {
 		boolean nicknameCheck = uService.nicknameService(nickname);
 		return nicknameCheck;
 	}
+	
+	// 	이메일 인증	
+	 // 인증번호 요청
+    @PostMapping("/email/send")
+    public String sendEmail(@RequestParam("email") String email) {
+        String code = emailService.createAuthCode();
+        emailService.sendAuthMail(email, code);
+        authStore.put(email, code); 
+        return "메일 발송 완료";
+    }
+
+    // 인증번호 확인
+    @PostMapping("/email/verify")
+    public boolean verifyCode(@RequestParam("email") String email, @RequestParam("code") String code) {
+        return code.equals(authStore.get(email));
+    }
+	
 }

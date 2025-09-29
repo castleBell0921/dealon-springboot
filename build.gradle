@@ -58,6 +58,9 @@ dependencies {
 	implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
 	runtimeOnly 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
+	
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	
 }
 
 tasks.named('test') {

@@ -26,16 +26,19 @@
 				<!-- 내 정보 수정 폼 -->
 				<div class="profile-form-card">
 					<h1>내 정보 수정</h1>
-					<form th:action="@{/user/update}" method="post" enctype="multipart/form-data" class="profile-form">
+					<form th:action="@{/user/update}" method="post"
+						enctype="multipart/form-data" class="profile-form">
 
 						<!-- 프로필 아바타 (form 안으로 이동) -->
 						<div class="form-row">
 							<label>프로필 이미지</label>
 							<div class="avatar-wrap">
-								<img class="avatar" id="avatarPreview" th:src="${loginUser != null ? loginUser.imageUrl : '/image/default-avatar.png'}" >
+								<img class="avatar" id="avatarPreview"
+									th:src="${loginUser != null ? loginUser.imageUrl : '/image/default-avatar.png'}">
 
 
-								<input type="file" id="avatarInput" accept="image/*" style="display: none;" name="imageUrl">
+								<input type="file" id="avatarInput" accept="image/*"
+									style="display: none;" name="imageUrl">
 							</div>
 							<div class="trust">
 								<div class="trust-label">
@@ -54,11 +57,18 @@
 						</div>
 
 						<div class="form-row horizontal">
-							<label for="email">Email</label> <input id="email" name="email"
-								type="email" th:value="${loginUser.email}" required>
+							<label for="email">Email</label> 
+							<input id="email" name="email" type="email" th:value="${loginUser.email}" required>
 							<div class="col-col">
-								<button type="button" class="btn-small">Email 인증</button>
+								<button type="button" id="emailAuthBtn" class="btn-small">Email 인증</button>
 							</div>
+						</div>
+
+						<!-- 인증번호 입력란 (처음엔 숨김) -->
+						<div class="form-row" id="emailAuthCodeRow" style="display: none;">
+							<label for="authCode">인증번호</label> <input id="authCode"
+								name="authCode" type="text" placeholder="인증번호 입력">
+							<button type="button" id="verifyAuthBtn" class="btn-small">확인</button>
 						</div>
 
 						<hr class="divider">
@@ -86,10 +96,10 @@
 		</main>
 	</div>
 	<div th:if="${msg}">
-    <script th:inline="javascript">
-        alert('[[${msg}]]');
-    </script>
-</div>
+		<script th:inline="javascript">
+			alert('[[${msg}]]');
+		</script>
+	</div>
 	<script th:src="@{/js/user/header.js}"></script>
 	<script th:src="@{/js/user/myInfo.js}"></script>
 </body>

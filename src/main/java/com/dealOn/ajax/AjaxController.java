@@ -148,7 +148,7 @@ public class AjaxController {
 		
 		if (emailCheck) {
 			String code = emailService.createAuthCode();
-			emailService.sendAuthMail(email, code);
+			emailService.sendVerificationEmail(email, code);
 			authStore.put(email, code);
 			return "메일 발송 완료";
 		} else {

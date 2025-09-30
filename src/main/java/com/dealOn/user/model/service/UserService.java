@@ -60,32 +60,25 @@ public class UserService {
 		}
 	}
 
-	public void updateUser(User user, MultipartFile imageFile, String nickname, String email) {
-		String imageUrl = null;
+	/*
+	 * public void updateUser(User user, MultipartFile imageFile, String nickname,
+	 * String email) { String imageUrl = null;
+	 * 
+	 * // 이미지 업로드 if (imageFile != null && !imageFile.isEmpty()) { try { imageUrl =
+	 * s3Service.uploadFile(imageFile); } catch (IOException e) {
+	 * 
+	 * e.printStackTrace(); } }
+	 * 
+	 * // 유저 정보 업데이트 user.setNickname(nickname); user.setEmail(email); if (imageUrl
+	 * != null) { user.setImageUrl(imageUrl); }
+	 * 
+	 * mapper.updateUser(user); }
+	 */
 
-		// 이미지 업로드
-		if (imageFile != null && !imageFile.isEmpty()) {
-			try {
-				imageUrl = s3Service.uploadFile(imageFile);
-			} catch (IOException e) {
-
-				e.printStackTrace();
-			}
-		}
-
-		// 유저 정보 업데이트
+	public void updateUserProfile(User user, String id, String nickname, String email, String avatarUrl, String pwd) {
 		user.setNickname(nickname);
 		user.setEmail(email);
-		if (imageUrl != null) {
-			user.setImageUrl(imageUrl);
-		}
-
-		mapper.updateUser(user);
-	}
-
-	public void updateUserProfile(User user, String id, String nickname, String email, String avatarUrl) {
-		user.setNickname(nickname);
-		user.setEmail(email);
+		user.setPwd(pwd);
 
 		if (avatarUrl != null) {
 			user.setImageUrl(avatarUrl); // DB 컬럼에 URL 저장
@@ -105,5 +98,21 @@ public class UserService {
 		} else {
 			return false;
 		}
+	}
+	
+	public String findId(User user) {
+		return mapper.findId(user);
+	}
+	
+	public User findUserByIdAndEmail(User user) {
+	    return mapper.findUserByIdAndEmail(user);
+	}
+
+	public void updatePassword(String id, String encodedPwd) {
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("id", id);
+		data.put("pwd", encodedPwd);
+		
+	    mapper.updatePassword(data);
 	}
 }

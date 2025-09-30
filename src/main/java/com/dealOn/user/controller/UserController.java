@@ -1,6 +1,7 @@
 package com.dealOn.user.controller;
 
 import java.io.IOException;
+import java.util.Random;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dealOn.Auth.service.EmailService;
 import com.dealOn.Auth.service.KakaoAuthService;
 import com.dealOn.common.S3Service;
 import com.dealOn.user.model.service.UserService;
@@ -29,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/user")
 public class UserController {
 	private final UserService uService;
+	private final EmailService eService;
 	private final BCryptPasswordEncoder bcrypt;
 	private final KakaoAuthService authService;
 	private final S3Service s3Service;
@@ -126,10 +129,37 @@ public class UserController {
 	}
 	
 	@PostMapping("/update")
-	public String updateUser(@RequestParam("imageUrl") MultipartFile avatar, @RequestParam("nickname") String nickname,
-			@RequestParam("email") String email, HttpSession session, RedirectAttributes ra) {
+	public String updateUser(@RequestParam("avatarFile") MultipartFile avatar, 
+			@ModelAttribute User user,
+			@RequestParam(value="newPwd", required = false) String newPwd,
+            @RequestParam(value="confirmPwd", required = false) String confirmPwd,
+            @RequestParam(value="currentPwd", required = false) String currentPwd,
+			HttpSession session,
+			RedirectAttributes ra) {
 
 		User loginUser = (User) session.getAttribute("loginUser");
+		
+		  // 비밀번호 변경 로직
+	    if (currentPwd != null && !currentPwd.isEmpty()
+	            && newPwd != null && !newPwd.isEmpty()
+	            && confirmPwd != null && !confirmPwd.isEmpty()) {
+	        if (!newPwd.equals(confirmPwd)) {
+	            ra.addFlashAttribute("msg", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+	            return "redirect:/user/myInfo";
+	        }
+
+	        if (!bcrypt.matches(currentPwd, loginUser.getPwd())) {
+	            ra.addFlashAttribute("msg", "현재 비밀번호가 올바르지 않습니다.");
+				/*
+				 * System.out.println("currentPwd: " + currentPwd);
+				 * System.out.println("sessionPwd: " + loginUser.getPwd());
+				 */
+	            return "redirect:/user/myInfo";
+	        }
+	        
+	        user.setPwd(bcrypt.encode(newPwd));
+
+	    }
 		
 		// 파일이 있으면 S3에 업로드
 		String avatarUrl = null;
@@ -141,9 +171,60 @@ public class UserController {
 			}
 		}
 		// 서비스 레이어에 전달
-		uService.updateUserProfile(loginUser, loginUser.getId(), nickname, email, avatarUrl);
+		uService.updateUserProfile(loginUser, loginUser.getId(), user.getNickname(), user.getEmail(), avatarUrl, user.getPwd());
 
 		ra.addFlashAttribute("msg", "프로필이 수정되었습니다.");
 		return "redirect:/user/myInfo";
 	}
+	
+	//아이디 찾기 폼 맵핑
+	@GetMapping("/findAccount")
+	public String findAccount() {
+		return "/findAccount";
+	}
+	// 비밀번호 찾기 폼 맵핑
+	@GetMapping("/findPwd")
+	public String findPwd() {
+		return "/findPwd";
+	}
+	
+	@PostMapping("/findId")
+	public String findId(@ModelAttribute User user, Model model) {
+		String id = uService.findId(user);
+		if(id != null) {
+			model.addAttribute("id", id);
+		} else {
+			model.addAttribute("errorMessage", "일치하는 회원 정보가 없습니다.");
+		}
+		
+		return "/findAccount"; 
+	}
+	
+	@PostMapping("/findPwd")
+	public String findPwd(@ModelAttribute User user,Model model) {
+
+	    // 1. DB에서 유저 조회
+	    User userInfo = uService.findUserByIdAndEmail(user);
+
+	    if (userInfo == null) {
+	        model.addAttribute("errorMessage", "일치하는 회원정보가 없습니다.");
+	        return "/findPwd";
+	    }
+
+	    // 2. 임시 비밀번호 생성
+	    String tempPwd = eService.generateTempPassword(10); // 10자리 임시 비밀번호
+	    String encodedPwd = bcrypt.encode(tempPwd);
+
+	    // 3. DB에 새 비밀번호 업데이트
+	    uService.updatePassword(userInfo.getId(), encodedPwd);
+
+	    // 4. 이메일로 임시 비밀번호 전송
+	    eService.sendTempPasswordEmail(userInfo.getEmail(), tempPwd);
+
+	    model.addAttribute("sentMessage", "임시 비밀번호가 이메일로 발송되었습니다.");
+	    return "/findPwd";
+	}
+
+	
+
 }

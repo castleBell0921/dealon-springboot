@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>아이디 찾기</title>
+<!-- Font Awesome 아이콘 사용을 위한 CDN 추가 (필요시) -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/App.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/findAccount.css}">
+</head>
+<body>
+	<div class="app-container">
+		<div th:replace="~{common/header :: header}"></div>
+		<div th:replace="~{common/searchBar :: searchBar}"></div>
+
+		<main class="main-wrap">
+			<section class="find-account-area">
+				<div class="find-card">
+					<h2>아이디 찾기</h2>
+					<form th:action="@{/user/findId}" method="post" class="find-form">
+
+						<!-- 이름 입력 필드 -->
+						<div class="form-row input-with-icon">
+							<i class="fas fa-user icon"></i> <input type="text" id="name"
+								name="name" placeholder="이름을 입력해주세요" required>
+						</div>
+
+						<!-- 이메일 입력 필드 -->
+						<div class="form-row input-with-icon">
+							<i class="fas fa-envelope icon"></i> <input type="email"
+								id="email" name="email" placeholder="이메일 주소를 입력해주세요" required>
+						</div>
+
+						<button type="submit" class="btn-primary full">아이디 확인</button>
+
+						<!-- 아이디 확인 결과 표시 -->
+						<p th:if="${id}" class="result-text success">
+							회원님의 아이디는 **<span th:text="${id}"></span>** 입니다.
+						</p>
+						<!-- 결과가 있을 때 버튼 표시 -->
+						<div th:if="${id}" class="result-buttons"
+							style="margin-top: 15px; display: flex; gap: 10px;">
+							<a th:href="@{/user/findPwd}" class="btn-secondary">비밀번호 찾기</a> 
+							<button type="button" class="btn-primary" id="findLogin">로그인 하러 가기</button>
+						</div>
+
+						<p th:if="${errorMessage}" class="result-text error"
+							th:text="${errorMessage}"></p>
+					</form>
+				</div>
+			</section>
+		</main>
+	</div>
+	<script th:src="@{/js/user/header.js}"></script>
+	<script th:src="@{/js/user/find.js}"></script>
+</body>
+</html>

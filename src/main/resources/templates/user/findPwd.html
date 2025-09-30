@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>비밀번호 찾기</title>
+<!-- Font Awesome 아이콘 사용을 위한 CDN 추가 (필요시) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/App.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/findAccount.css}">
+</head>
+<body>
+<div class="app-container">
+    <div th:replace="~{common/header :: header}"></div>
+    <div th:replace="~{common/searchBar :: searchBar}"></div>
+
+    <main class="main-wrap">
+        <section class="find-account-area">
+            <div class="find-card">
+                <h2>비밀번호 찾기</h2>
+                <form th:action="@{/user/findPwd}" method="post" class="find-form">
+                    
+                    <!-- 아이디 입력 필드 (비밀번호 재설정 시 아이디 확인은 필수적임) -->
+                    <div class="form-row input-with-icon">
+                        <i class="fas fa-id-card-alt icon"></i>
+                        <input type="text" id="id" name="id" placeholder="아이디 입력" required>
+                    </div>
+                    
+                    <!-- 이메일 입력 필드 -->
+                    <div class="form-row input-with-icon">
+                        <i class="fas fa-envelope icon"></i>
+                        <input type="email" id="email" name="email" placeholder="등록된 이메일 주소 입력" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary full">임시 비밀번호 발송</button>
+                    
+                    <!-- 임시 비밀번호 발송 결과 표시 -->
+                    <p th:if="${sentMessage}" class="result-text success" th:text="${sentMessage}"></p>
+                    <p th:if="${errorMessage}" class="result-text error" th:text="${errorMessage}"></p>
+                    <div th:if="${sentMessage}" class="result-buttons" style="margin-top: 15px; display: flex; gap: 10px;">
+                    	<a th:href="@{/user/findAccount}" class="btn-secondary">아이디 찾기</a>
+                    	<button type="button" class = "btn-primary" id="findLogin">로그인 하러가기</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+<script th:src="@{/js/user/header.js}"></script>
+</body>
+</html>

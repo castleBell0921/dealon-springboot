@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const emailAuthBtn = document.getElementById('emailAuthBtn');
 const emailAuthCodeRow = document.getElementById("emailAuthCodeRow");
+const verifyAuthBtn = document.getElementById("verifyAuthBtn");
 
 // 인증번호 요청 (Async/Await)
 emailAuthBtn.addEventListener('click', async () => {
@@ -61,7 +62,7 @@ emailAuthBtn.addEventListener('click', async () => {
 });
 
 // 인증번호 확인 (Async/Await)
-emailAuthCodeRow.addEventListener("click", async () => {
+verifyAuthBtn.addEventListener("click", async () => {
 	const email = document.getElementById("email").value;
 	const code = document.getElementById("authCode").value;
 

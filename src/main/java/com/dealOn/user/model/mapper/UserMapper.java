@@ -1,5 +1,6 @@
 package com.dealOn.user.model.mapper;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -28,5 +29,11 @@ public interface UserMapper {
 	int insertUserProfileImage(User user);
 
 	int emailCheck(Map<String,String> data);
+	
+	String findId(User user);
+
+	User findUserByIdAndEmail(User user);
+
+	void updatePassword(HashMap<String, String> data);
 
 }

@@ -35,6 +35,9 @@
 	SET nickname = #{nickname},
 	    email = #{email},
 	    imageUrl = #{imageUrl}
+	<if test="pwd != null">
+		,pwd = #{pwd}
+	</if>
 	WHERE id = #{id}
 </update>
 <insert id="insertUserProfileImage">
@@ -62,4 +65,23 @@
 		  user_no!=#{userNo}
 		  
 </select>
+
+<select id="findId">
+	select id
+	from users
+	where email=#{email} and
+		  name=#{name}
+</select>
+
+<select id="findUserByIdAndEmail">
+	SELECT *
+    FROM users
+    WHERE id = #{id} AND email = #{email}
+</select>
+
+<update id="updatePassword">
+	UPDATE users
+    SET pwd = #{pwd}
+    WHERE id = #{id}
+</update>
 </mapper>

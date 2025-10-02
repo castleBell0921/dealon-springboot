@@ -37,4 +37,18 @@ public class TemplatesResolver{
 		return pResolver;
 
 	}
+	
+	@Bean
+	public ClassLoaderTemplateResolver chatResolver() {
+		ClassLoaderTemplateResolver cResolver = new ClassLoaderTemplateResolver();
+
+		cResolver.setPrefix("templates/chat/");
+		cResolver.setSuffix(".html");
+		cResolver.setTemplateMode(TemplateMode.HTML);
+		cResolver.setCharacterEncoding("UTF-8");
+		cResolver.setCacheable(false);
+		cResolver.setCheckExistence(true);
+		return cResolver;
+
+	}
 }

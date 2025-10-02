@@ -224,6 +224,8 @@ public class UserController {
 	    model.addAttribute("sentMessage", "임시 비밀번호가 이메일로 발송되었습니다.");
 	    return "/findPwd";
 	}
+	
+	
 
 	
 

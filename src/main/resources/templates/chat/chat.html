@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>채팅방</title>
+<!-- Font Awesome 아이콘 -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/App.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/chat.css}">
+</head>
+<body>
+	<div class="app-container">
+		<div th:replace="~{common/header :: header}"></div>
+		<div th:replace="~{common/searchBar :: searchBar}"></div>
+
+		<main class="main-wrap">
+			<div class="chat-container">
+				<!-- 좌측: 채팅방 리스트 -->
+				<section class="chat-list">
+					<h2 class="list-title">전체 대화</h2>
+					<ul class="chat-room-list">
+						<!-- 💡 기본 선택/활성화된 채팅방 더미 데이터 -->
+						<li class="chat-room active"><img
+							src="https://placehold.co/40x40/6a5acd/ffffff?text=U1"
+							alt="avatar" class="avatar">
+							<div class="chat-content">
+								<!-- chat-content로 묶어 이름/미리보기 배치 -->
+								<p class="chat-name">헬치소0828</p>
+								<!-- 채팅 미리보기 (상품 이미지 추가) -->
+								<div class="chat-preview-wrap">
+									<p class="chat-preview">헬치소0828 님과 갤럭시탭 s9 256gb 미개봉 새제품에
+										대...</p>
+								</div>
+							</div>
+							<div class="chat-meta">
+								<span class="chat-time">6월 27일</span> <img
+									src="https://placehold.co/40x40/f3f3f3/000000?text=P"
+									alt="product thumbnail" class="product-thumb">
+							</div></li>
+
+						<!-- 다른 채팅방 더미 데이터 -->
+						<li class="chat-room"><img
+							src="https://placehold.co/40x40/e6e6e6/666666?text=U2"
+							alt="avatar" class="avatar">
+							<div class="chat-content">
+								<p class="chat-name">646558</p>
+								<div class="chat-preview-wrap">
+									<p class="chat-preview">생각해보셨다면 살포시 무시해드립니다.!! 감사합니다</p>
+								</div>
+							</div>
+							<div class="chat-meta">
+								<span class="chat-time">6월 15일</span> <img
+									src="https://placehold.co/40x40/f3f3f3/000000?text=P"
+									alt="product thumbnail" class="product-thumb">
+							</div></li>
+
+						<!-- 시스템 알림 (번개장터 고객센터 스타일) -->
+						<li class="chat-room system-message"><i
+							class="fas fa-bolt avatar system-icon"></i>
+							<div class="chat-content">
+								<p class="chat-name system-name">번개장터_고객센터</p>
+								<div class="chat-preview-wrap">
+									<p class="chat-preview">안전한 거래 문화 조성에 함께 해 주세요.</p>
+								</div>
+							</div>
+							<div class="chat-meta">
+								<span class="chat-time">6월 12일</span>
+							</div></li>
+
+						<!-- 반복문으로 채팅방 리스트 출력 예정 -->
+					</ul>
+				</section>
+
+				<!-- 우측: 채팅 상세 -->
+				<!-- 💡 '채팅방을 선택해주세요' 메시지 대신 기본 채팅창을 항상 표시 -->
+				<section class="chat-window">
+
+					<div class="chat-header">
+						<div class="product-summary">
+							<!-- 상품 이미지 -->
+							<img src="https://placehold.co/50x50" alt="상품 이미지"
+								class="product-img">
+
+							<!-- 상품 정보 -->
+							<div class="product-info">
+								<p class="chat-username">헬치소0828</p>
+								<p class="product-name">LG전자 그램17(12세대) 17ZD90Q-GX56K · RAM
+									16GB</p>
+								<p class="product-price">800,000원</p>
+							</div>
+						</div>
+
+						<!-- 우측 메뉴 버튼 -->
+						<button class="chat-menu">
+							<i class="fas fa-bars"></i>
+						</button>
+					</div>
+
+
+					<div class="chat-messages">
+						<!-- 시스템 날짜/시간 메시지 -->
+						<div class="date-divider">오늘</div>
+
+						<!-- 받은 메시지 예시 (상대방) -->
+						<div class="message received">
+							<p>안녕하세요~ 구매하시나요?</p>
+							<span class="time">오후 02:34</span>
+						</div>
+
+						<!-- 보낸 메시지 예시 (나) -->
+						<div class="message sent">
+							<p>안녕하세요~</p>
+							<span class="time">오후 02:30</span>
+						</div>
+
+						<!-- 반복문으로 채팅 메시지 출력 예정 -->
+					</div>
+
+					<div class="chat-input-area">
+						<!-- 플러스 버튼 (파일 첨부 등) -->
+						<button class="plus-btn">
+							<i class="fas fa-plus-circle"></i>
+						</button>
+						<!-- 입력창 -->
+						<input type="text" placeholder="메시지를 입력하세요." class="chat-input">
+						<!-- 전송 버튼 -->
+						<button class="send-btn">
+							<i class="fas fa-paper-plane"></i>
+						</button>
+					</div>
+				</section>
+			</div>
+		</main>
+	</div>
+
+	<script th:src="@{/js/user/header.js}"></script>
+</body>
+</html>

@@ -26,11 +26,11 @@ public class ProductController {
 
     @GetMapping("/list")
     public String ProductList(
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String location,
-            @RequestParam(required = false) Integer minPrice,
-            @RequestParam(required = false) Integer maxPrice,
-            @RequestParam(required = false) Boolean availableOnly,
+            @RequestParam(value="category", required = false) String category,
+            @RequestParam(value="location", required = false) String location,
+            @RequestParam(value="minPrice", required = false) Integer minPrice,
+            @RequestParam(value="maxPrice", required = false) Integer maxPrice,
+            @RequestParam(value="availableOnly", required = false) Boolean availableOnly,
             Model model
     ) {
         Map<String, Object> filters = new HashMap<>();
@@ -47,7 +47,7 @@ public class ProductController {
         model.addAttribute("categories", categories);
         model.addAttribute("filters", filters);
 
-        return "product/list";
+        return "/list";
     }
 
     @GetMapping("/detail/{productNo}")
@@ -60,9 +60,9 @@ public class ProductController {
 
         model.addAttribute("product", product);
         if (Objects.equals(product.getProductType(), "AUCTION")) {
-            return "product/auctionDetail"; // 경매 상품일 경우
+            return "/auctionDetail"; // 경매 상품일 경우
         } else {
-            return "product/normalDetail";  // 일반 상품일 경우
+            return "/normalDetail";  // 일반 상품일 경우
         }
     }
 

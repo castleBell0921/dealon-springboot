@@ -17,6 +17,7 @@
             <main class="product-main-content">
                 <div class="breadcrumb text-13px" th:text="'홈 > ' + ${product.categoryName}"></div>
                 <div class="product-info-container">
+                	<input type="hidden" th:value="${product.productNo}" name="productNo">
                     <section class="product-image-section">
                         <div class="image-slider-container">
                             <div class="slider-images">
@@ -54,7 +55,7 @@
                         <div class="product-meta-info" th:text="${product.createDate} + '·조회 ' + ${product.views}"></div>
                         <div class="product-price text-28px" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + ' 원'"></div>
                         <div class="product-description text-15px" th:text="${product.detail}"></div>
-                        <button class="chat-button text-16px">판매자에게 채팅하기</button>
+                        <button class="chat-button text-16px sellerChatBtn">판매자에게 채팅하기</button>
                     </section>
                 </div>
 
@@ -70,5 +71,6 @@
     </div>
 </div>
 <script th:src="@{/js/product/productDetail.js}"></script>
+<script th:src="@{/js/chat/chat.js}"></script>
 </body>
 </html>

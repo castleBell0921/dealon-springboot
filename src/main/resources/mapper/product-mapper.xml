@@ -30,6 +30,7 @@
     <select id="findProducts" parameterType="map" resultMap="productResultMap">
         SELECT
         P.NO AS PRODUCT_NO,
+        P.USER_NO,
         P.NAME,
         P.SALES_LOCATION AS LOCATION,
         TO_CHAR(P.CREATE_DATE, 'YYYY-MM-DD') AS CREATE_DATE,

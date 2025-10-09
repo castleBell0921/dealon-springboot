@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dealOn.chat.model.mapper.ChatMapper">
+	<select id="findSellerId">
+		SELECT USER_NO
+		FROM PRODUCT 
+		WHERE NO = #{productNo}  
+	</select>
+	<select id="findChatRoom">
+		SELECT *
+		FROM CHAT_ROOM
+		WHERE BUYER_NO = #{buyerNo} and
+			  SELLER_NO = #{sellerNo}
+	</select>
+	<insert id="createChatRoom">
+		INSERT INTO CHAT_ROOM 
+		(BUYER_NO, SELLER_NO, PRODUCT_NO, CREATE_DATE)
+    	VALUES (#{buyerNo}, #{sellerNo}, #{productNo}, SYSDATE)
+	</insert>
+	<select id="findByChatNo">
+		SELECT *
+		FROM CHAT_ROOM
+		WHERE CHAT_NO=#{chatNo}
+	</select>
+	<select id="findChatRoomsByUser">
+    SELECT CR.CHAT_NO,
+           CR.BUYER_NO,
+           CR.SELLER_NO,
+           CR.PRODUCT_NO,
+           CR.CREATE_DATE,
+           P.NAME AS PRODUCT_NAME,
+           NP.PRICE AS PRODUCT_PRICE,
+           U.NICKNAME,
+           I.IMAGE_URL
+    FROM CHAT_ROOM CR
+    JOIN PRODUCT P ON CR.PRODUCT_NO = P.NO
+    JOIN USERS U ON P.USER_NO = U.USER_NO
+    JOIN NORMAL NP ON P.NO = NP.NO2
+	JOIN IMAGES I ON ENTITY_ID = P.NO
+    WHERE CR.BUYER_NO = #{userNo} OR
+       	  CR.SELLER_NO = #{userNo}
+    ORDER BY CR.CREATE_DATE DESC
+</select>
+	
+</mapper>

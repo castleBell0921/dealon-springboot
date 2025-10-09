@@ -26,46 +26,22 @@
 
 
 				<ul class="chat-list">
-
-					<li class="chat-item">
+					<li th:each="chat : ${chatList}" class="chat-item">
 						<div class="avatar">👤</div>
 						<div class="chat-content">
-							<div class="user-name">웰치스0828</div>
+							<div class="user-name" th:text=${chat.nickname}></div>
 							<div class="message-preview">웰치스0828 님이 광역시오픈마켓 새제품에 대...</div>
 						</div>
 						<div class="chat-meta">
 							<div class="timestamp">6월 27일</div>
-							<img src="https://via.placeholder.com/48" alt="thumbnail" class="thumbnail">
-						</div>
-					</li>
-
-					<li class="chat-item">
-						<div class="avatar">👤</div>
-						<div class="chat-content">
-							<div class="user-name">646558</div>
-							<div class="message-preview">생각있으시면 실물사진 부탁드립니다.!! 감사합니다.</div>
-						</div>
-						<div class="chat-meta">
-							<div class="timestamp">6월 15일</div>
-							<img src="https://via.placeholder.com/48" alt="thumbnail" class="thumbnail">
-						</div>
-					</li>
-
-					<li class="chat-item">
-						<div class="avatar"><span class="dealon-icon"></span></div>
-						<div class="chat-content">
-							<div class="user-name">딜온</div>
-							<div class="message-preview">안전한 거래 문화 조성에 함께해 주세요.</div>
-						</div>
-						<div class="chat-meta">
-							<div class="timestamp">6월 12일</div>
+							<img th:src="${chat.imageUrl}" class="thumbnail">
 						</div>
 					</li>
 				</ul>
 			</section>
 
-			<section class="panel chat-view-panel">
-				<div class="chat-header text-20px">
+			<section class="panel chat-view-panel" th:if="${currentChat != null}">
+				<div class="chat-header text-20px" >
 					<!-- <button class="icon-button">←</button> -->
 					<span>웰치스0828</span>
 					<button class="icon-button">☰</button>
@@ -96,6 +72,11 @@
 					<button class="icon-button">+</button>
 					<input type="text" class="message-input" placeholder="메시지를 입력하세요.">
 					<button class="send-button">➤</button>
+				</div>
+			</section>
+			<section class="panel chat-view-panel" th:if="${currentChat == null}">
+				<div class="message-area">
+					<p>채팅방을 선택해주세요.</p>
 				</div>
 			</section>
 		</div>

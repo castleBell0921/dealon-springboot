@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>WebSocket 채팅 테스트</title>
+</head>
+<body>
+  <h2>채팅 테스트</h2>
+  <input id="chatNo" value="1">
+  <input id="senderNo" value="101">
+  <input id="msg" placeholder="메시지를 입력하세요">
+  <button onclick="sendMsg()">전송</button>
+
+  <pre id="log"></pre>
+
+  <script>
+    const socket = new WebSocket("ws://localhost:9090/ws/chat");
+
+    socket.onopen = () => log("✅ WebSocket 연결됨");
+    socket.onmessage = (e) => log("📩 " + e.data);
+    socket.onclose = () => log("❌ 연결 종료");
+
+    function sendMsg() {
+      const msg = {
+        chatNo: document.getElementById("chatNo").value,
+        senderNo: document.getElementById("senderNo").value,
+        message: document.getElementById("msg").value
+      };
+      socket.send(JSON.stringify(msg));
+    }
+
+    function log(text) {
+      document.getElementById("log").textContent += text + "\n";
+    }
+  </script>
+</body>
+</html>

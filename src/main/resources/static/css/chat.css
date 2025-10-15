@@ -197,15 +197,25 @@
     margin-top: 4px;
 }
 
+/* MESSAGE AREA: 메시지 영역 컨테이너 */
 .message-area {
     flex-grow: 1;
     padding: 24px;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
     background-color: #F0F0F0;
+    /* column 대신 block으로 변경하고 ul에 flex를 적용합니다. */
 }
 
+/* MESSAGE LIST: UL 태그에 적용할 스타일 */
+.message-list {
+    display: flex; /* 메시지들을 수직으로 배치 */
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    list-style: none; /* li의 기본 스타일 제거 */
+}
+
+/* DATE SEPARATOR: LI 태그에 적용 */
 .date-separator {
     text-align: center;
     margin: 16px 0;
@@ -213,13 +223,17 @@
     color: #888;
 }
 
-.message-container {
+/* 개별 메시지 LI 태그에 공통으로 적용 */
+.received, .message {
     display: flex;
-    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 12px;
+    padding: 0; /* li의 기본 패딩 제거 */
 }
 
+/* 보낸 메시지: LI 태그 */
 .message {
-    align-self: flex-end;
+    align-self: flex-end; /* 오른쪽 정렬 */
     margin-bottom: 20px;
 }
 
@@ -234,11 +248,8 @@
     max-width: 70%;
 }
 
-.received, .message {
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 12px;
-}
+/* 받은 메시지: LI 태그 */
+/* .received 스타일은 위에 .received, .message 공통 스타일에 포함됨 */
 
 .received .message-bubble {
     background-color: white;
@@ -261,6 +272,15 @@
     padding: 16px 24px;
     border-top: 1px solid #eeeeee;
 }
+
+.input-area .icon-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #555;
+}
+
 
 .input-area .message-input {
     flex-grow: 1;

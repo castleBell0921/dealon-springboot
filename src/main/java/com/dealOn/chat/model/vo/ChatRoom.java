@@ -14,8 +14,8 @@ public class ChatRoom {
     private String sellerNo;
     private String productNo;
     private Date createDate; 
-    private String productName;
-    private String productPrice;
+    private String name;
+    private String price;
     private String nickname;
     private String imageUrl;
 }

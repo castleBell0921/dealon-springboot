@@ -10,6 +10,8 @@
 <link rel="stylesheet" th:href="@{/css/common.css}">
 <link rel="stylesheet" th:href="@{/css/chat.css}">
 <link rel="stylesheet" th:href="@{/css/font.css}">
+
+
 </head>
 <body>
 	<div class="app-container">
@@ -22,14 +24,15 @@
 				<div class="panel-header text-36px">
 					<a>전체 대화</a>
 				</div>
-				<hr style="height: 2px; background-color: #B57EDC; border: none; width: 450px;">
+				<hr
+					style="height: 2px; background-color: #B57EDC; border: none; width: 450px;">
 
 
 				<ul class="chat-list">
-					<li th:each="chat : ${chatList}" class="chat-item">
+					<li th:each="chat : ${chatList}" class="chat-item" th:data-chat-no="${chat.chatNo}">
 						<div class="avatar">👤</div>
 						<div class="chat-content">
-							<div class="user-name" th:text=${chat.nickname}></div>
+							<div class="user-name" th:text="${chat.nickname}"></div>
 							<div class="message-preview">웰치스0828 님이 광역시오픈마켓 새제품에 대...</div>
 						</div>
 						<div class="chat-meta">
@@ -41,31 +44,50 @@
 			</section>
 
 			<section class="panel chat-view-panel" th:if="${currentChat != null}">
-				<div class="chat-header text-20px" >
+				<div class="chat-header text-20px">
 					<!-- <button class="icon-button">←</button> -->
-					<span>웰치스0828</span>
+					<!-- <span th:text="${currentChat != null ? currentChat.nickname : (chatInfo != null ? chatInfo.nickname : '이름 없음')}"></span> -->
+					<span th:text="${chatInfo.nickname}"></span>
+
 					<button class="icon-button">☰</button>
 				</div>
 
 				<div class="product-bar">
-					<img src="https://via.placeholder.com/50" alt="product" class="product-image">
+					<img th:src="${chatInfo.imageUrl}" class="product-image">
 					<div class="product-info">
-						<div class="product-name">LG전자 그램17(12세대) 17ZD90Q-GX56K - RAM 16GB</div>
-						<div class="product-price">800,000원</div>
+						<div class="product-name" th:text="${chatInfo.name}"></div>
+						<div class="product-price" th:text="${chatInfo.price}"></div>
 					</div>
 				</div>
 
+				<!-- 채팅 메시지 영역 시작 -->
 				<div class="message-area">
-					<div class="date-separator">오후 02:38</div>
-					<div class="message">
-						<div class="timestamp">오후 03:34</div>
-						<div class="message-bubble">안녕하세요~</div>
-					</div>
+					<!-- 메시지 리스트를 담는 UL 태그로 변경 -->
+					<ul class="message-list" th:each="msg : ${message}">
+						<!-- 날짜 구분선 및 모든 메시지 블록을 LI 태그로 변경 -->
+					<div th:if="${#temporals.format(msg.timestamp,'yyyy-MM-dd') != prevDate}"
+				         th:text="${#temporals.format(msg.timestamp,'yyyy년 MM월 dd일')}"
+				         th:with="prevDate=${#temporals.format(msg.timestamp,'yyyy-MM-dd')}">
+				    </div>
 
-					<div class="received">
-						<div class="message-bubble">안녕하세요 - 구매하시나요?</div>
-						<div class="timestamp">오후 03:34</div>
-					</div>
+						<!-- 보낸 메시지 (li) -->
+						<!-- <li th:class="${loginUser.userNo == msg.senderNo} ? 'message' : 'received'">
+				        	<div class="timestamp" th:text="${#temporals.format(msg.timestamp,'HH:mm')}"></div>
+							<div class="message-bubble" th:text="${msg.message}"></div>
+						</li> -->
+						  <li th:if="${loginUser.userNo == msg.senderNo}" class="message">
+					        <div class="timestamp" th:text="${#temporals.format(msg.timestamp,'HH:mm')}"></div>
+					        <div class="message-bubble" th:text="${msg.message}"></div>
+					    </li>
+					
+					    <!-- 상대방이 보낸 메시지(received)일 경우: 말풍선 -> 시간 순서 -->
+					    <li th:unless="${loginUser.userNo == msg.senderNo}" class="received">
+					        <div class="message-bubble" th:text="${msg.message}"></div>
+					        <div class="timestamp" th:text="${#temporals.format(msg.timestamp,'HH:mm')}"></div>
+					    </li>
+
+					</ul>
+					
 				</div>
 
 				<div class="input-area">
@@ -74,6 +96,7 @@
 					<button class="send-button">➤</button>
 				</div>
 			</section>
+
 			<section class="panel chat-view-panel" th:if="${currentChat == null}">
 				<div class="message-area">
 					<p>채팅방을 선택해주세요.</p>
@@ -83,5 +106,6 @@
 	</div>
 
 	<script th:src="@{/js/user/header.js}"></script>
+	<script th:src="@{/js/chat/chat.js}"></script>
 </body>
 </html>

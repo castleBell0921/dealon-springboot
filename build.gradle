@@ -60,6 +60,11 @@ dependencies {
 	runtimeOnly 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
 	
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	
 	
 }
 

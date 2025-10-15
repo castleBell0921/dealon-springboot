@@ -3,19 +3,41 @@
 <mapper namespace="com.dealOn.chat.model.mapper.ChatMapper">
 	<select id="findSellerId">
 		SELECT USER_NO
-		FROM PRODUCT 
-		WHERE NO = #{productNo}  
+		FROM PRODUCT
+		WHERE NO = #{productNo}
 	</select>
 	<select id="findChatRoom">
-		SELECT *
-		FROM CHAT_ROOM
-		WHERE BUYER_NO = #{buyerNo} and
-			  SELLER_NO = #{sellerNo}
+	SELECT CR.CHAT_NO,
+		   CR.BUYER_NO,
+		   CR.SELLER_NO,
+		   CR.PRODUCT_NO,
+		   CR.CREATE_DATE,
+		   NP.PRICE,
+           P.NAME,
+           I.IMAGE_URL,
+	CASE WHEN
+		   CR.BUYER_NO = #{userNo} THEN US.NICKNAME
+	ELSE
+		   UB.NICKNAME
+	END AS NICKNAME
+	FROM CHAT_ROOM CR
+	JOIN USERS UB ON CR.BUYER_NO = UB.USER_NO
+	JOIN USERS US ON CR.SELLER_NO = US.USER_NO
+	JOIN PRODUCT P ON CR.PRODUCT_NO = P.NO
+	JOIN NORMAL NP ON NP.NO2 = P.NO
+	JOIN IMAGES I ON ENTITY_ID = P.NO
+	WHERE
+		   (BUYER_NO = #{buyerNo} or
+		   SELLER_NO = #{sellerNo}) 
+	<if test="chatNo != null">
+		   and chat_no = #{chatNo}
+	</if>
+
 	</select>
 	<insert id="createChatRoom">
-		INSERT INTO CHAT_ROOM 
+		INSERT INTO CHAT_ROOM
 		(BUYER_NO, SELLER_NO, PRODUCT_NO, CREATE_DATE)
-    	VALUES (#{buyerNo}, #{sellerNo}, #{productNo}, SYSDATE)
+		VALUES (#{buyerNo}, #{sellerNo}, #{productNo}, SYSDATE)
 	</insert>
 	<select id="findByChatNo">
 		SELECT *
@@ -23,23 +45,52 @@
 		WHERE CHAT_NO=#{chatNo}
 	</select>
 	<select id="findChatRoomsByUser">
-    SELECT CR.CHAT_NO,
-           CR.BUYER_NO,
-           CR.SELLER_NO,
-           CR.PRODUCT_NO,
-           CR.CREATE_DATE,
-           P.NAME AS PRODUCT_NAME,
-           NP.PRICE AS PRODUCT_PRICE,
-           U.NICKNAME,
-           I.IMAGE_URL
-    FROM CHAT_ROOM CR
-    JOIN PRODUCT P ON CR.PRODUCT_NO = P.NO
-    JOIN USERS U ON P.USER_NO = U.USER_NO
-    JOIN NORMAL NP ON P.NO = NP.NO2
-	JOIN IMAGES I ON ENTITY_ID = P.NO
-    WHERE CR.BUYER_NO = #{userNo} OR
-       	  CR.SELLER_NO = #{userNo}
-    ORDER BY CR.CREATE_DATE DESC
-</select>
-	
+		SELECT CR.CHAT_NO,
+		CR.BUYER_NO,
+		CR.SELLER_NO,
+		CR.PRODUCT_NO,
+		CR.CREATE_DATE,
+		P.NAME AS PRODUCT_NAME,
+		NP.PRICE AS PRODUCT_PRICE,
+		CASE WHEN 
+			CR.BUYER_NO = #{userNo} THEN US.NICKNAME
+		ELSE 
+			UB.NICKNAME
+		END AS NICKNAME,
+		I.IMAGE_URL
+		FROM CHAT_ROOM CR
+
+		JOIN PRODUCT P ON CR.PRODUCT_NO = P.NO
+		JOIN USERS UB ON CR.BUYER_NO = UB.USER_NO
+		JOIN USERS US ON CR.SELLER_NO = US.USER_NO
+		LEFT JOIN NORMAL NP ON P.NO = NP.NO2
+		LEFT JOIN IMAGES I ON I.ENTITY_ID = P.NO
+
+		WHERE CR.BUYER_NO = #{userNo} or
+			   CR.SELLER_NO = #{userNo}
+		ORDER BY CR.CREATE_DATE DESC
+	</select>
+	<select id="findByChatInfo">
+		SELECT CR.CHAT_NO,
+		   CR.BUYER_NO,
+		   CR.SELLER_NO,
+		   CR.PRODUCT_NO,
+		   CR.CREATE_DATE,
+		   NP.PRICE,
+           P.NAME,
+           I.IMAGE_URL,
+	CASE WHEN
+		   CR.BUYER_NO = #{userNo} THEN US.NICKNAME
+	ELSE
+		   UB.NICKNAME
+	END AS NICKNAME
+	FROM CHAT_ROOM CR
+	JOIN USERS UB ON CR.BUYER_NO = UB.USER_NO
+	JOIN USERS US ON CR.SELLER_NO = US.USER_NO
+	LEFT JOIN PRODUCT P ON CR.PRODUCT_NO = P.NO
+	LEFT JOIN NORMAL NP ON NP.NO2 = P.NO
+	LEFT JOIN IMAGES I ON ENTITY_ID = P.NO
+	WHERE
+		chat_no = #{chatNo}
+	</select>
 </mapper>

@@ -18,4 +18,6 @@ public interface ChatMapper {
 	ChatRoom findByChatNo(String ChatNo);
 
 	List<ChatRoom> findChatRoomsByUser(String userNo);
+
+	ChatRoom findByChatInfo(HashMap<String, Object> data);
 }

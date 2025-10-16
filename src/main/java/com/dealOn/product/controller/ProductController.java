@@ -2,14 +2,15 @@ package com.dealOn.product.controller;
 
 import com.dealOn.common.model.vo.CategoryVO;
 import com.dealOn.product.model.service.ProductService;
+import com.dealOn.product.model.vo.AddProductVO;
 import com.dealOn.product.model.vo.ProductVO;
+import com.dealOn.user.model.vo.User;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,9 +68,27 @@ public class ProductController {
     }
 
     @GetMapping("/form")
-    public String productForm()
+    public String productForm(Model model)
     {
+        List<CategoryVO> categories = productService.findAllCategories();
+        model.addAttribute("categories", categories);
         return "/ProductForm";
+    }
+
+    @PostMapping("/addNormal")
+    public String addNormalProduct(@ModelAttribute AddProductVO product, RedirectAttributes redirectAttributes, HttpSession session) {
+        try {
+            User loginUser = (User) session.getAttribute("loginUser");
+            product.setUserNo(Integer.parseInt(loginUser.getUserNo()));
+
+            productService.addNormalProduct(product);
+            redirectAttributes.addFlashAttribute("message", "상품이 성공적으로 등록되었습니다.");
+            return "redirect:/product/list"; // 성공 시 리스트
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "상품 등록에 실패했습니다: " + e.getMessage());
+            return "redirect:/product/form"; // 실패 시 다시 폼으로
+        }
     }
 
 }

@@ -1,25 +1,33 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // --- 이미지 업로드 관련 로직 ---
+    // --- 이미지 업로드 순서 보장 로직 ---
     const imageUpload = document.getElementById('product-photo-upload');
     const imagePreviewContainer = document.getElementById('image-preview-container');
     const imageCounter = document.getElementById('image-counter');
-    let imageFiles = new DataTransfer(); // 서버에 전송할 파일 목록을 관리
+
+    // FileList를 관리하기 위한 DataTransfer 객체 생성 (순서 보장 핵심)
+    let imageFiles = new DataTransfer();
 
     imageUpload.addEventListener('change', (e) => {
         const files = Array.from(e.target.files);
 
         if (imageFiles.items.length + files.length > 10) {
             alert('이미지는 최대 10개까지 업로드할 수 있습니다.');
+            e.target.value = ""; // 현재 선택된 파일 초기화
             return;
         }
 
+        // 새로 선택된 파일들을 DataTransfer 객체에 순서대로 추가
         files.forEach(file => imageFiles.items.add(file));
-        imageUpload.files = imageFiles.files; // input의 file list 업데이트
+
+        // input의 파일 목록을 업데이트된 DataTransfer의 파일 목록으로 교체
+        imageUpload.files = imageFiles.files;
+
         updateImagePreview();
     });
 
     function updateImagePreview() {
-        imagePreviewContainer.innerHTML = ''; // 미리보기 컨테이너 초기화
+        imagePreviewContainer.innerHTML = '';
+
         Array.from(imageFiles.files).forEach((file, index) => {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -28,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const img = document.createElement('img');
                 img.src = e.target.result;
-                img.alt = 'preview';
                 img.style = 'width: 100%; height: 100%; object-fit: cover; border-radius: 8px;';
 
                 const removeButton = document.createElement('button');
@@ -39,12 +46,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 removeButton.onclick = () => {
                     const newFiles = new DataTransfer();
                     const currentFiles = Array.from(imageFiles.files);
-                    currentFiles.splice(index, 1); // 해당 인덱스의 파일 제거
+                    currentFiles.splice(index, 1);
                     currentFiles.forEach(f => newFiles.items.add(f));
 
                     imageFiles = newFiles;
-                    imageUpload.files = imageFiles.files; // input의 file list 업데이트
-                    updateImagePreview(); // 미리보기 다시 렌더링
+                    imageUpload.files = imageFiles.files;
+                    updateImagePreview();
                 };
 
                 previewWrapper.appendChild(img);
@@ -53,10 +60,10 @@ document.addEventListener('DOMContentLoaded', function () {
             };
             reader.readAsDataURL(file);
         });
-        imageCounter.innerText = `${imageFiles.items.length}/10`;
+        imageCounter.innerText = `${imageFiles.files.length}/10`;
     }
 
-    // --- 모달 관련 로직 ---
+    // --- 모달 로직 (카테고리 번호 저장) ---
     function setupModal(triggerId, modalId, hiddenInputId, displayElementId) {
         const trigger = document.getElementById(triggerId);
         const modal = document.getElementById(modalId);
@@ -65,45 +72,46 @@ document.addEventListener('DOMContentLoaded', function () {
         const displayElement = document.getElementById(displayElementId);
         const listItems = modal.querySelectorAll('.modal-list li');
 
-        // 모달 열기
-        trigger.addEventListener('click', () => {
-            modal.style.display = 'flex';
-        });
-
-        // 모달 닫기 (X 버튼)
-        closeBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        // 모달 닫기 (오버레이 클릭)
+        trigger.addEventListener('click', () => { modal.style.display = 'flex'; });
+        closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
         modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
+            if (e.target === modal) { modal.style.display = 'none'; }
         });
 
-        // 항목 선택
         listItems.forEach(item => {
             item.addEventListener('click', () => {
-                const selectedValue = item.textContent;
-                hiddenInput.value = selectedValue; // 숨겨진 input에 값 설정
-                displayElement.textContent = selectedValue; // 화면에 선택된 값 표시
-                displayElement.style.color = '#333'; // 텍스트 색상 변경
-                modal.style.display = 'none'; // 모달 닫기
+                const selectedText = item.textContent;
+                const selectedValue = item.dataset.value || selectedText;
+
+                hiddenInput.value = selectedValue;
+                displayElement.textContent = selectedText;
+                displayElement.style.color = '#333';
+                modal.style.display = 'none';
             });
         });
     }
 
-    // 카테고리 모달 설정
+    // 카테고리 모달은 그대로 사용
     setupModal('category-select', 'category-modal', 'category-hidden-input', 'category-select');
 
-    // 거래 희망 장소 모달 설정
-    setupModal('location-select', 'location-modal', 'location-hidden-input', 'location-select');
+    // 기존 location-modal 관련 setupModal 호출 부분을 아래 코드로 대체 -- 다음 우편번호 검색
+    document.getElementById('location-select').addEventListener('click', function() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                let addr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
+                document.getElementById('location-hidden-input').value = addr;
+                document.getElementById('location-select').textContent = addr;
+                document.getElementById('location-select').style.color = '#333';
+            }
+        }).open();
+    });
 
-
-    // --- 폼 제출 로직 ---
+    // --- 폼 제출 유효성 검사 ---
     document.getElementById('product-form').addEventListener('submit', function (e) {
-        // 클라이언트 측 유효성 검사 등 필요한 로직 추가 가능
-        console.log('상품 등록 폼 제출');
+        if (imageFiles.files.length === 0) {
+            alert('이미지를 하나 이상 등록해주세요.');
+            e.preventDefault();
+        }
     });
 });

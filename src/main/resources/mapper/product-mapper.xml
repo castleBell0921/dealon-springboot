@@ -108,4 +108,19 @@
                  JOIN PRODUCT P ON C.NO = P.CATEGORY
         ORDER BY C.NAME ASC
     </select>
+
+    <insert id="insertProduct" parameterType="com.dealOn.product.model.vo.AddProductVO">
+        INSERT INTO PRODUCT (USER_NO, NAME, DETAIL, CATEGORY, SALES_LOCATION)
+        VALUES (#{userNo}, #{name}, #{detail}, #{category}, #{salesLocation})
+    </insert>
+
+    <insert id="insertNormalProduct" parameterType="com.dealOn.product.model.vo.AddProductVO">
+        INSERT INTO NORMAL (PRICE, STATE, VIEWS, NO2)
+        VALUES (#{price}, 'N', 0, #{productNo})
+    </insert>
+
+    <insert id="insertImage">
+        INSERT INTO IMAGES (ENTITY_TYPE, ENTITY_ID, IMAGE_URL, DISPLAY_ORDER)
+        VALUES (#{entityType}, #{entityId}, #{imageUrl}, #{displayOrder})
+    </insert>
 </mapper>

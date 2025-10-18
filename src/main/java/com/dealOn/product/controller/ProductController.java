@@ -76,18 +76,28 @@ public class ProductController {
     }
 
     @PostMapping("/addNormal")
-    public String addNormalProduct(@ModelAttribute AddProductVO product, RedirectAttributes redirectAttributes, HttpSession session) {
+    public String addNormalProduct(@ModelAttribute AddProductVO product,
+                                   HttpSession session, // HttpSession 직접 주입받음
+                                   RedirectAttributes redirectAttributes) {
+
+        User loginUser = (User) session.getAttribute("loginUser");
+
+        // 로그인 상태 확인
+        if (loginUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "로그인이 필요한 서비스입니다.");
+            return "redirect:/";
+        }
+
         try {
-            User loginUser = (User) session.getAttribute("loginUser");
             product.setUserNo(Integer.parseInt(loginUser.getUserNo()));
 
             productService.addNormalProduct(product);
             redirectAttributes.addFlashAttribute("message", "상품이 성공적으로 등록되었습니다.");
-            return "redirect:/product/list"; // 성공 시 리스트
+            return "redirect:/";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "상품 등록에 실패했습니다: " + e.getMessage());
-            return "redirect:/product/form"; // 실패 시 다시 폼으로
+            return "redirect:/product/add";
         }
     }
 

@@ -109,14 +109,15 @@
         ORDER BY C.NAME ASC
     </select>
 
-    <insert id="insertProduct" parameterType="com.dealOn.product.model.vo.AddProductVO">
+    <insert id="insertProduct" parameterType="com.dealOn.product.model.vo.AddProductVO"
+            useGeneratedKeys="true" keyProperty="productNo" keyColumn="NO">
         INSERT INTO PRODUCT (USER_NO, NAME, DETAIL, CATEGORY, SALES_LOCATION)
         VALUES (#{userNo}, #{name}, #{detail}, #{category}, #{salesLocation})
     </insert>
 
     <insert id="insertNormalProduct" parameterType="com.dealOn.product.model.vo.AddProductVO">
         INSERT INTO NORMAL (PRICE, STATE, VIEWS, NO2)
-        VALUES (#{price}, 'N', 0, #{productNo})
+        VALUES (#{price}, 'A', 0, #{productNo})
     </insert>
 
     <insert id="insertImage">

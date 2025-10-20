@@ -39,7 +39,18 @@ public class ChatController {
 		}
 
 		List<ChatRoom> chatList = chatService.findChatRoomsByUser(loginUser.getUserNo());
+		List<String> chatNos = chatList.stream().map(ChatRoom::getChatNo).toList();
+		List<ChatMessage> lastMessage = chatService.getLastMessages(chatNos);
+
+		// 채팅방별 마지막 메시지 Map 생성
+	    Map<String, ChatMessage> lastChat = new HashMap<>();
+	    for (ChatMessage msg : lastMessage) {
+	        lastChat.put(msg.getChatNo(), msg);
+	    }
+		
+		
 		model.addAttribute("chatList", chatList);
+		model.addAttribute("lastChat", lastChat);
 
 		return "/chat";
 	}
@@ -112,6 +123,7 @@ public class ChatController {
 		}
 
 		List<ChatRoom> chatList = chatService.findChatRoomsByUser(loginUser.getUserNo());
+		List<String> chatNos = chatList.stream().map(ChatRoom::getChatNo).toList();
 		ChatRoom currentChat = chatService.findByChatNo(chatNo);
 
 		if (currentChat == null) {
@@ -119,14 +131,20 @@ public class ChatController {
 		} else {
 			// System.out.println(chatService.getMessages(chatNo));
 			List<ChatMessage> message = chatService.getMessages(chatNo);
-
+			List<ChatMessage> lastMessage = chatService.getLastMessages(chatNos);
+			ChatRoom chatInfo = (ChatRoom) session.getAttribute("chatInfo");
+			Map<String, ChatMessage> lastChat = new HashMap<>();
+		    for (ChatMessage msg : lastMessage) {
+		        lastChat.put(msg.getChatNo(), msg);
+		    }
+		    
 			model.addAttribute("currentChat", currentChat);
 			model.addAttribute("chatList", chatList);
 			model.addAttribute("message", message);
 			model.addAttribute("loginUser", loginUser);
-			
-			ChatRoom chatInfo = (ChatRoom) session.getAttribute("chatInfo");
 	        model.addAttribute("chatInfo", chatInfo);
+	        model.addAttribute("lastChat", lastChat);
+	        System.out.println("lastChat: " + lastChat);
 	        System.out.println("url in chatInfo" + chatInfo);
 			return "/chat"; // templates/chat/chat.html
 		}
@@ -141,7 +159,6 @@ public class ChatController {
 	    ChatRoom chatRoom = chatService.findByChatNo(chatNo);
 	    ChatRoom chatInfo = chatService.findByChatInfo(chatNo, loginUser.getUserNo());
 	    List<ChatMessage> messages = chatService.getMessages(chatNo);
-
 	    result.put("chatInfo", chatInfo);
 	    result.put("messages", messages);
 	    result.put("loginUser", loginUser);
@@ -149,6 +166,8 @@ public class ChatController {
 	    System.out.println("chatRoom: " + chatRoom);
 	    System.out.println("chatInfo: " + chatInfo);
 	    System.out.println("messages: " + messages);
+	    
+	    
 	    return result;
 	}
 

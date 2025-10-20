@@ -29,14 +29,15 @@
 
 
 				<ul class="chat-list">
-					<li th:each="chat : ${chatList}" class="chat-item" th:data-chat-no="${chat.chatNo}">
+					<li th:each="chat : ${chatList}" class="chat-item"
+						th:data-chat-no="${chat.chatNo}">
 						<div class="avatar">👤</div>
 						<div class="chat-content">
 							<div class="user-name" th:text="${chat.nickname}"></div>
-							<div class="message-preview">웰치스0828 님이 광역시오픈마켓 새제품에 대...</div>
+							<div class="message-preview" th:text="${lastChat[chat.chatNo] != null} ? ${#strings.substring(lastChat[chat.chatNo].message, 0, 11)} : '대화 내용이 없습니다.'"></div>
 						</div>
 						<div class="chat-meta">
-							<div class="timestamp">6월 27일</div>
+							<div class="timestamp"  th:text="${lastChat[chat.chatNo] != null} ? ${#temporals.format(lastChat[chat.chatNo].timestamp, 'yyyy-MM-dd HH:mm')} : ''"></div>
 							<img th:src="${chat.imageUrl}" class="thumbnail">
 						</div>
 					</li>
@@ -65,29 +66,33 @@
 					<!-- 메시지 리스트를 담는 UL 태그로 변경 -->
 					<ul class="message-list" th:each="msg : ${message}">
 						<!-- 날짜 구분선 및 모든 메시지 블록을 LI 태그로 변경 -->
-					<div th:if="${#temporals.format(msg.timestamp,'yyyy-MM-dd') != prevDate}"
-				         th:text="${#temporals.format(msg.timestamp,'yyyy년 MM월 dd일')}"
-				         th:with="prevDate=${#temporals.format(msg.timestamp,'yyyy-MM-dd')}">
-				    </div>
+						<div
+							th:if="${#temporals.format(msg.timestamp,'yyyy-MM-dd') != prevDate}"
+							th:text="${#temporals.format(msg.timestamp,'yyyy년 MM월 dd일')}"
+							th:with="prevDate=${#temporals.format(msg.timestamp,'yyyy-MM-dd')}">
+						</div>
 
 						<!-- 보낸 메시지 (li) -->
 						<!-- <li th:class="${loginUser.userNo == msg.senderNo} ? 'message' : 'received'">
 				        	<div class="timestamp" th:text="${#temporals.format(msg.timestamp,'HH:mm')}"></div>
 							<div class="message-bubble" th:text="${msg.message}"></div>
 						</li> -->
-						  <li th:if="${loginUser.userNo == msg.senderNo}" class="message">
-					        <div class="timestamp" th:text="${#temporals.format(msg.timestamp,'HH:mm')}"></div>
-					        <div class="message-bubble" th:text="${msg.message}"></div>
-					    </li>
-					
-					    <!-- 상대방이 보낸 메시지(received)일 경우: 말풍선 -> 시간 순서 -->
-					    <li th:unless="${loginUser.userNo == msg.senderNo}" class="received">
-					        <div class="message-bubble" th:text="${msg.message}"></div>
-					        <div class="timestamp" th:text="${#temporals.format(msg.timestamp,'HH:mm')}"></div>
-					    </li>
+						<li th:if="${loginUser.userNo == msg.senderNo}" class="message">
+							<div class="timestamp"
+								th:text="${#temporals.format(msg.timestamp,'HH:mm')}"></div>
+							<div class="message-bubble" th:text="${msg.message}"></div>
+						</li>
+
+						<!-- 상대방이 보낸 메시지(received)일 경우: 말풍선 -> 시간 순서 -->
+						<li th:unless="${loginUser.userNo == msg.senderNo}"
+							class="received">
+							<div class="message-bubble" th:text="${msg.message}"></div>
+							<div class="timestamp"
+								th:text="${#temporals.format(msg.timestamp,'HH:mm')}"></div>
+						</li>
 
 					</ul>
-					
+
 				</div>
 
 				<div class="input-area">

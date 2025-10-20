@@ -4,7 +4,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -78,6 +81,32 @@ public class ChatService {
 		data.put("userNo", userNo);
 		return chatMapper.findByChatInfo(data);
 	}
+	
+	public List<ChatMessage> getLastMessages(List<String> chatNos) {
+	    Aggregation agg = Aggregation.newAggregation(
+	        Aggregation.match(Criteria.where("chatNo").in(chatNos)),
+	        Aggregation.sort(Sort.Direction.DESC, "timestamp"),
+	        Aggregation.group("chatNo").first(Aggregation.ROOT).as("lastMessage")
+	    );
 
-	 
+	    AggregationResults<LastMessageWrapper> results =
+	            mongoTemplate.aggregate(agg, "CHAT", LastMessageWrapper.class);
+
+	    return results.getMappedResults().stream()
+	            .map(LastMessageWrapper::getLastMessage)
+	            .toList();
+	}
+	
+	 // Aggregation 결과 Wrapper
+    public static class LastMessageWrapper {
+        private ChatMessage lastMessage;
+
+        public ChatMessage getLastMessage() {
+            return lastMessage;
+        }
+
+        public void setLastMessage(ChatMessage lastMessage) {
+            this.lastMessage = lastMessage;
+        }
+    }
 }

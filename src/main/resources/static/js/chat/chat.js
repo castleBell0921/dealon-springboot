@@ -56,28 +56,28 @@ if(sellerChatBtn != null) {
 const chatViewContainer = document.querySelector('.chat-view-panel');
 const chatListContainer = document.querySelector('.chat-list'); // .chat-item들을 감싸는 부모
 
+if(chatListContainer !=null) {
+	chatListContainer.addEventListener('click', async (e) => {
+		const item = e.target.closest('.chat-item');
+		if (!item) return;
 
-chatListContainer.addEventListener('click', async (e) => {
-    const item = e.target.closest('.chat-item');
-    if (!item) return;
+		const chatNo = item.dataset.chatNo;
+		console.log(chatNo);
 
-    const chatNo = item.dataset.chatNo;
-	console.log(chatNo);
+		try {
+			const response = await fetch(`/chat/detail/${chatNo}`);
+			if (!response.ok) throw new Error("서버 응답 오류");
 
-    try {
-        const response = await fetch(`/chat/detail/${chatNo}`);
-        if (!response.ok) throw new Error("서버 응답 오류");
+			const data = await response.json();
+			const chatInfo = data.chatInfo;
+			const messages = data.messages;
+			const loginUserNo = data.loginUser.userNo;
 
-        const data = await response.json();
-        const chatInfo = data.chatInfo;
-        const messages = data.messages;
-		const loginUserNo = data.loginUser.userNo;
 
-		
-		
 
-        // chatHTML 생성
-        const chatHTML = `
+
+			// chatHTML 생성
+			const chatHTML = `
             <div class="chat-header text-20px">
                 <span>${chatInfo.nickname || "이름 없음"}</span>
                 <button class="icon-button">☰</button>
@@ -87,33 +87,35 @@ chatListContainer.addEventListener('click', async (e) => {
                 <img src="${chatInfo.imageUrl || ''}" class="product-image">
                 <div class="product-info">
                     <div class="product-name">${chatInfo.name || ''}</div>
-                    <div class="product-price">${chatInfo.price || ''}</div>
+                    <div class="product-price">${chatInfo.price || ''}원</div>
                 </div>
             </div>
 
 			<div class="message-area">
 			    <ul class="message-list">
-			        ${messages.map(msg => {
-			            const time = msg.timestamp.split('T')[1].slice(0,5);
-			            if (msg.senderNo == loginUserNo) {
-			                return `
-			                    <li class="message">
-			                        <div class="timestamp">${time}</div>
-			                        <div class="message-bubble">${msg.message}</div>
-			                    </li>
-			                `;
-			            } else {
-			                return `
-			                    <li class="received">
-			                        <div class="message-bubble">${msg.message}</div>
-			                        <div class="timestamp">${time}</div>
-			                    </li>
-			                `;
-			            }
-			        }).join('')}
+			        ${messages.length > 0
+					? messages.map(msg => {
+						const time = msg.timestamp.split('T')[1].slice(0, 5);
+						if (msg.senderNo == loginUserNo) {
+							return `
+			                        <li class="message">
+			                            <div class="timestamp">${time}</div>
+			                            <div class="message-bubble">${msg.message}</div>
+			                        </li>
+			                    `;
+						} else {
+							return `
+			                        <li class="received">
+			                            <div class="message-bubble">${msg.message}</div>
+			                            <div class="timestamp">${time}</div>
+			                        </li>
+			                    `;
+						}
+					}).join('')
+					: `<li class="no-message"><p>💬 채팅을 시작해주세요!</p></li>`
+				}
 			    </ul>
 			</div>
-
 
             <div class="input-area">
                 <button class="icon-button">+</button>
@@ -122,10 +124,11 @@ chatListContainer.addEventListener('click', async (e) => {
             </div>
         `;
 
-        chatViewContainer.innerHTML = chatHTML;
+			chatViewContainer.innerHTML = chatHTML;
 
-    } catch (error) {
-        console.error("채팅방 로드 중 오류:", error);
-        alert("채팅방 정보를 불러오지 못했습니다.");
-    }
-});
+		} catch (error) {
+			console.error("채팅방 로드 중 오류:", error);
+			alert("채팅방 정보를 불러오지 못했습니다.");
+		}
+	});
+}

@@ -11,7 +11,7 @@ import com.dealOn.chat.model.vo.ChatRoom;
 public interface ChatMapper {
 	String findSellerId(String productNo);
 
-	ChatRoom findChatRoom(HashMap<String, Object> data);
+	List<ChatRoom> findChatRoom(HashMap<String, Object> data);
 
 	int createChatRoom(HashMap<String, Object> data);
 	

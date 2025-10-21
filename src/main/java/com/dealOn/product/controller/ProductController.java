@@ -52,14 +52,17 @@ public class ProductController {
     }
 
     @GetMapping("/detail/{productNo}")
-    public String getProductDetail(@PathVariable("productNo") int productNo, Model model) {
+    public String getProductDetail(@PathVariable("productNo") int productNo, Model model, HttpSession session) {
         ProductVO product = productService.getProductDetail(productNo);
-
+        User loginUser = (User)session.getAttribute("loginUser");
         if (product == null) {
             return "redirect:/product/list";
         }
 
         model.addAttribute("product", product);
+        model.addAttribute("loginUser",loginUser);
+        System.out.println("loginUser: " + loginUser);
+        System.out.println("product: " + product);
         if (Objects.equals(product.getProductType(), "AUCTION")) {
             return "/auctionDetail"; // 경매 상품일 경우
         } else {

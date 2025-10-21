@@ -18,6 +18,8 @@
                 <div class="breadcrumb text-13px" th:text="'홈 > ' + ${product.categoryName}"></div>
                 <div class="product-info-container">
                 	<input type="hidden" th:value="${product.productNo}" name="productNo">
+                	<input type="hidden" th:value="${product.userNo}" id="productUserNo">
+                	<input type="hidden" th:value="${loginUser.userNo}" id="loginUserNo">
                     <section class="product-image-section">
                         <div class="image-slider-container">
                             <div class="slider-images">

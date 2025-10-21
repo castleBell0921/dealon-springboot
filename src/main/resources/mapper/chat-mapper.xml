@@ -7,14 +7,17 @@
 		WHERE NO = #{productNo}
 	</select>
 	<select id="findChatRoom">
-	SELECT CR.CHAT_NO,
+	SELECT DISTINCT CR.CHAT_NO,
 		   CR.BUYER_NO,
 		   CR.SELLER_NO,
 		   CR.PRODUCT_NO,
 		   CR.CREATE_DATE,
 		   NP.PRICE,
            P.NAME,
-           I.IMAGE_URL,
+           (SELECT IMAGE_URL 
+            FROM IMAGES 
+            WHERE ENTITY_ID = P.NO 
+            AND ROWNUM = 1) AS IMAGE_URL,
 	CASE WHEN
 		   CR.BUYER_NO = #{userNo} THEN US.NICKNAME
 	ELSE
@@ -27,8 +30,11 @@
 	JOIN NORMAL NP ON NP.NO2 = P.NO
 	JOIN IMAGES I ON ENTITY_ID = P.NO
 	WHERE
-		   (BUYER_NO = #{buyerNo} or
-		   SELLER_NO = #{sellerNo}) 
+		  CR.PRODUCT_NO=#{productNo} AND
+		  ((BUYER_NO = #{buyerNo} AND SELLER_NO = #{sellerNo}) OR
+       	  (BUYER_NO = #{sellerNo} AND SELLER_NO = #{buyerNo}))
+		    
+		   
 	<if test="chatNo != null">
 		   and chat_no = #{chatNo}
 	</if>
@@ -40,12 +46,12 @@
 		VALUES (#{buyerNo}, #{sellerNo}, #{productNo}, SYSDATE)
 	</insert>
 	<select id="findByChatNo">
-		SELECT *
+		SELECT  *
 		FROM CHAT_ROOM
 		WHERE CHAT_NO=#{chatNo}
 	</select>
 	<select id="findChatRoomsByUser">
-		SELECT CR.CHAT_NO,
+		SELECT DISTINCT CR.CHAT_NO,
 		CR.BUYER_NO,
 		CR.SELLER_NO,
 		CR.PRODUCT_NO,
@@ -57,7 +63,10 @@
 		ELSE 
 			UB.NICKNAME
 		END AS NICKNAME,
-		I.IMAGE_URL
+		(SELECT IMAGE_URL 
+            FROM IMAGES 
+            WHERE ENTITY_ID = P.NO 
+            AND ROWNUM = 1) AS IMAGE_URL
 		FROM CHAT_ROOM CR
 
 		JOIN PRODUCT P ON CR.PRODUCT_NO = P.NO
@@ -71,14 +80,17 @@
 		ORDER BY CR.CREATE_DATE DESC
 	</select>
 	<select id="findByChatInfo">
-		SELECT CR.CHAT_NO,
+		SELECT DISTINCT CR.CHAT_NO,
 		   CR.BUYER_NO,
 		   CR.SELLER_NO,
 		   CR.PRODUCT_NO,
 		   CR.CREATE_DATE,
 		   NP.PRICE,
            P.NAME,
-           I.IMAGE_URL,
+           (SELECT IMAGE_URL 
+            FROM IMAGES 
+            WHERE ENTITY_ID = P.NO 
+            AND ROWNUM = 1) AS IMAGE_URL,
 	CASE WHEN
 		   CR.BUYER_NO = #{userNo} THEN US.NICKNAME
 	ELSE

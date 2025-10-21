@@ -19,6 +19,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(chatWebSocketHandler, "/ws/chat")
-                .setAllowedOrigins("*"); // 개발 단계에서는 CORS 열어두기
+                .setAllowedOrigins("*"); // 개발 단계 CORS 허용
     }
 }

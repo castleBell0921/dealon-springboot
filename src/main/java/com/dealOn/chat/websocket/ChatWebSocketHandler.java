@@ -14,37 +14,44 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.dealOn.chat.model.service.ChatService;
 import com.dealOn.chat.model.vo.ChatMessage;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private final ChatService chatService;
-    private final Map<String, List<WebSocketSession>> chatRooms = new ConcurrentHashMap<>(); // 동시 접근 가능
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())   // LocalDateTime 지원
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+    // 채팅방별 연결된 세션 리스트
+    private final Map<String, List<WebSocketSession>> chatRooms = new ConcurrentHashMap<>();
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-        String payload = message.getPayload();
-        ChatMessage chatMessage = new com.fasterxml.jackson.databind.ObjectMapper()
-                .readValue(payload, ChatMessage.class);
+        ChatMessage chatMessage = objectMapper.readValue(message.getPayload(), ChatMessage.class);
 
+        // MongoDB에 저장
         chatService.saveMessage(chatMessage.getChatNo(), chatMessage.getSenderNo(), chatMessage.getMessage());
+        log.info("💾 Saved message: {}", chatMessage);
 
-        // 채팅방 세션 가져오기 또는 새로 생성 (CopyOnWriteArrayList 사용)
+        // 채팅방 세션 관리
         chatRooms.putIfAbsent(chatMessage.getChatNo(), new CopyOnWriteArrayList<>());
         List<WebSocketSession> sessions = chatRooms.get(chatMessage.getChatNo());
 
-        // 세션에 없으면 추가
-        if (!sessions.contains(session)) {
-            sessions.add(session);
-        }
+        if (!sessions.contains(session)) sessions.add(session);
 
-        // 모든 세션에 메시지 전송
+        // 같은 채팅방에 있는 모든 세션에 메시지 전송
         for (WebSocketSession s : sessions) {
             if (s.isOpen()) {
-                s.sendMessage(new TextMessage(payload));
+                s.sendMessage(new TextMessage(message.getPayload()));
             }
         }
     }

@@ -26,52 +26,78 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
-    private final ChatService chatService;
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .registerModule(new JavaTimeModule())   // LocalDateTime 지원
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+	private final ChatService chatService;
+	private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule()) // LocalDateTime
+																										// 지원
+			.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-    // 채팅방별 연결된 세션 리스트
-    private final Map<String, List<WebSocketSession>> chatRooms = new ConcurrentHashMap<>();
+	// 채팅방별 연결된 세션 리스트
+	private final Map<String, List<WebSocketSession>> chatRooms = new ConcurrentHashMap<>();
 
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        String chatNo = getChatNoFromURI(session);
-        chatRooms.putIfAbsent(chatNo, new CopyOnWriteArrayList<>());
-        chatRooms.get(chatNo).add(session);
-        log.info("✅ 연결된 세션: {}, 채팅방: {}", session.getId(), chatNo);
-    }
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+	    String chatNo = getChatNoFromURI(session);
+	    String userNo = getUserNoFromURI(session); // 쿼리나 세션에서 로그인 유저 번호 가져오기
+	    session.getAttributes().put("userNo", userNo);
 
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-        ChatMessage chatMessage = objectMapper.readValue(message.getPayload(), ChatMessage.class);
+	    chatRooms.putIfAbsent(chatNo, new CopyOnWriteArrayList<>());
+	    chatRooms.get(chatNo).add(session);
+	    log.info("✅ 연결된 세션: {}, 채팅방: {}, 유저: {}", session.getId(), chatNo, userNo);
+	}
+	
+	// 세션에서 유저 번호 가져오기
+	private String getUserNoFromSession(WebSocketSession session) {
+	    Object userNo = session.getAttributes().get("userNo");
+	    return userNo != null ? userNo.toString() : "unknown";
+	}
+	
+	private String getUserNoFromURI(WebSocketSession session) {
+	    String query = session.getUri().getQuery(); // "chatNo=61&userNo=123"
+	    if (query != null) {
+	        for (String param : query.split("&")) {
+	            String[] kv = param.split("=");
+	            if (kv.length == 2 && kv[0].equals("userNo")) return kv[1];
+	        }
+	    }
+	    return "unknown";
+	}
 
-        // MongoDB 저장
-        chatService.saveMessage(chatMessage.getChatNo(), chatMessage.getSenderNo(), chatMessage.getMessage());
-        log.info("💾 Saved message: {}", chatMessage);
 
-        // 해당 채팅방 세션 가져오기
-        List<WebSocketSession> sessions = chatRooms.get(chatMessage.getChatNo());
-        if (sessions != null) {
-            for (WebSocketSession s : sessions) {
-                if (s.isOpen()) {
-                    s.sendMessage(new TextMessage(message.getPayload()));
-                }
-            }
-        }
-    }
+	@Override
+	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
+	    ChatMessage chatMessage = objectMapper.readValue(message.getPayload(), ChatMessage.class);
 
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        chatRooms.values().forEach(list -> list.remove(session));
-        log.info("❌ 세션 종료: {}", session.getId());
-    }
+	    // DB 저장
+	    chatService.saveMessage(chatMessage.getChatNo(), chatMessage.getSenderNo(), chatMessage.getMessage());
+	    log.info("💾 Saved message: {}", chatMessage);
 
-    private String getChatNoFromURI(WebSocketSession session) {
-        String query = session.getUri().getQuery(); // 예: "chatNo=123"
-        if (query != null && query.startsWith("chatNo=")) {
-            return query.substring(7);
-        }
-        return "unknown";
-    }
+	    // 해당 채팅방 세션 가져오기
+	    List<WebSocketSession> sessions = chatRooms.get(chatMessage.getChatNo());
+	    if (sessions != null) {
+	        for (WebSocketSession s : sessions) {
+	            if (s.isOpen()) {
+	                // 모든 세션에 메시지 전송 (자신 포함)
+	                s.sendMessage(new TextMessage(message.getPayload()));
+	            }
+	        }
+	    }
+	}
+
+
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+		chatRooms.values().forEach(list -> list.remove(session));
+		log.info("❌ 세션 종료: {}", session.getId());
+	}
+
+	private String getChatNoFromURI(WebSocketSession session) {
+	    String query = session.getUri().getQuery(); // 예: "chatNo=63&userNo=84"
+	    if (query != null) {
+	        for (String param : query.split("&")) {
+	            String[] kv = param.split("=");
+	            if (kv.length == 2 && kv[0].equals("chatNo")) return kv[1];
+	        }
+	    }
+	    return "unknown";
+	}
 }

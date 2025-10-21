@@ -1,6 +1,3 @@
-// ========================
-// 상품 디테일에서 채팅하기
-// ========================
 const sellerChatBtn = document.querySelector(".sellerChatBtn");
 
 if (sellerChatBtn != null) {
@@ -49,9 +46,6 @@ if (sellerChatBtn != null) {
     });
 }
 
-// ========================
-// 채팅방 로드 및 WebSocket 관리
-// ========================
 const chatViewContainer = document.querySelector('.chat-view-panel');
 const chatListContainer = document.querySelector('.chat-list');
 let socket = null;
@@ -60,13 +54,13 @@ let lastDateMap = {};
 // 채팅방 렌더링 함수
 async function loadChatRoom(chatNo) {
     try {
-		chatViewContainer.innerHTML = `
-		            <div class="message-area">
-		                <ul class="message-list">
-		                    <li class="no-message"><p>💬 채팅방 로딩 중...</p></li>
-		                </ul>
-		            </div>
-		        `;
+        chatViewContainer.innerHTML = `
+            <div class="message-area">
+                <ul class="message-list">
+                    <li class="no-message"><p>💬 채팅방 로딩 중...</p></li>
+                </ul>
+            </div>
+        `;
 
         const response = await fetch(`/chat/detail/${chatNo}`);
         if (!response.ok) throw new Error("서버 응답 오류");
@@ -76,7 +70,7 @@ async function loadChatRoom(chatNo) {
         const messages = data.messages;
         const loginUserNo = data.loginUser.userNo;
 
-        // chatViewContainer HTML 전체 렌더링
+        // 채팅방 HTML 전체 렌더링
         chatViewContainer.innerHTML = `
             <div class="chat-header text-20px">
                 <span>${chatInfo.nickname || "이름 없음"}</span>
@@ -113,14 +107,17 @@ async function loadChatRoom(chatNo) {
 
         // 기존 WebSocket 종료
         if (socket && socket.readyState === WebSocket.OPEN) {
+            console.log("⚠️ 기존 WebSocket 연결 종료");
             socket.close();
         }
 
-		// 현재 PC의 서버 LAN IP 자동 감지
-		const serverIp = location.hostname; // localhost 대신 실제 IP 사용 가능
-		const serverPort = 9090;
-		
-		socket = new WebSocket(`ws://${serverIp}:${serverPort}/ws/chat?chatNo=${chatNo}`);
+        // LAN IP 기반 WebSocket 연결
+        const serverIp = location.hostname;
+        const serverPort = 9090;
+        console.log(`🌐 WebSocket 연결 시도: ws://${serverIp}:${serverPort}/ws/chat?chatNo=${chatNo}`);
+        
+		socket = new WebSocket(`ws://${serverIp}:${serverPort}/ws/chat?chatNo=${chatNo}&userNo=${loginUserNo}`);
+
 
         lastDateMap[chatNo] = null;
 
@@ -131,6 +128,7 @@ async function loadChatRoom(chatNo) {
         socket.onopen = () => console.log("✅ WebSocket 연결 성공");
 
         socket.onmessage = (event) => {
+            console.log("📩 메시지 수신:", event.data);
             const msg = JSON.parse(event.data);
             const dateObj = new Date(msg.timestamp);
             const currentDate = dateObj.toISOString().split('T')[0];
@@ -153,6 +151,10 @@ async function loadChatRoom(chatNo) {
             messageList.scrollTop = messageList.scrollHeight;
         };
 
+        socket.onerror = (error) => console.error("❌ WebSocket 에러 발생:", error);
+
+        socket.onclose = (event) => console.log(`⚠️ WebSocket 종료 (code: ${event.code}, reason: ${event.reason})`);
+
         // send 버튼 이벤트
         if (!sendButton.dataset.listener) {
             sendButton.addEventListener('click', () => {
@@ -166,7 +168,13 @@ async function loadChatRoom(chatNo) {
                     timestamp: new Date().toISOString()
                 };
 
-                socket.send(JSON.stringify(chatData));
+                if (socket.readyState === WebSocket.OPEN) {
+                    console.log("📤 메시지 전송:", chatData);
+                    socket.send(JSON.stringify(chatData));
+                } else {
+                    console.warn("⚠️ WebSocket 연결이 열려있지 않아 메시지 전송 실패");
+                }
+
                 messageInput.value = '';
             });
             sendButton.dataset.listener = true;
@@ -178,9 +186,7 @@ async function loadChatRoom(chatNo) {
     }
 }
 
-// ========================
 // 채팅방 클릭 이벤트
-// ========================
 if (chatListContainer != null) {
     chatListContainer.addEventListener('click', (e) => {
         const item = e.target.closest('.chat-item');
@@ -190,9 +196,7 @@ if (chatListContainer != null) {
     });
 }
 
-// ========================
-// 페이지 로드 시 URL 기반 채팅방 자동 로드
-// ========================
+// URL 기반 채팅방 자동 로드
 const pathMatch = location.pathname.match(/\/chat\/chatRoom\/(\d+)/);
 if (pathMatch) {
     const chatNo = pathMatch[1];

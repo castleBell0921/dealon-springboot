@@ -85,6 +85,7 @@
             A.START_PRICE,
             A.CURRENT_PRICE AS currentPrice,
             A.END_DATE,
+            U.USER_NO,
             CASE WHEN N.NO IS NOT NULL THEN 'NORMAL' ELSE 'AUCTION' END AS PRODUCT_TYPE
         FROM PRODUCT P
                  LEFT JOIN NORMAL N ON P.NO = N.NO2

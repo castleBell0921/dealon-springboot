@@ -87,13 +87,21 @@ public class ChatController {
 			}
 
 			// 2. 채팅방 생성/조회 (NoSQL 기반)
-			ChatRoom chatRoom = chatService.findChatRoom(buyerNo, sellerNo, productNo, loginUser.getUserNo());
-			System.out.println("chatRoomInfo: " + chatRoom);
-
-			if (chatRoom != null) {
+			List<ChatRoom> chatRooms = chatService.findChatRoom(buyerNo, sellerNo, productNo, loginUser.getUserNo());
+			System.out.println("chatRoomInfo: " + chatRooms);
+			System.out.println("chatRoomNo" + productNo);
+			ChatRoom matchedChatRoom = null;
+			for (ChatRoom chatRoom : chatRooms) {
+			    if (chatRoom.getProductNo().equals(productNo)) { // productNo 비교
+			        matchedChatRoom = chatRoom;
+			        break; // 첫 번째 매칭 요소만 필요하면 break
+			    }
+			}
+			if (matchedChatRoom != null) {
 				// 3. 채팅방 ID (String 타입) 반환
-				result.put("chatRoomId", chatRoom.getChatNo());
-				session.setAttribute("chatInfo", chatRoom);
+				result.put("chatRoomId", matchedChatRoom.getChatNo());
+				session.setAttribute("chatInfo", matchedChatRoom);
+				
 			} else {
 				ChatRoom newChatRoom = chatService.createChatRoom(buyerNo, sellerNo, productNo);
 				if (newChatRoom != null) {

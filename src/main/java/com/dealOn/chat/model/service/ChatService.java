@@ -30,7 +30,7 @@ public class ChatService {
 		
 	}
 
-	public ChatRoom findChatRoom(String buyerNo, String sellerNo, String productNo, String userNo) {
+	public List<ChatRoom> findChatRoom(String buyerNo, String sellerNo, String productNo, String userNo) {
 		HashMap<String, Object> data = new HashMap<String, Object>();
 		data.put("buyerNo", buyerNo);
 		data.put("sellerNo", sellerNo);
@@ -47,7 +47,7 @@ public class ChatService {
 		
 		int result = chatMapper.createChatRoom(data);
 		if(result > 0) {
-			return chatMapper.findChatRoom(data);
+			return (ChatRoom) chatMapper.findChatRoom(data);
 		}
 		return null;
 	}
@@ -95,7 +95,7 @@ public class ChatService {
 	    return results.getMappedResults().stream()
 	            .map(LastMessageWrapper::getLastMessage)
 	            .toList();
-	}
+	}	
 	
 	 // Aggregation 결과 Wrapper
     public static class LastMessageWrapper {

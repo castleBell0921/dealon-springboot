@@ -34,7 +34,9 @@
 						<div class="avatar">👤</div>
 						<div class="chat-content">
 							<div class="user-name" th:text="${chat.nickname}"></div>
-							<div class="message-preview" th:text="${lastChat[chat.chatNo] != null} ? ${#strings.substring(lastChat[chat.chatNo].message, 0, 11)} : '대화 내용이 없습니다.'"></div>
+							<div class="message-preview" 
+							     th:text="${lastChat[chat.chatNo] != null} ? ${#strings.abbreviate(lastChat[chat.chatNo].message, 11)} : '대화 내용이 없습니다.'">
+							</div>
 						</div>
 						<div class="chat-meta">
 							<div class="timestamp"  th:text="${lastChat[chat.chatNo] != null} ? ${#temporals.format(lastChat[chat.chatNo].timestamp, 'yyyy-MM-dd HH:mm')} : ''"></div>

@@ -137,7 +137,7 @@ if(chatListContainer !=null) {
 			chatViewContainer.innerHTML = chatHTML;
 			
 			// WebSocket 연결
-			const socket = new WebSocket(`ws://${location.host}/ws/chat`);
+			const socket = new WebSocket(`ws://${location.host}/ws/chat?chatNo=${chatInfo.chatNo}`);
 			const sendButton = document.getElementsByClassName('send-button')[0];
 			const messageInput = document.getElementsByClassName('message-input')[0];
 			socket.onopen = () => {

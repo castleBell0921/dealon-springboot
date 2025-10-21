@@ -35,23 +35,28 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final Map<String, List<WebSocketSession>> chatRooms = new ConcurrentHashMap<>();
 
     @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        String chatNo = getChatNoFromURI(session);
+        chatRooms.putIfAbsent(chatNo, new CopyOnWriteArrayList<>());
+        chatRooms.get(chatNo).add(session);
+        log.info("✅ 연결된 세션: {}, 채팅방: {}", session.getId(), chatNo);
+    }
+
+    @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         ChatMessage chatMessage = objectMapper.readValue(message.getPayload(), ChatMessage.class);
 
-        // MongoDB에 저장
+        // MongoDB 저장
         chatService.saveMessage(chatMessage.getChatNo(), chatMessage.getSenderNo(), chatMessage.getMessage());
         log.info("💾 Saved message: {}", chatMessage);
 
-        // 채팅방 세션 관리
-        chatRooms.putIfAbsent(chatMessage.getChatNo(), new CopyOnWriteArrayList<>());
+        // 해당 채팅방 세션 가져오기
         List<WebSocketSession> sessions = chatRooms.get(chatMessage.getChatNo());
-
-        if (!sessions.contains(session)) sessions.add(session);
-
-        // 같은 채팅방에 있는 모든 세션에 메시지 전송
-        for (WebSocketSession s : sessions) {
-            if (s.isOpen()) {
-                s.sendMessage(new TextMessage(message.getPayload()));
+        if (sessions != null) {
+            for (WebSocketSession s : sessions) {
+                if (s.isOpen()) {
+                    s.sendMessage(new TextMessage(message.getPayload()));
+                }
             }
         }
     }
@@ -59,5 +64,14 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         chatRooms.values().forEach(list -> list.remove(session));
+        log.info("❌ 세션 종료: {}", session.getId());
+    }
+
+    private String getChatNoFromURI(WebSocketSession session) {
+        String query = session.getUri().getQuery(); // 예: "chatNo=123"
+        if (query != null && query.startsWith("chatNo=")) {
+            return query.substring(7);
+        }
+        return "unknown";
     }
 }

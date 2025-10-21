@@ -116,7 +116,12 @@ async function loadChatRoom(chatNo) {
             socket.close();
         }
 
-        socket = new WebSocket(`ws://localhost:9090/ws/chat?chatNo=${chatNo}`);
+		// 현재 PC의 서버 LAN IP 자동 감지
+		const serverIp = location.hostname; // localhost 대신 실제 IP 사용 가능
+		const serverPort = 9090;
+		
+		socket = new WebSocket(`ws://${serverIp}:${serverPort}/ws/chat?chatNo=${chatNo}`);
+
         lastDateMap[chatNo] = null;
 
         const messageList = chatViewContainer.querySelector('.message-list');

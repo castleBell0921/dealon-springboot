@@ -3,7 +3,6 @@ package com.dealOn.chat.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -102,6 +101,7 @@ public class ChatController {
 				result.put("chatRoomId", matchedChatRoom.getChatNo());
 				session.setAttribute("chatInfo", matchedChatRoom);
 				
+				
 			} else {
 				ChatRoom newChatRoom = chatService.createChatRoom(buyerNo, sellerNo, productNo);
 				if (newChatRoom != null) {
@@ -123,7 +123,7 @@ public class ChatController {
 	}
 
 	@GetMapping("/chatRoom/{chatNo}")
-	public String chatRoomDetail(@PathVariable("chatNo") String chatNo, Model model, HttpSession session) {
+	public String  chatRoomDetail  (@PathVariable("chatNo") String chatNo, Model model, HttpSession session) {
 
 		User loginUser = (User) session.getAttribute("loginUser");
 		if (loginUser == null) {
@@ -141,6 +141,11 @@ public class ChatController {
 			List<ChatMessage> message = chatService.getMessages(chatNo);
 			List<ChatMessage> lastMessage = chatService.getLastMessages(chatNos);
 			ChatRoom chatInfo = (ChatRoom) session.getAttribute("chatInfo");
+			if(chatInfo == null) {
+			    chatInfo = chatService.findByChatNo(chatNo);
+			    session.setAttribute("chatInfo", chatInfo);
+
+			}
 			Map<String, ChatMessage> lastChat = new HashMap<>();
 		    for (ChatMessage msg : lastMessage) {
 		        lastChat.put(msg.getChatNo(), msg);

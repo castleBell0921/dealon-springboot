@@ -52,8 +52,11 @@ public class ChatService {
 		return null;
 	}
 	
-	public ChatRoom findByChatNo(String chatNo) {
-		return chatMapper.findByChatNo(chatNo);
+	public ChatRoom findByChatNo(String chatNo, String userNo) {
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("chatNo", chatNo);
+		data.put("userNo", userNo);
+		return chatMapper.findByChatNo(data);
 	}
 
 	public List<ChatRoom> findChatRoomsByUser(String userNo) {

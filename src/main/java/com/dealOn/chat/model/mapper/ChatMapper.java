@@ -15,7 +15,7 @@ public interface ChatMapper {
 
 	int createChatRoom(HashMap<String, Object> data);
 	
-	ChatRoom findByChatNo(String ChatNo);
+	ChatRoom findByChatNo(HashMap<String, String> data);
 
 	List<ChatRoom> findChatRoomsByUser(String userNo);
 

@@ -132,7 +132,7 @@ public class ChatController {
 
 		List<ChatRoom> chatList = chatService.findChatRoomsByUser(loginUser.getUserNo());
 		List<String> chatNos = chatList.stream().map(ChatRoom::getChatNo).toList();
-		ChatRoom currentChat = chatService.findByChatNo(chatNo);
+		ChatRoom currentChat = chatService.findByChatNo(chatNo, loginUser.getUserNo());
 
 		if (currentChat == null) {
 			return "error/404"; // 없는 채팅방일 경우
@@ -142,7 +142,7 @@ public class ChatController {
 			List<ChatMessage> lastMessage = chatService.getLastMessages(chatNos);
 			ChatRoom chatInfo = (ChatRoom) session.getAttribute("chatInfo");
 			if(chatInfo == null) {
-			    chatInfo = chatService.findByChatNo(chatNo);
+			    chatInfo = chatService.findByChatNo(chatNo, loginUser.getUserNo());
 			    session.setAttribute("chatInfo", chatInfo);
 
 			}
@@ -169,7 +169,7 @@ public class ChatController {
 	    Map<String, Object> result = new HashMap<>();
 	    
 	    User loginUser = (User)session.getAttribute("loginUser");
-	    ChatRoom chatRoom = chatService.findByChatNo(chatNo);
+	    ChatRoom chatRoom = chatService.findByChatNo(chatNo, loginUser.getUserNo());
 	    ChatRoom chatInfo = chatService.findByChatInfo(chatNo, loginUser.getUserNo());
 	    List<ChatMessage> messages = chatService.getMessages(chatNo);
 	    result.put("chatInfo", chatInfo);

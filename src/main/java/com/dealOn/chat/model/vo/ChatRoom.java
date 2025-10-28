@@ -18,4 +18,7 @@ public class ChatRoom {
     private String price;
     private String nickname;
     private String imageUrl;
+    private String sellerStatus;
+    private String buyerStatus;
+    
 }

@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>채팅방</title>
+ <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
 <!-- Font Awesome 아이콘 -->
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -14,6 +16,11 @@
 
 </head>
 <body>
+	<div id="messageBox"
+	     class="fixed bottom-4 left-1/2 transform -translate-x-1/2 
+	            bg-black text-white px-8 py-4 rounded-lg shadow-lg 
+	            opacity-0 transition-opacity duration-300 z-50">
+	</div>
 	<div class="app-container">
 		<div th:replace="~{common/header :: header}"></div>
 		<div th:replace="~{common/searchBar :: searchBar}"></div>
@@ -29,17 +36,17 @@
 
 
 				<ul class="chat-list">
-					<li th:each="chat : ${chatList}" class="chat-item"
-						th:data-chat-no="${chat.chatNo}">
+					<li th:each="chat : ${chatList}" class="chat-item"th:data-chat-no="${chat.chatNo}">
 						<div class="avatar">👤</div>
 						<div class="chat-content">
 							<div class="user-name" th:text="${chat.nickname}"></div>
-							<div class="message-preview" 
-							     th:text="${lastChat[chat.chatNo] != null} ? ${#strings.abbreviate(lastChat[chat.chatNo].message, 11)} : '대화 내용이 없습니다.'">
+							<div class="message-preview"
+								th:text="${lastChat[chat.chatNo] != null} ? ${#strings.abbreviate(lastChat[chat.chatNo].message, 11)} : '대화 내용이 없습니다.'">
 							</div>
 						</div>
 						<div class="chat-meta">
-							<div class="timestamp"  th:text="${lastChat[chat.chatNo] != null} ? ${#temporals.format(lastChat[chat.chatNo].timestamp, 'yyyy-MM-dd HH:mm')} : ''"></div>
+							<div class="timestamp"
+								th:text="${lastChat[chat.chatNo] != null} ? ${#temporals.format(lastChat[chat.chatNo].timestamp, 'yyyy-MM-dd HH:mm')} : ''"></div>
 							<img th:src="${chat.imageUrl}" class="thumbnail">
 						</div>
 					</li>
@@ -52,8 +59,39 @@
 					<!-- <span th:text="${currentChat != null ? currentChat.nickname : (chatInfo != null ? chatInfo.nickname : '이름 없음')}"></span> -->
 					<span th:text="${chatInfo.nickname}"></span>
 
-					<button class="icon-button">☰</button>
+					<button class="icon-button" id="toggleButton">☰</button>
+					<div id="dropdownMenu"
+						class="
+						        dropdown-menu
+						        absolute right-0 mt-2 w-48 
+						        bg-white rounded-xl shadow-2xl 
+						        ring-1 ring-black ring-opacity-5 
+						        divide-y divide-gray-100
+						        origin-top-right
+						    "
+						role="menu" aria-orientation="vertical"
+						aria-labelledby="toggleButton">
+
+						<div class="py-1">
+							<!-- 신고하기 메뉴 항목 -->
+							<a href="#" data-action="report"
+								class="
+						                menu-item block px-4 py-3 text-sm text-gray-700 
+						                hover:bg-red-50 hover:text-red-600 
+						                transition duration-100 ease-in-out
+						                rounded-t-xl
+						            "
+								role="menuitem"> 신고하기 </a>
+
+							<!-- 채팅방 나가기 메뉴 항목 -->
+							<a href="#" data-action="leave"
+								class="menu-item block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition duration-100 ease-in-out rounded-b-xl"
+								role="menuitem"> 채팅방 나가기 </a>
+						</div>
+					</div>
 				</div>
+				
+				
 
 				<div class="product-bar">
 					<img th:src="${chatInfo.imageUrl}" class="product-image">

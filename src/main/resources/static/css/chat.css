@@ -1,311 +1,326 @@
 :root {
-    /* 목표 이미지의 보라색 계열을 메인 색상으로 정의 */
-    --main-color: #6a5acd; 
-    --sent-bubble-color: #926ce7; /* 목표 이미지에 가까운 연보라색 */
-    --received-bubble-color: #ffffff;
-    --background-color: #f7f7f7;
-    --border-color: #e0e0e0;
+	/* 목표 이미지의 보라색 계열을 메인 색상으로 정의 */
+	--main-color: #6a5acd;
+	--sent-bubble-color: #926ce7; /* 목표 이미지에 가까운 연보라색 */
+	--received-bubble-color: #ffffff;
+	--background-color: #f7f7f7;
+	--border-color: #e0e0e0;
 }
 
-
 .chat-app-container {
-    background-color: #F8F8F8;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    margin-top: 30px;
-    padding: 60px;
-    gap: 20px;
-    height: 1200px;
+	background-color: #F8F8F8;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	margin-top: 30px;
+	padding: 60px;
+	gap: 20px;
+	height: 1200px;
 }
 
 /* 공통 패널 스타일 (div -> section 으로 변경되었으나, 클래스 기반이라 수정 불필요) */
 .panel {
-    width: 580px;
-    height: 1000px;
-    background-color: #ffffff;
-    border-radius: 16px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+	width: 580px;
+	height: 1000px;
+	background-color: #ffffff;
+	border-radius: 16px;
+	border: 1px solid #e0e0e0;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 }
-
-
 
 /* 왼쪽: 전체 대화 목록 패널 */
 .chat-list-panel .chat-list {
-    overflow-y: auto;
-    flex-grow: 1;
-    /* <ul> 태그의 기본 스타일 제거 (디자인 유지를 위해 추가) */
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+	overflow-y: auto;
+	flex-grow: 1;
+	/* <ul> 태그의 기본 스타일 제거 (디자인 유지를 위해 추가) */
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
 }
 
 /* li 태그로 변경되었으나, 클래스 기반이라 수정 불필요 */
 .chat-item {
-    display: flex;
-    align-items: center;
-    padding: 16px 24px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+	display: flex;
+	align-items: center;
+	padding: 16px 24px;
+	cursor: pointer;
+	transition: background-color 0.2s;
 }
 
 .chat-item:hover {
-    background-color: #f9f9f9;
+	background-color: #f9f9f9;
 }
 
 .chat-item .avatar {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background-color: #e0e0e0;
-    margin-right: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    color: #888;
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+	background-color: #e0e0e0;
+	margin-right: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 24px;
+	color: #888;
 }
 
 .chat-item .avatar-icon {
-    font-size: 28px;
+	font-size: 28px;
 }
 
-.dealon-icon{
-    background-image: url("/image/딜온로고.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 50px;
-    height: 50px;
+.dealon-icon {
+	background-image: url("/image/딜온로고.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 50px;
+	height: 50px;
 }
 
 .chat-item .chat-content {
-    flex-grow: 1;
+	flex-grow: 1;
 }
 
 .chat-item .chat-content .user-name {
-    font-weight: 500;
-    font-size: 16px;
-    color: #333;
+	font-weight: 500;
+	font-size: 16px;
+	color: #333;
 }
-.user-name{
-    text-align: left;
+
+.user-name {
+	text-align: left;
 }
 
 .chat-item .chat-content .message-preview {
-    font-size: 14px;
-    color: #666;
-    margin-top: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 300px;
+	font-size: 14px;
+	color: #666;
+	margin-top: 4px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 300px;
 }
-.message-preview{
-    text-align: left;
+
+.message-preview {
+	text-align: left;
 }
 
 .chat-item .chat-meta {
-    text-align: right;
-    font-size: 12px;
-    color: #999;
-    margin-left: 16px;
+	text-align: right;
+	font-size: 12px;
+	color: #999;
+	margin-left: 16px;
 }
 
 .chat-item .chat-meta .thumbnail {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    background-color: #f0f0f0;
-    margin-top: 8px;
-    object-fit: cover;
+	width: 48px;
+	height: 48px;
+	border-radius: 8px;
+	background-color: #f0f0f0;
+	margin-top: 8px;
+	object-fit: cover;
 }
 
 .panel-header {
-    padding: 24px;
-    text-align: left;
-    /*border-bottom: 1px solid #eeeeee;*/
+	padding: 24px;
+	text-align: left;
+	/*border-bottom: 1px solid #eeeeee;*/
 }
 
-.panel-header a{
-    font-weight: bold;
-    margin-left: 50px;
-    margin-top: 45px;
-    margin-bottom: 13.47px;
-    display: inline-block;
+.panel-header a {
+	font-weight: bold;
+	margin-left: 50px;
+	margin-top: 45px;
+	margin-bottom: 13.47px;
+	display: inline-block;
 }
 
 /* 오른쪽: 개별 대화창 패널 */
 .chat-view-panel {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .chat-header {
-    padding: 24px;
-    font-weight: bold;
-    border-bottom: 1px solid #eeeeee;
+    position: relative; /* 추가 */
+	
+	padding: 24px;
+	font-weight: bold;
+	border-bottom: 1px solid #eeeeee;
 }
+
 .chat-view-panel .chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-weight: bold;
 }
 
 .chat-view-panel .icon-button {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #555;
+	background: none;
+	border: none;
+	font-size: 24px;
+	cursor: pointer;
+	color: #555;
 }
 
 .product-bar {
-    display: flex;
-    align-items: center;
-    padding: 12px 24px;
-    border-bottom: 1px solid #eeeeee;
+	display: flex;
+	align-items: center;
+	padding: 12px 24px;
+	border-bottom: 1px solid #eeeeee;
 }
 
 .product-bar .product-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    background-color: #e0e0e0;
-    margin-right: 16px;
-    object-fit: cover;
+	width: 50px;
+	height: 50px;
+	border-radius: 8px;
+	background-color: #e0e0e0;
+	margin-right: 16px;
+	object-fit: cover;
 }
 
 .product-bar .product-info {
-    flex-grow: 1;
+	flex-grow: 1;
 }
 
 .product-bar .product-info .product-name {
-    font-size: 14px;
-    color: #555;
+	font-size: 14px;
+	color: #555;
 }
 
 .product-bar .product-info .product-price {
-    font-size: 16px;
-    font-weight: 700;
-    color: #000;
-    margin-top: 4px;
+	font-size: 16px;
+	font-weight: 700;
+	color: #000;
+	margin-top: 4px;
 }
 
 /* MESSAGE AREA: 메시지 영역 컨테이너 */
 .message-area {
-    flex-grow: 1;
-    padding: 24px;
-    overflow-y: auto;
-    background-color: #F0F0F0;
-    /* column 대신 block으로 변경하고 ul에 flex를 적용합니다. */
+	flex-grow: 1;
+	padding: 24px;
+	overflow-y: auto;
+	background-color: #F0F0F0;
 }
 
 /* MESSAGE LIST: UL 태그에 적용할 스타일 */
 .message-list {
-    display: flex; /* 메시지들을 수직으로 배치 */
-    flex-direction: column;
-    padding: 0;
-    margin: 0;
-    list-style: none; /* li의 기본 스타일 제거 */
+	display: flex; /* 메시지들을 수직으로 배치 */
+	flex-direction: column;
+	padding: 0;
+	margin: 0;
+	list-style: none; /* li의 기본 스타일 제거 */
 }
 
 /* DATE SEPARATOR: LI 태그에 적용 */
 .date-separator {
-    text-align: center;
-    margin: 16px 0;
-    font-size: 12px;
-    color: #888;
+	text-align: center;
+	margin: 16px 0;
+	font-size: 12px;
+	color: #888;
 }
 
 /* 개별 메시지 LI 태그에 공통으로 적용 */
 .received, .message {
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 12px;
-    padding: 0; /* li의 기본 패딩 제거 */
+	display: flex;
+	align-items: flex-end;
+	margin-bottom: 12px;
+	padding: 0; /* li의 기본 패딩 제거 */
 }
 
 /* 보낸 메시지: LI 태그 */
 .message {
-    align-self: flex-end; /* 오른쪽 정렬 */
-    margin-bottom: 20px;
+	align-self: flex-end; /* 오른쪽 정렬 */
+	margin-bottom: 20px;
 }
 
 .message .message-bubble {
-    background-color: #A349D8;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-size: 16px;
-    cursor: pointer;
-    max-width: 70%;
+	background-color: #A349D8;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 20px;
+	font-size: 16px;
+	cursor: pointer;
+	max-width: 70%;
 }
 
 /* 받은 메시지: LI 태그 */
 /* .received 스타일은 위에 .received, .message 공통 스타일에 포함됨 */
-
 .received .message-bubble {
-    background-color: white;
-    padding: 12px 16px;
-    border-radius: 18px;
-    border-top-left-radius: 4px;
-    max-width: 70%;
-    font-size: 16px;
+	background-color: white;
+	padding: 12px 16px;
+	border-radius: 18px;
+	border-top-left-radius: 4px;
+	max-width: 70%;
+	font-size: 16px;
 }
 
 .timestamp {
-    font-size: 11px;
-    color: #999;
-    margin: 0 8px;
+	font-size: 11px;
+	color: #999;
+	margin: 0 8px;
 }
 
 .input-area {
-    display: flex;
-    align-items: center;
-    padding: 16px 24px;
-    border-top: 1px solid #eeeeee;
+	display: flex;
+	align-items: center;
+	padding: 16px 24px;
+	border-top: 1px solid #eeeeee;
 }
 
 .input-area .icon-button {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #555;
+	background: none;
+	border: none;
+	font-size: 24px;
+	cursor: pointer;
+	color: #555;
 }
 
-
 .input-area .message-input {
-    flex-grow: 1;
-    border: none;
-    background-color: #f7f7f7;
-    border-radius: 22px;
-    padding: 12px 20px;
-    font-size: 16px;
-    margin: 0 12px;
+	flex-grow: 1;
+	border: none;
+	background-color: #f7f7f7;
+	border-radius: 22px;
+	padding: 12px 20px;
+	font-size: 16px;
+	margin: 0 12px;
 }
 
 .input-area .message-input:focus {
-    outline: none;
+	outline: none;
 }
 
 .input-area .send-button {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background-color: #A490E3;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background-color: #A490E3;
+	border: none;
+	color: white;
+	font-size: 20px;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.dropdown-menu {
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(10px);
+	transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility
+		0.2s;
+    z-index: 9999 !important;
+		
+}
+
+.dropdown-menu.active {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
 }

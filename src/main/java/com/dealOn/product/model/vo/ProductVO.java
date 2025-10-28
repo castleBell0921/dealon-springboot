@@ -23,6 +23,7 @@ public class ProductVO {
     private BigDecimal currentPriceUnified; // 리스트 페이지용 가격
     private int views; 
     private String userNo;
+    private String status;
 
     // 썸네일 이미지
     private String thumbnailUrl;

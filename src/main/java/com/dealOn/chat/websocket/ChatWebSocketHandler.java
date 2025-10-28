@@ -70,15 +70,26 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	    // DB 저장
 	    chatService.saveMessage(chatMessage.getChatNo(), chatMessage.getSenderNo(), chatMessage.getMessage());
 	    log.info("💾 Saved message: {}", chatMessage);
+	    
 
 	    // 해당 채팅방 세션 가져오기
 	    List<WebSocketSession> sessions = chatRooms.get(chatMessage.getChatNo());
-	    if (sessions != null) {
-	        for (WebSocketSession s : sessions) {
-	            if (s.isOpen()) {
-	                // 모든 세션에 메시지 전송 (자신 포함)
-	                s.sendMessage(new TextMessage(message.getPayload()));
-	            }
+	    
+	    if (sessions == null || sessions.isEmpty()) {
+	        log.info("⚠️ 현재 채팅방({})에 아무도 접속 중이 아님. 실시간 전송 생략", chatMessage.getChatNo());
+	        return;
+	    }
+
+	    // 3️⃣ 상대방이 없는 경우 (본인만 연결된 경우)
+	    if (sessions.size() == 1 && sessions.contains(session)) {
+	        log.info("⚠️ 상대방이 채팅방에 접속 중이 아님. 메시지는 DB에만 저장됨.");
+	        return;
+	    }
+
+	    // 4️⃣ 둘 다 접속 중인 경우에만 실시간 전송
+	    for (WebSocketSession s : sessions) {
+	        if (s.isOpen()) {
+	            s.sendMessage(new TextMessage(message.getPayload()));
 	        }
 	    }
 	}

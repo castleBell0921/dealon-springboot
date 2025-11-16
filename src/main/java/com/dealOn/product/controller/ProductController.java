@@ -12,10 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -101,6 +98,73 @@ public class ProductController {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "상품 등록에 실패했습니다: " + e.getMessage());
             return "redirect:/product/add";
+        }
+    }
+
+    @GetMapping("/updateForm/{productNo}")
+    public String productUpdateForm(@PathVariable("productNo") int productNo, Model model, HttpSession session) {
+
+        User loginUser = (User) session.getAttribute("loginUser");
+
+        // 1. 상품 상세 정보 조회 (기존 getProductDetail 재사용)
+        ProductVO product = productService.getProductDetail(productNo);
+        System.out.println("### DEBUG: " + product.toString());
+        // 2. 로그인 여부 및 본인 상품 여부 확인
+        // *주의*: ProductVO에 userNo 필드가 있고, User VO에 getUserNo()가 String을 반환한다고 가정합니다.
+        if (loginUser == null || product == null || !Objects.equals(String.valueOf(product.getUserNo()), loginUser.getUserNo())) {
+            // model.addAttribute("errorMessage", "수정 권한이 없습니다.");
+            return "redirect:/product/detail/" + productNo; // 권한이 없으면 상세페이지로
+        }
+
+        // 3. 카테고리 목록 조회 (기존 findAllCategories 재사용)
+        List<CategoryVO> categories = productService.findAllCategories();
+
+        // 4. Model에 담기
+        model.addAttribute("product", product); // (상세 정보)
+        model.addAttribute("categories", categories); // (카테고리 목록)
+
+        return "product/productUpdateForm"; // (새로 만들 HTML 템플릿)
+    }
+
+    /**
+     * (POST) 상품 수정 처리
+     */
+    @PostMapping("/updateNormal")
+    public String updateNormalProduct(@ModelAttribute AddProductVO product, // 폼 데이터 바인딩
+                                      @RequestParam(value = "deletedImages", required = false) String deletedImagesStr,
+                                      HttpSession session,
+                                      RedirectAttributes redirectAttributes) {
+
+        User loginUser = (User) session.getAttribute("loginUser");
+
+        // 1. 로그인 확인 및 권한 재확인
+        // (product.getUserNo()는 폼에서 hidden으로 전송되어야 함)
+        if (loginUser == null || !Objects.equals(String.valueOf(product.getUserNo()), loginUser.getUserNo())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "수정 권한이 없습니다.");
+            return "redirect:/";
+        }
+
+        // 2. 삭제할 이미지 URL 리스트 파싱
+        List<String> deletedImages = new ArrayList<>();
+        if (deletedImagesStr != null && !deletedImagesStr.isEmpty()) {
+            deletedImages = Arrays.asList(deletedImagesStr.split(","));
+        }
+
+        // 3. 서비스 호출
+        try {
+            // product 객체에는 productNo, userNo, name, detail, price, category, salesLocation 및
+            // *새로 추가된* productImages(MultipartFile 리스트)가 포함되어 있습니다.
+            productService.updateNormalProduct(product, deletedImages);
+
+            redirectAttributes.addFlashAttribute("message", "상품이 성공적으로 수정되었습니다.");
+            // 4. 성공 시, 상세 페이지로 리다이렉트
+            return "redirect:/product/detail/" + product.getProductNo();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "상품 수정에 실패했습니다: " + e.getMessage());
+            // 5. 실패 시, 수정 폼으로 다시 리다이렉트
+            return "redirect:/product/updateForm/" + product.getProductNo();
         }
     }
 

@@ -30,7 +30,8 @@ public class ProductVO {
 
     // 상세 페이지 전용
     private String detail; 
-    private String categoryName; 
+    private String categoryName;
+    private int categoryNo;
     private String sellerNickname; 
     private String sellerProfileImage; 
     private List<String> imageUrls; // 상품의 모든 이미지 URL 리스트

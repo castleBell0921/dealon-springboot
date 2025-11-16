@@ -13,6 +13,7 @@
         <result property="productType" column="PRODUCT_TYPE"/>
         <result property="thumbnailUrl" column="THUMBNAIL_URL"/>
         <result property="categoryName" column="CATEGORY_NAME"/>
+        <result property="categoryNo" column="CATEGORY_NO"/>
         <result property="sellerNickname" column="SELLER_NICKNAME"/>
         <result property="sellerProfileImage" column="SELLER_PROFILE_IMAGE"/>
         <result property="sellerTrust" column="SELLER_TRUST"/>
@@ -25,6 +26,7 @@
 
     <resultMap id="categoryResultMap" type="com.dealOn.common.model.vo.CategoryVO">
         <result property="name" column="NAME"/>
+        <result property="no" column="NO"/>
     </resultMap>
 
     <select id="findProducts" parameterType="map" resultMap="productResultMap">
@@ -77,7 +79,7 @@
             P.SALES_LOCATION AS LOCATION,
             COALESCE(TO_NUMBER(N.VIEWS), TO_NUMBER(A.VIEWS)) AS VIEWS,
             C.NAME AS CATEGORY_NAME,
-            U.NICKNAME AS SELLER_NICKNAME,
+            P.CATEGORY AS CATEGORY_NO, U.NICKNAME AS SELLER_NICKNAME,
             U.IMAGEURL AS SELLER_PROFILE_IMAGE,
             U.TRUST AS SELLER_TRUST,
             N.PRICE AS price,
@@ -104,9 +106,8 @@
     </select>
 
     <select id="findAllCategories" resultMap="categoryResultMap">
-        SELECT DISTINCT C.NAME
-        FROM CATEGORY C
-                 JOIN PRODUCT P ON C.NO = P.CATEGORY
+        SELECT DISTINCT C.NO, C.NAME FROM CATEGORY C
+                                              JOIN PRODUCT P ON C.NO = P.CATEGORY
         ORDER BY C.NAME ASC
     </select>
 
@@ -125,4 +126,42 @@
         INSERT INTO IMAGES (ENTITY_TYPE, ENTITY_ID, IMAGE_URL, DISPLAY_ORDER)
         VALUES (#{entityType}, #{entityId}, #{imageUrl}, #{displayOrder})
     </insert>
+
+    <update id="updateProduct" parameterType="com.dealOn.product.model.vo.AddProductVO">
+        UPDATE PRODUCT
+        SET
+            NAME = #{name},
+            DETAIL = #{detail},
+            CATEGORY = #{category},
+            SALES_LOCATION = #{salesLocation}
+        WHERE
+            NO = #{productNo}
+          AND USER_NO = #{userNo} </update>
+
+    <update id="updateNormalProduct" parameterType="com.dealOn.product.model.vo.AddProductVO">
+        UPDATE NORMAL
+        SET
+            PRICE = #{price}
+        WHERE
+            NO2 = #{productNo}
+    </update>
+
+    <select id="findImageCountByProductNo" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM IMAGES
+        WHERE ENTITY_ID = #{productNo}
+          AND ENTITY_TYPE = 'PRODUCT'
+    </select>
+
+    <delete id="deleteImagesByUrl">
+        DELETE FROM IMAGES
+        WHERE
+        ENTITY_ID = #{productNo}
+        AND ENTITY_TYPE = 'PRODUCT'
+        AND IMAGE_URL IN
+        <foreach collection="urls" item="url" open="(" separator="," close=")">
+            #{url}
+        </foreach>
+    </delete>
+
 </mapper>

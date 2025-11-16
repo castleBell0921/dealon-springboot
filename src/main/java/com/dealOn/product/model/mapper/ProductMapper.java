@@ -19,4 +19,11 @@ public interface ProductMapper {
     int insertNormalProduct(AddProductVO product);
     int insertImage(@Param("entityId") int entityId, @Param("entityType") String entityType, @Param("imageUrl") String imageUrl, @Param("displayOrder") int displayOrder);
 
+    int updateProduct(AddProductVO product);
+
+    int updateNormalProduct(AddProductVO product);
+
+    int findImageCountByProductNo(int productNo);
+
+    int deleteImagesByUrl(@Param("productNo") int productNo, @Param("urls") List<String> urls);
 }

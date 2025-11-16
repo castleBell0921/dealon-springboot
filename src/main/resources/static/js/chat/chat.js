@@ -11,60 +11,80 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		return null; // 채팅방 번호를 찾지 못했을 경우
 	}
+
+	// 상품 디테일에서 "채팅하기" 버튼 클릭 시
 	const sellerChatBtn = document.querySelector(".sellerChatBtn");
-	// 초기 탐색된 변수(toggleButton, dropdownMenu)는
-	// attachDropdownListeners 함수 사용으로 인해 사용되지 않지만 기존 코드를 유지합니다.
-	/*const toggleButton = document.getElementById('toggleButton');
-	const dropdownMenu = document.getElementById('dropdownMenu');*/
 
-	if (sellerChatBtn != null) {
+	if (sellerChatBtn) {
 		sellerChatBtn.addEventListener("click", async () => {
-			// alert() 사용 대신 모달/커스텀 UI 사용을 권장합니다.
-			const productUserNo = document.getElementById("productUserNo").value;
-			const loginUserNo = document.getElementById("loginUserNo").value;
-
-			if (productUserNo == loginUserNo) {
-				console.warn('자신과 대화 시도 감지: 사용자 번호 동일');
-				// 임시 alert 사용
-				alert('자신과 대화하면 아픈사람이에요.');
-				return;
-			}
+			const productNo = document.querySelector("input[name='productNo']").value;
 
 			try {
-				const productNoInput = document.querySelector("input[name='productNo']");
-				if (!productNoInput) {
-					console.error("상품 번호 입력 필드(input[name='productNo'])를 찾을 수 없습니다.");
-					alert("상품 정보를 불러올 수 없습니다.");
-					return;
-				}
-
-				const productNo = productNoInput.value;
-				const apiUrl = `/chat/createRoom?productNo=${productNo}`;
-
-				const response = await fetch(apiUrl, {
+				const response = await fetch("/chat/createRoom", {
 					method: "POST",
-					credentials: 'same-origin'
+					headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					body: new URLSearchParams({ productNo }),
 				});
-
-				if (!response.ok) {
-					console.error(`HTTP Error: ${response.status} - ${response.statusText}`);
-					throw new Error(`서버 요청에 실패했습니다. (상태 코드: ${response.status})`);
-				}
-
 				const data = await response.json();
 
 				if (data.chatRoomId) {
-					location.href = `/chat/chatRoom/${data.chatRoomId}`;
-				} else {
-					alert("채팅방 생성에 실패했습니다. (서버 응답 오류)");
-				}
+					// ✅ 채팅방 재입장 또는 생성 성공 시
 
-			} catch (error) {
-				console.error("채팅방 생성 중 오류:", error);
-				alert("채팅방 생성 중 예상치 못한 오류가 발생했습니다.");
+					const chatListContainer = document.querySelector(".chat-list");
+
+					// 💡 [핵심 수정 로직] 좌측 채팅 리스트 갱신
+					if (chatListContainer) {
+						// 1. 좌측 채팅 리스트에 이미 존재하는지 확인
+						let existingRoom = chatListContainer.querySelector(
+							`[data-chat-no="${data.chatRoomId}"]`
+						);
+
+						// 2. 항목이 존재하지 않는다면 (나갔던 방이라 'N' 상태라 목록에 없었음) 새로 추가
+						if (!existingRoom) {
+							// chat.html 구조에 맞춰 li 태그로 생성
+							const newChatItem = document.createElement("li");
+							newChatItem.classList.add("chat-item");
+							newChatItem.dataset.chatNo = data.chatRoomId;
+
+							// 서버 응답 (data)의 최신 정보 사용
+							newChatItem.innerHTML = `
+						        <div class="avatar">👤</div>
+						        <div class="chat-content">
+						            <div class="user-name">${data.nickname || '상대방'}</div>
+						            <div class="message-preview">대화 내용이 없습니다.</div> 
+						        </div>
+						        <div class="chat-meta">
+						            <div class="timestamp"></div>
+						            <img src="${data.imageUrl || '/img/default.png'}" class="thumbnail">
+						        </div>
+							`;
+
+							chatListContainer.prepend(newChatItem); // 목록 맨 앞에 추가
+							existingRoom = newChatItem; // 새로 만든 요소를 existingRoom에 할당하여 다음 로직에서 사용
+						}
+
+						// 3. (옵션) 이미 존재했던 방이라도, 목록의 가장 위로 옮깁니다. (최근 활동 방)
+						if (existingRoom && existingRoom !== chatListContainer.firstElementChild) {
+							chatListContainer.prepend(existingRoom);
+						}
+					}
+
+					// ✅ 방 이동
+					setTimeout(() => {
+						window.location.href = `/chat/chatRoom/${data.chatRoomId}`;
+					}, 300);
+				} else if (data.noChat != null) {
+					alert(data.noChat);
+				}
+				else {
+					alert(data.message || "채팅방을 생성할 수 없습니다.");
+				}
+			} catch (err) {
+				console.error("채팅방 생성 중 오류:", err);
 			}
 		});
 	}
+
 
 	const chatViewContainer = document.querySelector('.chat-view-panel');
 	const chatListContainer = document.querySelector('.chat-list');
@@ -177,84 +197,175 @@ document.addEventListener('DOMContentLoaded', () => {
 			const response = await fetch(`/chat/detail/${chatNo}`);
 			if (!response.ok) throw new Error("서버 응답 오류");
 
-			const data = await response.json();
-			const chatInfo = data.chatInfo;
-			const messages = data.messages;
-			const loginUserNo = data.loginUser.userNo;
-
-			// 채팅방 HTML 전체 렌더링 (드롭다운 메뉴 HTML 추가)
-			if (chatViewContainer) {
-				chatViewContainer.innerHTML = `
-					<div class="chat-header text-20px">
-						<span>${chatInfo.nickname || "이름 없음"}</span>
-						<button class="icon-button" id="toggleButton">☰</button>
-						
-						<div id="dropdownMenu"
-							class="
-								dropdown-menu
-								absolute right-0 mt-2 w-48
-								bg-white rounded-xl shadow-2xl
-								ring-1 ring-black ring-opacity-5
-								divide-y divide-gray-100
-								origin-top-right
-							"
-							style="right: 24px; top: 76px; z-index: 50;" 
-							role="menu" aria-orientation="vertical"
-							aria-labelledby="toggleButton">
-
-							<div class="py-1">
-								<a href="#" data-action="report"
+				const data = await response.json();
+				const chatInfo = data.chatInfo;
+				const messages = data.messages;
+				const loginUserNo = data.loginUser.userNo;
+	
+				// 채팅방 HTML 전체 렌더링 (드롭다운 메뉴 HTML 추가)
+				if ((loginUserNo == chatInfo.sellerNo && chatInfo.buyerStatus == 'Y') ||
+					(loginUserNo == chatInfo.buyerNo && chatInfo.sellerStatus == 'Y')) {
+					if (chatViewContainer) {
+						chatViewContainer.innerHTML = `
+							<div class="chat-header text-20px">
+								<span>${chatInfo.nickname || "이름 없음"}</span>
+								<button class="icon-button" id="toggleButton">☰</button>
+								
+								<div id="dropdownMenu"
 									class="
-										menu-item block px-4 py-3 text-sm text-gray-700
-										hover:bg-red-50 hover:text-red-600
-										transition duration-100 ease-in-out
-										rounded-t-xl
+										dropdown-menu
+										absolute right-0 mt-2 w-48
+										bg-white rounded-xl shadow-2xl
+										ring-1 ring-black ring-opacity-5
+										divide-y divide-gray-100
+										origin-top-right
 									"
-									role="menuitem"> 신고하기 </a>
-
-								<a href="#" data-action="leave"
-									class="
-										menu-item block px-4 py-3 text-sm text-gray-700
-										hover:bg-red-50 hover:text-red-600
-										transition duration-100 ease-in-out
-										rounded-b-xl
-									"
-									role="menuitem"> 채팅방 나가기 </a>
+									style="right: 24px; top: 76px; z-index: 50;" 
+									role="menu" aria-orientation="vertical"
+									aria-labelledby="toggleButton">
+		
+									<div class="py-1">
+										<a href="#" data-action="report"
+											class="
+												menu-item block px-4 py-3 text-sm text-gray-700
+												hover:bg-red-50 hover:text-red-600
+												transition duration-100 ease-in-out
+												rounded-t-xl
+											"
+											role="menuitem"> 신고하기 </a>
+		
+										<a href="#" data-action="leave"
+											class="
+												menu-item block px-4 py-3 text-sm text-gray-700
+												hover:bg-red-50 hover:text-red-600
+												transition duration-100 ease-in-out
+												rounded-b-xl
+											"
+											role="menuitem"> 채팅방 나가기 </a>
+									</div>
+								</div>
+								
 							</div>
-						</div>
-						
-					</div>
-					<div class="product-bar">
-						<img src="${chatInfo.imageUrl || ''}" class="product-image">
-						<div class="product-info">
-							<div class="product-name">${chatInfo.name || ''}</div>
-							<div class="product-price">${chatInfo.price ? chatInfo.price + "원" : ''}</div>
-						</div>
-					</div>
-					<div class="message-area">
-						<ul class="message-list">
-							${messages.length > 0
-						? messages.map(msg => {
-							const time = msg.timestamp.split('T')[1].slice(0, 5);
-							return msg.senderNo == loginUserNo
-								? `<li class="message"><div class="timestamp">${time}</div><div class="message-bubble">${msg.message}</div></li>`
-								: `<li class="received"><div class="message-bubble">${msg.message}</div><div class="timestamp">${time}</div></li>`;
-						}).join('')
-						: `<li class="no-message"><p>💬 채팅을 시작해주세요!</p></li>`
+							<div class="product-bar" id="product-bar">
+								<img src="${chatInfo.imageUrl || ''}" class="product-image">
+								<div class="product-info">
+									<input type="hidden" id="productNo" value=${chatInfo.productNo}>
+									<div class="product-name">${chatInfo.name || ''}</div>
+									<div class="product-price">${chatInfo.price ? chatInfo.price + "원" : ''}</div>
+								</div>
+							</div>
+							<div class="message-area">
+								<ul class="message-list">
+									${messages.length > 0
+								? messages.map(msg => {
+									const time = new Date(msg.timestamp).toLocaleTimeString('ko-KR', {
+										hour: '2-digit',
+										minute: '2-digit',
+										hour12: false
+									});
+									return msg.senderNo == loginUserNo
+										? `<li class="message"><div class="timestamp">${time}</div><div class="message-bubble">${msg.message}</div></li>`
+										: `<li class="received"><div class="message-bubble">${msg.message}</div><div class="timestamp">${time}</div></li>`;
+								}).join('')
+								: `<li class="no-message"><p>💬 채팅을 시작해주세요!</p></li>`
+							}
+								</ul>
+							</div>
+							<div class="input-area">
+								<button class="icon-button">+</button>
+								<input type="text" class="message-input" placeholder="메시지를 입력하세요.">
+								<button class="send-button">➤</button>
+							</div>
+						`;
+	
+						// **[수정]** 동적 로드 후 드롭다운 리스너 재부착
+						attachDropdownListeners(chatViewContainer);
 					}
-						</ul>
-					</div>
-					<div class="input-area">
-						<button class="icon-button">+</button>
-						<input type="text" class="message-input" placeholder="메시지를 입력하세요.">
-						<button class="send-button">➤</button>
-					</div>
-				`;
+				} else {
+					if (chatViewContainer) {
+						chatViewContainer.innerHTML = `
+				            <div class="chat-header text-20px">
+				                <span>${chatInfo.nickname || "이름 없음"}</span>
+								<button class="icon-button" id="toggleButton">☰</button>
+								<div id="dropdownMenu"
+																class="
+																	dropdown-menu
+																	absolute right-0 mt-2 w-48
+																	bg-white rounded-xl shadow-2xl
+																	ring-1 ring-black ring-opacity-5
+																	divide-y divide-gray-100
+																	origin-top-right
+																"
+																style="right: 24px; top: 76px; z-index: 50;" 
+																role="menu" aria-orientation="vertical"
+																aria-labelledby="toggleButton">
+									
+																<div class="py-1">
+																	<a href="#" data-action="report"
+																		class="
+																			menu-item block px-4 py-3 text-sm text-gray-700
+																			hover:bg-red-50 hover:text-red-600
+																			transition duration-100 ease-in-out
+																			rounded-t-xl
+																		"
+																		role="menuitem"> 신고하기 </a>
+									
+																	<a href="#" data-action="leave"
+																		class="
+																			menu-item block px-4 py-3 text-sm text-gray-700
+																			hover:bg-red-50 hover:text-red-600
+																			transition duration-100 ease-in-out
+																			rounded-b-xl
+																		"
+																		role="menuitem"> 채팅방 나가기 </a>
+																</div>
+															</div>
+				            </div>
+	
+				            <div class="product-bar" id="product-bar">
+				                <img src="${chatInfo.imageUrl || ''}" class="product-image">
+				                <div class="product-info">
+				                    <input type="hidden" id="productNo" value=${chatInfo.productNo}>
+				                    <div class="product-name">${chatInfo.name || ''}</div>
+				                    <div class="product-price">${chatInfo.price ? chatInfo.price + "원" : ''}</div>
+				                </div>
+				            </div>
+	
+				            <div class="message-area">
+				                <ul class="message-list">
+				                    ${messages.length > 0
+								? messages.map(msg => {
+									const time = new Date(msg.timestamp).toLocaleTimeString('ko-KR', {
+										hour: '2-digit',
+										minute: '2-digit',
+										hour12: false
+									});
+									return msg.senderNo == loginUserNo
+										? `<li class="message"><div class="timestamp">${time}</div><div class="message-bubble">${msg.message}</div></li>`
+										: `<li class="received"><div class="message-bubble">${msg.message}</div><div class="timestamp">${time}</div></li>`;
+								}).join('')
+								: `<li class="no-message"><p>💬 채팅을 시작해주세요!</p></li>`
+							}
+	
 
-				// **[수정]** 동적 로드 후 드롭다운 리스너 재부착
-				attachDropdownListeners(chatViewContainer);
-			}
+				                    <li class="system-message">
+				                        <p>⚠ 상대방이 채팅방을 나갔습니다.</p>
+				                    </li>
+				                </ul>
+				            </div>
+	
 
+				            <div class="input-area">
+				                <button class="icon-button" disabled>+</button>
+				                <input type="text" class="message-input" 
+				                    placeholder="상대방이 채팅방을 나갔습니다." disabled>
+				                <button class="send-button" disabled>➤</button>
+				            </div>
+				        `;
+						
+						attachDropdownListeners(chatViewContainer);
+					}
+				}
 			// 1. **(수정 포인트)** 채팅방 로드 후 스크롤
 			// DOM 갱신 후 바로 스크롤
 			scrollToBottom();
@@ -296,7 +407,11 @@ document.addEventListener('DOMContentLoaded', () => {
 					lastDateMap[chatNo] = currentDate;
 				}
 
-				const time = msg.timestamp.split('T')[1].slice(0, 5);
+				const time = new Date(msg.timestamp).toLocaleTimeString('ko-KR', {
+					hour: '2-digit',
+					minute: '2-digit',
+					hour12: false
+				});
 				const noMessageEl = messageList.querySelector('.no-message');
 				if (noMessageEl) noMessageEl.remove();
 
@@ -321,11 +436,15 @@ document.addEventListener('DOMContentLoaded', () => {
 				const message = messageInput.value.trim();
 				if (!message) return;
 
+				const now = new Date();
+				const koreaTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (9 * 60 * 60000)); // UTC → KST
+				const formattedTime = koreaTime.toISOString();
+
 				const chatData = {
 					chatNo: chatInfo.chatNo,
 					senderNo: loginUserNo,
 					message: message,
-					timestamp: new Date().toISOString()
+					timestamp: formattedTime
 				};
 
 				if (socket.readyState === WebSocket.OPEN) {
@@ -335,20 +454,28 @@ document.addEventListener('DOMContentLoaded', () => {
 					console.warn("⚠️ WebSocket 연결이 열려있지 않아 메시지 전송 실패");
 				}
 
-				const messageList = chatViewContainer.querySelector('.message-list');
-				const time = new Date().toISOString().split('T')[1].slice(0, 5);
+				// 👇 **[핵심 수정]** 내가 메시지를 보낼 때 '채팅을 시작해주세요!' 문구 제거
+				                const noMessageEl = messageList.querySelector('.no-message');
+								if (noMessageEl) noMessageEl.remove();
+				                // 👆 **[핵심 수정]**
+
+								const time = new Date(chatData.timestamp).toLocaleTimeString('ko-KR', {
+									hour: '2-digit',
+									minute: '2-digit',
+									hour12: false
+								});
 				const newMsgHTML = `<li class="message"><div class="timestamp">${time}</div><div class="message-bubble">${message}</div></li>`;
 
-				// 내가 보낸 메시지는 onmessage가 아닌 여기서 바로 렌더링 해야 사용자 경험이 좋습니다.
-				messageList.insertAdjacentHTML('beforeend', newMsgHTML);
+								// 내가 보낸 메시지는 onmessage가 아닌 여기서 바로 렌더링 해야 사용자 경험이 좋습니다.
+								messageList.insertAdjacentHTML('beforeend', newMsgHTML);
 
-				// 3. **(수정 포인트)** 메시지 전송 후 스크롤
-				scrollToBottom();
+								// 3. **(수정 포인트)** 메시지 전송 후 스크롤
+								scrollToBottom();
 
 
 
-				messageInput.value = '';
-			});
+								messageInput.value = '';
+							});
 		} catch (error) {
 			console.error("채팅방 로드 중 오류:", error);
 			alert("채팅방 정보를 불러오지 못했습니다.");
@@ -414,4 +541,90 @@ document.addEventListener('DOMContentLoaded', () => {
 			messageBox.classList.add('opacity-0');
 		}, duration);
 	}
+
+	document.addEventListener('click', (event) => {
+		// 클릭된 요소부터 상위로 탐색하여 가장 가까운 #product-bar 요소를 찾습니다.
+		const productBar = event.target.closest('#product-bar');
+
+		if (productBar) {
+			// #product-bar 내부의 #productNo input을 찾습니다.
+			// productNo input이 <div class="product-info"> 안에 있으므로 
+			// productBar.querySelector("#productNo")로 접근 가능합니다.
+			const product = productBar.querySelector("#productNo");
+
+			if (product) {
+				const productNo = product.value;
+
+				console.log('✅ productBar 클릭 - 이벤트 위임'); // 이 콘솔이 찍히는지 확인하세요!
+
+				if (productNo?.trim()) {
+					location.href = `/product/detail/${productNo}`;
+				} else {
+					// showAlert 함수가 있다면 사용하거나, alert 사용
+					alert("상품 번호를 확인할 수 없습니다.");
+				}
+			}
+		}
+	});
 });
+
+async function updateChatList(targetChatNo) {
+	const chatListPanel = document.querySelector('.chat-list-panel'); // 좌측 전체 패널
+	const chatListContainer = document.querySelector('.chat-list'); // <ul class="chat-list">
+
+	if (!chatListPanel || !chatListContainer) return;
+
+	try {
+		const response = await fetch("/chat/api/chatList");
+		const data = await response.json();
+
+		if (data.success) {
+			// Thymeleaf Fragment를 사용하지 않는다면, JS에서 목록 HTML을 생성해야 합니다.
+			// 여기서는 목록 HTML을 JS에서 직접 생성하는 방식으로 구현합니다.
+			let newHtml = '';
+
+			// 받은 리스트를 순회하며 <li> 항목을 생성합니다.
+			if (data.chatList && data.chatList.length > 0) {
+				data.chatList.forEach(chat => {
+					const lastMsg = data.lastChat[chat.chatNo];
+					const msgPreview = lastMsg ? (lastMsg.message.length > 11 ? lastMsg.message.substring(0, 11) + '...' : lastMsg.message) : '대화 내용이 없습니다.';
+					const timestamp = lastMsg ? new Date(lastMsg.timestamp).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '';
+
+					// 현재 활성화된 채팅방을 표시하기 위한 클래스 추가 (옵션)
+					const activeClass = chat.chatNo == targetChatNo ? 'active' : '';
+
+					newHtml += `
+                        <li class="chat-item ${activeClass}" data-chat-no="${chat.chatNo}">
+                            <div class="avatar">👤</div>
+                            <div class="chat-content">
+                                <div class="user-name">${chat.nickname}</div>
+                                <div class="message-preview">${msgPreview}</div>
+                            </div>
+                            <div class="chat-meta">
+                                <div class="timestamp">${timestamp}</div>
+                                <img src="${chat.imageUrl || '/img/default.png'}" class="thumbnail">
+                            </div>
+                        </li>
+                    `;
+				});
+			}
+
+			chatListContainer.innerHTML = newHtml;
+
+			// 목록 갱신 후, 새로 생성된 채팅방으로 이동
+			if (targetChatNo) {
+				// 기존 loadChatRoom 함수를 호출하여 우측 화면을 갱신합니다.
+				loadChatRoom(targetChatNo);
+			}
+		} else {
+			console.error("채팅 목록을 불러오는 데 실패했습니다.");
+		}
+	} catch (e) {
+		console.error("AJAX 오류:", e);
+	}
+}
+
+
+
+
+

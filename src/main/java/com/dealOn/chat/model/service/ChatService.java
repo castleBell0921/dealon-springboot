@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dealOn.chat.model.mapper.ChatMapper;
 import com.dealOn.chat.model.repository.ChatMessageNoSqlRepository;
@@ -80,7 +81,7 @@ public class ChatService {
 	}
 
 	public ChatRoom findByChatInfo(String chatNo, String userNo) {
-		HashMap<String, Object> data = new HashMap<String, Object>();
+		HashMap<String, String> data = new HashMap<String, String>();
 		data.put("chatNo", chatNo);
 		data.put("userNo", userNo);
 		return chatMapper.findByChatInfo(data);
@@ -109,16 +110,23 @@ public class ChatService {
 		}
 	}
 
+	@Transactional
 	public boolean leaveChatRoom(String chatNo, String userNo,String userOption) {
 		HashMap<String, String> data = new HashMap<String, String>();
-		HashMap<String, Object> chatData = new HashMap<String, Object>();
+		HashMap<String, String> chatData = new HashMap<String, String>();
 		chatData.put("chatNo",chatNo);
 		chatData.put("userNo", userNo);
+		System.out.println("chatNo:"+ chatNo);
+		System.out.println("userNo:"+ userNo);
 		data.put("chatNo", chatNo);
 		data.put("userNo", userNo);
 		data.put("userOption", userOption);
-		int rdbResult = chatMapper.leaveChatRoom(data);
+		
 		ChatRoom chatInfo = chatMapper.findByChatInfo(chatData);
+		int rdbResult = chatMapper.leaveChatRoom(data);
+		
+		System.out.println("chatData: " + chatData);
+		System.out.println("chatInfo: " + chatInfo);
 		if (rdbResult > 0) {
 
 			// 2. NoSQL 작업: 해당 채팅방의 모든 메시지 기록 삭제
@@ -143,4 +151,12 @@ public class ChatService {
 	public ChatRoom findByChatNoIgnoreStatus(String chatNo) {
 		return chatMapper.findByChatNoIgnoreStatus(chatNo);
 	}
+	
+	@Transactional
+	public void updateStatus(String chatNo, String userOption) {
+        chatMapper.updateStatus(chatNo, userOption);
+
+	}
+	
+	
 }

@@ -32,7 +32,7 @@
 					<a>전체 대화</a>
 				</div>
 				<hr
-					style="height: 2px; background-color: #B57EDC; border: none; width: 450px;">
+					style="height: 2px; background-color: #B57EDC; border: none; width: 578px;">
 
 
 				<ul class="chat-list">
@@ -93,9 +93,10 @@
 				
 				
 
-				<div class="product-bar">
+				<div class="product-bar" id="product-bar">
 					<img th:src="${chatInfo.imageUrl}" class="product-image">
 					<div class="product-info">
+						<input type="hidden" id="productNo" th:value="${chatInfo.productNo}">
 						<div class="product-name" th:text="${chatInfo.name}"></div>
 						<div class="product-price" th:text="${chatInfo.price}"></div>
 					</div>
@@ -119,7 +120,7 @@
 						</li> -->
 						<li th:if="${loginUser.userNo == msg.senderNo}" class="message">
 							<div class="timestamp"
-								th:text="${#temporals.format(msg.timestamp,'HH:mm')}"></div>
+								th:text="${#temporals.format(msg.timestamp,'yyyy-MM-dd HH:mm')}"></div>
 							<div class="message-bubble" th:text="${msg.message}"></div>
 						</li>
 
@@ -128,7 +129,7 @@
 							class="received">
 							<div class="message-bubble" th:text="${msg.message}"></div>
 							<div class="timestamp"
-								th:text="${#temporals.format(msg.timestamp,'HH:mm')}"></div>
+								th:text="${#temporals.format(msg.timestamp,'yyyy-MM-dd HH:mm')}"></div>
 						</li>
 
 					</ul>

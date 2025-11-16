@@ -32,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ChatController {
 
 	private final ChatService chatService;
-	private final ChatMapper chatMapper;
 
 	@GetMapping("/chatRoom")
 	public String chatIn(HttpSession session, Model model) {
@@ -57,12 +56,6 @@ public class ChatController {
 		return "/chat";
 	}
 
-	/**
-	 * 구매자가 채팅방을 생성하거나 기존 채팅방을 찾아 이동합니다. * @param productNo 상품 번호
-	 * 
-	 * @param session HTTP 세션 (로그인 사용자 정보 획득용)
-	 * @return 채팅방 ID(String)를 포함하는 Map
-	 */
 	@PostMapping("/createRoom")
 	@ResponseBody
 	public Map<String, Object> createChatRoom(@RequestParam("productNo") String productNo, HttpSession session) {
@@ -88,6 +81,13 @@ public class ChatController {
 				return result;
 			}
 
+			// ✅ 자기 자신일 경우
+			if (sellerNo.equals(buyerNo)) {
+				result.put("chatRoomId", null);
+				result.put("noChat", "자기 자신과는 대화할 수 없습니다.");
+				return result;
+			}
+
 			// 2. 채팅방 생성/조회 (NoSQL 기반)
 			List<ChatRoom> chatRooms = chatService.findChatRoom(buyerNo, sellerNo, productNo, loginUser.getUserNo());
 			System.out.println("chatRoomInfo: " + chatRooms);
@@ -100,15 +100,29 @@ public class ChatController {
 				}
 			}
 			if (matchedChatRoom != null) {
-				// 내 상태가 N이면 다시 Y로 변경
+				String userOption = null;
 				if (loginUser.getUserNo().equals(matchedChatRoom.getBuyerNo())
 						&& "N".equals(matchedChatRoom.getBuyerStatus())) {
-					chatMapper.updateStatus(matchedChatRoom.getChatNo(), "buyer");
+					userOption = "buyer";
 				} else if (loginUser.getUserNo().equals(matchedChatRoom.getSellerNo())
 						&& "N".equals(matchedChatRoom.getSellerStatus())) {
-					chatMapper.updateStatus(matchedChatRoom.getChatNo(), "seller");
+					userOption = "seller";
 				}
+
+				// ✅ 재입장으로 인해 상태가 변경되는 경우
+				if (userOption != null) {
+					chatService.updateStatus(matchedChatRoom.getChatNo(), userOption);
+				}
+
+				ChatRoom latestRoomInfo = chatService.findByChatInfo(matchedChatRoom.getChatNo(),
+						loginUser.getUserNo());
+
+				// ✅ 프론트에서 쓸 수 있게 최신 정보 추가
 				result.put("chatRoomId", matchedChatRoom.getChatNo());
+				result.put("name", latestRoomInfo.getName());
+				result.put("nickname", latestRoomInfo.getNickname());
+				result.put("imageUrl", latestRoomInfo.getImageUrl());
+
 			} else {
 				ChatRoom newChatRoom = chatService.createChatRoom(buyerNo, sellerNo, productNo);
 				if (newChatRoom != null) {
@@ -132,56 +146,62 @@ public class ChatController {
 	@GetMapping("/chatRoom/{chatNo}")
 	public String chatRoomDetail(@PathVariable("chatNo") String chatNo, Model model, HttpSession session) {
 
-	    User loginUser = (User) session.getAttribute("loginUser");
-	    if (loginUser == null) {
-	        return "redirect:/";
-	    }
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/";
+		}
 
-	    List<ChatRoom> chatList = chatService.findChatRoomsByUser(loginUser.getUserNo());
-	    List<String> chatNos = chatList.stream().map(ChatRoom::getChatNo).toList();
+		// 1. 채팅방 존재 여부 확인 (상태 무시)
+		ChatRoom currentChat = chatService.findByChatNoIgnoreStatus(chatNo);
+		if (currentChat == null) {
+			return "error/404"; // 채팅방 자체가 없는 경우
+		}
 
-	    // 1. 채팅방 존재 여부 확인 (상태 무시)
-	    ChatRoom currentChat = chatService.findByChatNoIgnoreStatus(chatNo);
-	    if (currentChat == null) {
-	        return "error/404"; // 채팅방 자체가 없는 경우
-	    }
+		String userOptionToUpdate = null;
+		if (loginUser.getUserNo().equals(currentChat.getBuyerNo()) && "N".equals(currentChat.getBuyerStatus())) {
+			userOptionToUpdate = "buyer";
+		} else if (loginUser.getUserNo().equals(currentChat.getSellerNo())
+				&& "N".equals(currentChat.getSellerStatus())) {
+			userOptionToUpdate = "seller";
+		}
 
-	    // 2. 나갔던 사용자의 상태 Y로 복구
-	    if (loginUser.getUserNo().equals(currentChat.getBuyerNo()) && "N".equals(currentChat.getBuyerStatus())) {
-	        chatMapper.updateStatus(currentChat.getChatNo(), "buyer");
-	    } else if (loginUser.getUserNo().equals(currentChat.getSellerNo()) && "N".equals(currentChat.getSellerStatus())) {
-	        chatMapper.updateStatus(currentChat.getChatNo(), "seller");
-	    }
+		// 3. 상태 반영 후 currentChat 다시 조회
+		// ✅ 상태 업데이트를 먼저 실행하고 커밋을 보장합니다.
+		if (userOptionToUpdate != null) {
+			chatService.updateStatus(currentChat.getChatNo(), userOptionToUpdate);
+		}
 
-	    // 3. 상태 반영 후 currentChat 다시 조회
-	    currentChat = chatService.findByChatNo(chatNo, loginUser.getUserNo());
+		currentChat = chatService.findByChatNo(chatNo, loginUser.getUserNo());
 
-	    // 4. 메시지 조회
-	    List<ChatMessage> message = chatService.getMessages(chatNo);
-	    List<ChatMessage> lastMessage = chatService.getLastMessages(chatNos);
+		List<ChatRoom> chatList = chatService.findChatRoomsByUser(loginUser.getUserNo());
+		List<String> chatNos = chatList.stream().map(ChatRoom::getChatNo).toList();
 
-	    // 5. 세션 chatInfo 처리
-	    ChatRoom chatInfo = (ChatRoom) session.getAttribute("chatInfo");
-	    if (chatInfo == null) {
-	        chatInfo = currentChat;
-	        session.setAttribute("chatInfo", chatInfo);
-	    }
+		// 4. 메시지 조회
+		List<ChatMessage> message = chatService.getMessages(chatNo);
+		List<ChatMessage> lastMessage = chatService.getLastMessages(chatNos);
 
-	    // 6. 채팅방별 마지막 메시지 Map 생성
-	    Map<String, ChatMessage> lastChat = new HashMap<>();
-	    for (ChatMessage msg : lastMessage) {
-	        lastChat.put(msg.getChatNo(), msg);
-	    }
+		// 5. 세션 chatInfo 처리
+		ChatRoom chatInfo = (ChatRoom) session.getAttribute("chatInfo");
+		if (chatInfo == null) {
+			chatInfo = currentChat;
+			session.setAttribute("chatInfo", chatInfo);
+		}
 
-	    // 7. 모델에 데이터 추가
-	    model.addAttribute("currentChat", currentChat);
-	    model.addAttribute("chatList", chatList);
-	    model.addAttribute("message", message);
-	    model.addAttribute("loginUser", loginUser);
-	    model.addAttribute("chatInfo", chatInfo);
-	    model.addAttribute("lastChat", lastChat);
+		// 6. 채팅방별 마지막 메시지 Map 생성
+		Map<String, ChatMessage> lastChat = new HashMap<>();
+		for (ChatMessage msg : lastMessage) {
+			lastChat.put(msg.getChatNo(), msg);
+		}
 
-	    return "/chat"; // templates/chat/chat.html
+		// 7. 모델에 데이터 추가
+		model.addAttribute("currentChat", currentChat);
+		model.addAttribute("chatList", chatList);
+		model.addAttribute("message", message);
+		model.addAttribute("loginUser", loginUser);
+		model.addAttribute("chatInfo", chatInfo);
+		model.addAttribute("lastChat", lastChat);
+
+		return "/chat"; // templates/chat/chat.html
 	}
 
 	@GetMapping("/detail/{chatNo}")
@@ -243,4 +263,39 @@ public class ChatController {
 			return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
+
+	// ChatController.java (새로운 메서드 추가)
+
+	@GetMapping("/api/chatList")
+	@ResponseBody
+	public Map<String, Object> getChatList(HttpSession session) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		Map<String, Object> result = new HashMap<>();
+
+		if (loginUser == null) {
+			result.put("success", false);
+			return result;
+		}
+
+		try {
+			List<ChatRoom> chatList = chatService.findChatRoomsByUser(loginUser.getUserNo());
+			List<String> chatNos = chatList.stream().map(ChatRoom::getChatNo).toList();
+			List<ChatMessage> lastMessage = chatService.getLastMessages(chatNos);
+
+			Map<String, ChatMessage> lastChat = new HashMap<>();
+			for (ChatMessage msg : lastMessage) {
+				lastChat.put(msg.getChatNo(), msg);
+			}
+
+			result.put("success", true);
+			result.put("chatList", chatList);
+			result.put("lastChat", lastChat);
+
+		} catch (Exception e) {
+			log.error("채팅 목록 조회 중 오류 발생", e);
+			result.put("success", false);
+		}
+		return result;
+	}
+
 }

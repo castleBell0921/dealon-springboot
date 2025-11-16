@@ -39,8 +39,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	    String chatNo = getChatNoFromURI(session);
 	    String userNo = getUserNoFromURI(session); // 쿼리나 세션에서 로그인 유저 번호 가져오기
 	    session.getAttributes().put("userNo", userNo);
-
+	    // 그냥 List는 멀티쓰레드 환경에서 안전X => 동시에 add 했을때 데이터 손실 가능성O
+	    // 쓰기 시 배열을 복사해서 처리 → 다른 스레드에서 읽고 있어도 안전
 	    chatRooms.putIfAbsent(chatNo, new CopyOnWriteArrayList<>());
+	    // chatNo가 key값인 map 있으면 아무일도 안 일어나고, 없을떄 실행해주는거 
 	    chatRooms.get(chatNo).add(session);
 	    log.info("✅ 연결된 세션: {}, 채팅방: {}, 유저: {}", session.getId(), chatNo, userNo);
 	}

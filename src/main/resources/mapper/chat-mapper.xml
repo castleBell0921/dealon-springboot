@@ -44,10 +44,8 @@
 	</select>
 	<insert id="createChatRoom">
 		INSERT INTO CHAT_ROOM
-		(BUYER_NO, SELLER_NO,
-		PRODUCT_NO, CREATE_DATE)
-		VALUES (#{buyerNo}, #{sellerNo},
-		#{productNo},SYSDATE, 'Y', 'Y')
+		(BUYER_NO, SELLER_NO, PRODUCT_NO, CREATE_DATE)
+		VALUES (#{buyerNo}, #{sellerNo}, #{productNo},SYSDATE)
 	</insert>
 	<select id="findByChatNo">
 		SELECT DISTINCT CR.CHAT_NO,

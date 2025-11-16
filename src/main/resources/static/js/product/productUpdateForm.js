@@ -143,10 +143,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = new FormData(document.getElementById('product-form'));
 
-        // *새로 추가된* 파일(imageFiles)을 FormData에 추가
-        Array.from(imageFiles.files).forEach(file => {
-            formData.append('productImages', file);
-        });
+        // *새로 추가된* 파일(imageFiles)을 FormData에 추가 ---- 이미지 중복추가로 임시 주석처리
+        // Array.from(imageFiles.files).forEach(file => {
+        //     formData.append('productImages', file);
+        // });
 
         formData.set('deletedImages', deletedImages.join(','));
 

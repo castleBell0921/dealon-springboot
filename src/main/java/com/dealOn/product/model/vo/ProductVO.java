@@ -44,5 +44,6 @@ public class ProductVO {
     // 경매 상품 정보
     private BigDecimal startPrice;
     private BigDecimal currentPrice;
-    private Date endDate; 
+    private Date endDate;
+
 }

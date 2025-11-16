@@ -108,7 +108,17 @@ public class ProductController {
 
         // 1. 상품 상세 정보 조회 (기존 getProductDetail 재사용)
         ProductVO product = productService.getProductDetail(productNo);
-        System.out.println("### DEBUG: " + product.toString());
+        // 디버깅로그
+        System.out.println("### DEBUG 2: Controller ###");
+        if (product != null) {
+            System.out.println("Category Name: " + product.getCategoryName());
+            System.out.println("Category No: " + product.getCategoryNo());
+        } else {
+            System.out.println("Product is NULL");
+        }
+        System.out.println("###########################");
+        // 디버깅로그 여기까지
+
         // 2. 로그인 여부 및 본인 상품 여부 확인
         // *주의*: ProductVO에 userNo 필드가 있고, User VO에 getUserNo()가 String을 반환한다고 가정합니다.
         if (loginUser == null || product == null || !Objects.equals(String.valueOf(product.getUserNo()), loginUser.getUserNo())) {

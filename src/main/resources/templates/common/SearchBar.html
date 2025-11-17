@@ -10,7 +10,14 @@
             <span th:text="${location} ?: '위치 정보 없음'"></span>
         </div>
         <div class="searchbar-input-wrapper">
-            <input type="text" placeholder=" 상품명을 입력해주세요" class="searchbar-input text-14px" />
+        	<form method="get" action="/product/search" id='form'>
+	            <input type="text" placeholder=" 상품명을 입력해주세요" name="searchText" class="searchbar-input text-14px" />
+	            <button type="button" class="search-btn">
+			        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+			            <path d="M9 2a7 7 0 015.29 11.71l3 3a1 1 0 01-1.42 1.42l-3-3A7 7 0 119 2zm0 2a5 5 0 100 10A5 5 0 009 4z" fill="#555"/>
+			        </svg>
+	    		</button>
+    		</form>
         </div>
     </div>
     <div class="popular-keywords text-14px">

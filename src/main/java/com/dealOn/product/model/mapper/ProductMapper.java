@@ -26,4 +26,5 @@ public interface ProductMapper {
     int findImageCountByProductNo(int productNo);
 
     int deleteImagesByUrl(@Param("productNo") int productNo, @Param("urls") List<String> urls);
+	List<ProductVO> productSearch(String value);
 }

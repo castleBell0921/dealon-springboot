@@ -101,4 +101,10 @@ public class ProductService {
             }
         }
     }
+
+	public List<ProductVO> productSearch(String value) {
+		return productMapper.productSearch(value);
+		
+		
+	}
 }

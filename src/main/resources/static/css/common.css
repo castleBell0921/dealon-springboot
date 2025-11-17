@@ -57,12 +57,13 @@
 }
 
 .searchbar-input {
-  width: 1370px;
+  /* width: 1370px; */
+  width: 100%;
   height: 50px;
   border: 2px solid #B57EDC;
   border-radius: 24px;
   padding-left: 15px;
-  padding-right: 40px;
+  padding-right: 50px;   /* 40이였음*/
   outline: none;
   box-sizing: border-box;
 }
@@ -777,4 +778,17 @@
   color: #000;
 }
 
-
+/* 돋보기 버튼 스타일 추가/수정 */
+.search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 6px;
+  
+  /* 👇 **[핵심 수정]** 버튼을 입력창 우측에 정확히 배치 */
+  position: absolute; /* ✅ 추가: 부모(.searchbar-input-wrapper) 기준 절대 위치 */
+  right: 15px; /* ✅ 설정: 오른쪽으로부터의 거리 */
+  top: 50%; /* ✅ 설정: 상단에서 50% 위치 */
+  transform: translateY(-50%); /* ✅ 설정: 정확히 수직 중앙 정렬 */
+  z-index: 10; /* ✅ 설정: 입력창보다 위로 오도록 */
+}

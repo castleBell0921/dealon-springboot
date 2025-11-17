@@ -1,18 +1,30 @@
 package com.dealOn.product.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.dealOn.common.model.vo.CategoryVO;
 import com.dealOn.product.model.service.ProductService;
 import com.dealOn.product.model.vo.AddProductVO;
 import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.user.model.vo.User;
+
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -177,5 +189,18 @@ public class ProductController {
             return "redirect:/product/updateForm/" + product.getProductNo();
         }
     }
-
+    @GetMapping("/search")
+    public String ProductSearch(@RequestParam("searchText") String value, 
+    		 @RequestParam(value="category", required = false) String category,
+             @RequestParam(value="location", required = false) String location,
+             @RequestParam(value="minPrice", required = false) Integer minPrice,
+             @RequestParam(value="maxPrice", required = false) Integer maxPrice,
+             @RequestParam(value="availableOnly", required = false) Boolean availableOnly,
+             Model model) {
+    	List<ProductVO> list = productService.productSearch(value); 
+    	System.out.println("검색 값: " + value);
+    	model.addAttribute("products", list);
+    	
+    	return "/list";
+    }
 }

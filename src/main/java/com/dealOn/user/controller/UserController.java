@@ -1,7 +1,7 @@
 package com.dealOn.user.controller;
 
 import java.io.IOException;
-import java.util.Random;
+import java.util.List;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,9 +19,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.dealOn.Auth.service.EmailService;
 import com.dealOn.Auth.service.KakaoAuthService;
 import com.dealOn.common.S3Service;
+import com.dealOn.product.model.service.ProductService;
+import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.user.model.service.UserService;
 import com.dealOn.user.model.vo.User;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +38,7 @@ public class UserController {
 	private final BCryptPasswordEncoder bcrypt;
 	private final KakaoAuthService authService;
 	private final S3Service s3Service;
+	private final ProductService pService;
 
 	@GetMapping("signIn")
 	public String SignIn(@RequestParam(name = "nickname", required = false) String nickname,
@@ -123,10 +127,25 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/myInfo")
-	public String myInfo() {
+	@GetMapping("/myProduct")
+	public String myProduct(HttpServletRequest  request, HttpSession session,Model model) {
+		User loginUser = (User)session.getAttribute("loginUser");
+		List<ProductVO> productList = pService.findByUserNoProducts(loginUser.getUserNo());
+		model.addAttribute("productList", productList);
+        model.addAttribute("requestURI", request.getRequestURI());
+
+		return "user/myProduct";
+	}
+	
+	@GetMapping("editProfile")
+	public String editProfile(HttpServletRequest  request, HttpSession session, Model model) {
+		User loginUser = (User)session.getAttribute("loginUser");
+		model.addAttribute("loginUser", loginUser);
+		model.addAttribute("requestURI", request.getRequestURI());
 		return "user/myInfo";
 	}
+	
+	
 	
 	@PostMapping("/update")
 	public String updateUser(@RequestParam("avatarFile") MultipartFile avatar, 
@@ -145,7 +164,7 @@ public class UserController {
 	            && confirmPwd != null && !confirmPwd.isEmpty()) {
 	        if (!newPwd.equals(confirmPwd)) {
 	            ra.addFlashAttribute("msg", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
-	            return "redirect:/user/myInfo";
+	            return "redirect:/user/editProfile";
 	        }
 
 	        if (!bcrypt.matches(currentPwd, loginUser.getPwd())) {
@@ -154,7 +173,7 @@ public class UserController {
 				 * System.out.println("currentPwd: " + currentPwd);
 				 * System.out.println("sessionPwd: " + loginUser.getPwd());
 				 */
-	            return "redirect:/user/myInfo";
+	            return "redirect:/user/editProfile";
 	        }
 	        
 	        user.setPwd(bcrypt.encode(newPwd));
@@ -174,7 +193,7 @@ public class UserController {
 		uService.updateUserProfile(loginUser, loginUser.getId(), user.getNickname(), user.getEmail(), avatarUrl, user.getPwd());
 
 		ra.addFlashAttribute("msg", "프로필이 수정되었습니다.");
-		return "redirect:/user/myInfo";
+		return "redirect:/user/editProfile";
 	}
 	
 	//아이디 찾기 폼 맵핑

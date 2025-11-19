@@ -1,0 +1,134 @@
+.main-wrap {
+    display: flex;
+    max-width: 1500px; /* 현재 좁다면 이 값을 더 큰 값(예: 1400px, 1600px)으로 설정 */
+    margin: 40px 0rem; /* 상하 여백 확대 */
+    gap: 50px; /* 사이드바와 메인 영역 간격 확대 */
+    align-items: flex-start;
+}
+
+/* 내 상품 리스트 영역 */
+.product-list-area {
+	margin-top: 30px;
+	/* width: 1500px; 원하는 본문 너비 (예시로 1000px 설정) */
+	flex: 1;
+	flex-direction: column;
+	display: flex;
+	padding-left: 50px; /* 사이드바와의 적절한 간격 확보 */
+}
+
+/* 탭 메뉴 스타일 */
+.tabs {
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 20px;
+}
+
+.tab-item {
+	padding: 10px 15px;
+	font-size: 1rem;
+	color: #777;
+	text-decoration: none;
+	font-weight: 500;
+	transition: color 0.2s;
+	position: relative;
+	top: 1px; /* border-bottom을 탭 아래로 이동 */
+}
+
+.tab-item.active {
+	color: #000;
+	font-weight: 700;
+	border-bottom: 2px solid #000; /* 활성 탭 아래의 진한 선 */
+}
+
+.total-count {
+	margin-left: auto;
+	font-size: 0.9rem;
+	color: #777;
+}
+
+/* 상품 그리드 레이아웃 */
+.product-grid {
+	display: grid;
+	/* 한 줄에 4개의 상품이 보이도록 설정 */
+	grid-template-columns: repeat(4, 1fr);
+	gap: 20px; /* 상품 카드 사이의 간격 */
+}
+
+.product-card {
+	border: 1px solid #eee; /* 선택적으로 테두리 추가 */
+	border-radius: 6px;
+	overflow: hidden;
+	cursor: pointer;
+	transition: box-shadow 0.2s;
+	width: 100%;
+}
+
+.product-card:hover {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 호버 시 그림자 효과 */
+}
+
+/* 이미지 플레이스홀더 (실제 이미지가 없을 경우) */
+.product-image-placeholder {
+	width: 100%;
+	/* 1:1 비율을 위한 padding-bottom 트릭 */
+	padding-bottom: 100%;
+	background-color: #f7f7f7;
+	position: relative; /* ✅ 이미지의 절대 위치 기준점 */
+
+	/* 기존 임시 정렬 코드는 제거하거나 주석 처리 */
+	/* display: flex; 
+       justify-content: center;
+       align-items: center; */
+}
+
+/* 👇 **[핵심 수정]** 내부 <img> 태그가 부모를 꽉 채우도록 설정 */
+.product-image-placeholder img {
+	position: absolute; /* ✅ 부모(.product-image-placeholder) 기준으로 절대 위치 */
+	top: 0;
+	left: 0;
+	width: 100%; /* ✅ 너비 100% */
+	height: 100%; /* ✅ 높이 100% */
+	/* 이미지가 1:1 비율을 유지하며 잘리지 않게 채우는 속성 */
+	object-fit: cover;
+	/* 둥근 모서리가 있다면 부모와 동일하게 적용 */
+	border-radius: inherit;
+}
+
+/* 상품 정보 텍스트 */
+.product-info {
+	padding: 0px 25px;
+}
+
+.product-name {
+	font-size: 1rem;
+	font-weight: 500;
+	color: #333;
+	margin-bottom: 5px;
+	/* 이름이 길 경우 ... 처리 */
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	margin-left: -5px;
+}
+
+.product-price {
+	font-size: 1.1rem;
+	font-weight: 700;
+	color: #333;
+	margin-bottom: 10px;
+}
+
+.product-meta {
+	display: flex;
+	gap: 10px;
+	font-size: 1rem;
+	color: #999;
+	margin-top: 0px;
+	margin-left: -9px;
+}
+
+.h1 {
+	margin-right: 0;
+	margin-top: -5px;
+}

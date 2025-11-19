@@ -1,0 +1,33 @@
+<!-- src/main/resources/templates/user/profile.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>내 정보 수정</title>
+<link rel="stylesheet" th:href="@{/css/App.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
+<link rel="stylesheet" th:href="@{/css/myInfo.css}">
+<link rel="stylesheet" th:href="@{/css/myProduct.css}">
+</head>
+<body>
+	<div class="app-container">
+		<div th:replace="~{common/header :: header}"></div>
+		<div th:replace="~{common/searchBar :: searchBar}"></div>
+
+		<main class="main-wrap">
+			<!-- 사이드바 -->
+			<div th:replace="~{user/sidebar :: sidebar}"></div>
+			<div th:replace="~{user/myProduct :: productListArea(${productList})}"></div>	
+			<div th:replace="~{user/myInfo :: myInfo(${loginUser})}"></div>
+		</main>
+	</div>
+	<div th:if="${msg}">
+		<script th:inline="javascript">
+			alert('[[${msg}]]');
+		</script>
+	</div>
+	<script th:src="@{/js/user/header.js}"></script>
+	<script th:src="@{/js/user/myInfo.js}"></script>
+</body>
+</html>

@@ -107,4 +107,8 @@ public class ProductService {
 		
 		
 	}
+
+	public List<ProductVO> findByUserNoProducts(String userNo) {
+		return productMapper.findByUserNoProducts(userNo);
+	}
 }

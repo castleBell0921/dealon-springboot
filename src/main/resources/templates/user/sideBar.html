@@ -14,9 +14,10 @@
         <nav class="sidebar-section">
             <h4 class="section-title">거래 정보</h4>
             <ul class="sidebar-menu">
-                <li><a th:href="@{/user/sell-history}">판매내역</a></li>
-                <li><a th:href="@{/user/buy-history}">구매내역</a></li>
-                <li><a th:href="@{/user/favorites}">찜한상품</a></li>
+            	<li id="myProduct"><a th:href="@{/user/myProduct}" th:classappend="${requestURI == '/user/myProduct'} ? 'active'">내 등록 상품</a></li>
+                <li><a href="#">판매내역</a></li>
+                <li><a href="#">구매내역</a></li>
+                <li><a href="#">찜한상품</a></li>
             </ul>
         </nav>
         
@@ -25,7 +26,7 @@
         <nav class="sidebar-section">
             <h4 class="section-title">내 정보</h4>
             <ul class="sidebar-menu">
-                <li><a th:href="@{/user/profile}" class="active">내 정보 수정</a></li>
+                <li id="myInfoEdit"><a th:href="@{/user/editProfile}" th:classappend="${requestURI == '/user/editProfile'} ? 'active'">내 정보 수정</a></li>
             </ul>
         </nav>
     </aside>

@@ -126,3 +126,19 @@ changeBtn.addEventListener('click', async () => {
 		console.error(err);
 	}
 });
+
+/*const allA = document.querySelectorAll('a');
+
+document.addEventListener('click', (e) => {
+
+    // 클릭된 요소가 li인지 확인 (문자열 비교 주의!)
+    if (e.target.tagName === 'A') {
+
+        // 1. 모든 li의 active 제거
+        allA.forEach(a => a.classList.remove('active'));
+
+        // 2. 클릭한 li에 active 추가
+        e.target.classList.add('active');
+    }
+});*/
+

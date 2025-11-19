@@ -1,0 +1,51 @@
+<!-- src/main/resources/templates/user/profile.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>내 정보 수정</title>
+<link rel="stylesheet" th:href="@{/css/App.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
+<link rel="stylesheet" th:href="@{/css/myProduct.css}">
+</head>
+<body>
+	<div class="app-container">
+		<div th:replace="~{common/header :: header}"></div>
+		<div th:replace="~{common/searchBar :: searchBar}"></div>
+
+		<main class="main-wrap">
+			<div th:replace="~{user/sidebar :: sidebar}"></div>
+			
+			<section class="product-list-area">
+				<h1 class="h1">내 상품</h1>
+				<div class="tabs">
+					<a class="tab-item active" href="#">전체</a> 
+					<a class="tab-item"href="#">판매중</a> 
+					<a class="tab-item" href="#">예약중</a> 
+					<a class="tab-item" href="#">판매완료</a>
+				</div>
+
+				<div class="product-grid">
+
+					<div class="product-card" th:each="list:${productList}">
+						<div class="product-image-placeholder">
+							<img th:src="${list.thumbnailUrl}">
+						</div>
+						<div class="product-info">
+							<p class="product-name" th:text="${list.name}"></p>
+							<p class="product-price" th:text="${list.price}"></p>
+							<div class="product-meta">
+								<span class="views">👁️ 5</span> <span class="likes">❤️ 8</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</section>
+		</main>
+	</div>
+	<script th:src="@{/js/user/header.js}"></script>
+	<script th:src="@{/js/user/myInfo.js}"></script>
+</body>
+</html>

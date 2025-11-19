@@ -58,7 +58,7 @@
                 AND P.SALES_LOCATION LIKE '%' || #{location} || '%'
             </if>
             <if test="minPrice != null">
-                AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) >= #{minPrice}
+                AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &gt;;= #{minPrice}
             </if>
             <if test="maxPrice != null">
                 AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &lt;= #{maxPrice}
@@ -187,7 +187,7 @@
     LEFT JOIN NORMAL N ON P.NO = N.NO2
     LEFT JOIN AUCTION A ON P.NO = A.NO2
     <where>
-            P.NAME LIKE '%' || #{searchText} || '%'
+            P.NAME LIKE '%' || #{value} || '%'
 
         <if test="category != null and category != ''">
             AND P.CATEGORY = (SELECT NO FROM CATEGORY WHERE NAME = #{category})

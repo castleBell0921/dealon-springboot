@@ -197,8 +197,18 @@ public class ProductController {
              @RequestParam(value="maxPrice", required = false) Integer maxPrice,
              @RequestParam(value="availableOnly", required = false) Boolean availableOnly,
              Model model) {
-    	List<ProductVO> list = productService.productSearch(value); 
+    	 Map<String, Object> filters = new HashMap<>();
+         filters.put("category", category);
+         filters.put("location", location);
+         filters.put("minPrice", minPrice);
+         filters.put("maxPrice", maxPrice);
+         filters.put("availableOnly", availableOnly != null);
+         filters.put("value", value);
+         
+    	List<ProductVO> list = productService.productSearch(filters);
+    	
     	System.out.println("검색 값: " + value);
+    	model.addAttribute("filters", filters);
     	model.addAttribute("products", list);
     	
     	return "/list";

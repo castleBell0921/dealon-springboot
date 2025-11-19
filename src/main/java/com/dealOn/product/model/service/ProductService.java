@@ -102,8 +102,8 @@ public class ProductService {
         }
     }
 
-	public List<ProductVO> productSearch(String value) {
-		return productMapper.productSearch(value);
+	public List<ProductVO> productSearch(Map<String, Object> filters) {
+		return productMapper.productSearch(filters);
 		
 		
 	}

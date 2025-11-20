@@ -51,6 +51,7 @@
         LEFT JOIN NORMAL N ON P.NO = N.NO2
         LEFT JOIN AUCTION A ON P.NO = A.NO2
         <where>
+            AND (P.STATUS IS NULL OR P.STATUS != 'N')
             <if test="category != null and category != ''">
                 AND P.CATEGORY = (SELECT NO FROM CATEGORY WHERE NAME = #{category})
             </if>
@@ -58,7 +59,7 @@
                 AND P.SALES_LOCATION LIKE '%' || #{location} || '%'
             </if>
             <if test="minPrice != null">
-                AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &gt;;= #{minPrice}
+                AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) >= #{minPrice}
             </if>
             <if test="maxPrice != null">
                 AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &lt;= #{maxPrice}
@@ -235,5 +236,11 @@
         WHERE P.USER_NO = #{userNo}
         ORDER BY P.CREATE_DATE DESC
     </select>
+
+    <update id="deleteProduct" parameterType="int">
+        UPDATE PRODUCT
+        SET STATUS = 'N'
+        WHERE NO = #{productNo}
+    </update>
 
 </mapper>

@@ -243,4 +243,21 @@
         WHERE NO = #{productNo}
     </update>
 
+    <select id="checkWishlist" resultType="_int">
+        SELECT COUNT(*)
+        FROM WISHLIST
+        WHERE USER_NO = #{userNo}
+          AND PRODUCT_NO = #{productNo}
+    </select>
+
+    <insert id="insertWishlist">
+        INSERT INTO WISHLIST (USER_NO, PRODUCT_NO)
+        VALUES (#{userNo}, #{productNo})
+    </insert>
+
+    <delete id="deleteWishlist">
+        DELETE FROM WISHLIST
+        WHERE USER_NO = #{userNo}
+          AND PRODUCT_NO = #{productNo}
+    </delete>
 </mapper>

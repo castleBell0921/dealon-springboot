@@ -117,4 +117,22 @@ public class ProductService {
         // 이미지 삭제 로직 없이, 상태값만 변경하는 Mapper 호출
         productMapper.deleteProduct(productNo);
     }
+
+    // 찜 체크
+    public boolean isWishlisted(int userNo, int productNo) {
+        return productMapper.checkWishlist(userNo, productNo) > 0;
+    }
+
+    // 토글기능
+    @Transactional(rollbackFor = Exception.class)
+    public String toggleWishlist(int userNo, int productNo) {
+        // 찜했는지 확인
+        if (isWishlisted(userNo, productNo)) {
+            productMapper.deleteWishlist(userNo, productNo);
+            return "removed"; 
+        } else {
+            productMapper.insertWishlist(userNo, productNo);
+            return "added"; 
+        }
+    }
 }

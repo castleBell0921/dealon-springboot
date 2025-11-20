@@ -9,12 +9,7 @@ import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dealOn.common.model.vo.CategoryVO;
@@ -67,7 +62,11 @@ public class ProductController {
         if (product == null) {
             return "redirect:/product/list";
         }
-
+        boolean isWishlisted = false;
+        if (loginUser != null) {
+            isWishlisted = productService.isWishlisted(Integer.parseInt(loginUser.getUserNo()), productNo);
+        }
+        model.addAttribute("isWishlisted", isWishlisted); // 뷰로 전달
         model.addAttribute("product", product);
         model.addAttribute("loginUser",loginUser);
         System.out.println("loginUser: " + loginUser);
@@ -236,5 +235,17 @@ public class ProductController {
             redirectAttributes.addFlashAttribute("errorMessage", "삭제 중 오류가 발생했습니다.");
             return "redirect:/product/detail/" + productNo;
         }
+    }
+
+    @PostMapping("/wishlist/toggle")
+    @ResponseBody
+    public String toggleWishlist(@RequestParam("productNo") int productNo, HttpSession session) {
+        User loginUser = (User) session.getAttribute("loginUser");
+        // 로그인 안 된 경우 처리
+        if (loginUser == null) {
+            return "login_required";
+        }
+        // ProductService의 메서드 호출
+        return productService.toggleWishlist(Integer.parseInt(loginUser.getUserNo()), productNo);
     }
 }

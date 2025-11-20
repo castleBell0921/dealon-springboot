@@ -22,4 +22,15 @@ document.addEventListener("DOMContentLoaded", function() {
             updateSlider();
         });
     }
+
+    const deleteBtn = document.getElementById("delete-btn");
+
+    if (deleteBtn) {
+        deleteBtn.addEventListener("click", function() {
+            // productNo는 normalDetail.html에서 선언한 전역변수
+            if (confirm("정말로 이 상품을 삭제하시겠습니까?")) {
+                location.href = `/product/delete/${productNo}`;
+            }
+        });
+    }
 });

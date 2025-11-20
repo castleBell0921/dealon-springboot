@@ -82,6 +82,11 @@
         </div>
     </div>
 </div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const productNo = /*[[${product.productNo}]]*/ 0;
+    /*]]>*/
+</script>
 <script th:src="@{/js/user/header.js}"></script>
 <script th:src="@{/js/product/productDetail.js}"></script>
 <script th:src="@{/js/chat/chat.js}"></script>

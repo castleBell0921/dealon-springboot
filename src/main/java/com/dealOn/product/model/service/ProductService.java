@@ -111,4 +111,10 @@ public class ProductService {
 	public List<ProductVO> findByUserNoProducts(String userNo) {
 		return productMapper.findByUserNoProducts(userNo);
 	}
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteProduct(int productNo) throws Exception {
+        // 이미지 삭제 로직 없이, 상태값만 변경하는 Mapper 호출
+        productMapper.deleteProduct(productNo);
+    }
 }

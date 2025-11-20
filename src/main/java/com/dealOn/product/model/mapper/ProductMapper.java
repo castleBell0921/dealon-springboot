@@ -28,4 +28,6 @@ public interface ProductMapper {
     int deleteImagesByUrl(@Param("productNo") int productNo, @Param("urls") List<String> urls);
 	List<ProductVO> productSearch(Map<String, Object> filters);
 	List<ProductVO> findByUserNoProducts(String userNo);
+
+    int deleteProduct(int productNo);
 }

@@ -19,7 +19,7 @@
                 <div class="product-info-container">
                 	<input type="hidden" th:value="${product.productNo}" name="productNo">
                 	<input type="hidden" th:value="${product.userNo}" id="productUserNo">
-                	<input type="hidden" th:value="${loginUser.userNo}" id="loginUserNo">
+                    <input type="hidden" th:value="${loginUser != null ? loginUser.userNo : 0}" id="loginUserNo">
                     <section class="product-image-section">
                         <div class="image-slider-container">
                             <div class="slider-images">

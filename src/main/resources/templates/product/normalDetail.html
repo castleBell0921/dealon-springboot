@@ -17,14 +17,18 @@
             <main class="product-main-content">
                 <div class="breadcrumb text-13px" th:text="'홈 > ' + ${product.categoryName}"></div>
                 <div class="product-info-container">
-                	<input type="hidden" th:value="${product.productNo}" name="productNo">
+                	<input type="hidden" th:value="${product.productNo}" id="productNo" name="productNo">
                 	<input type="hidden" th:value="${product.userNo}" id="productUserNo">
+
+                	<input type="hidden" th:value="${loginUser.userNo}" id="userNo">
+
                     <input type="hidden" th:value="${loginUser != null ? loginUser.userNo : 0}" id="loginUserNo">
+
                     <section class="product-image-section">
                         <div class="image-slider-container">
                             <div class="slider-images">
                                 <div class="slider-image" th:each="imgUrl : ${product.imageUrls}">
-                                    <img th:src="${imgUrl}" th:alt="${product.name}" />
+                                    <img th:src="${imgUrl}" th:alt="${product.name}" id="productImage" />
                                 </div>
                             </div>
                             <button class="slider-btn prev-btn" th:if="${#lists.size(product.imageUrls) > 1}">&lt;</button>
@@ -53,7 +57,7 @@
                     </section>
                     <section class="product-details-section">
                         <div class="product-location text-18px" th:text="${product.location}"></div>
-                        <h1 class="product-title text-24px" th:text="${product.name}"></h1>
+                        <h1 class="product-title text-24px" th:text="${product.name}" id="productName"></h1>
                         <div class="product-meta-info" th:text="${product.createDate} + '·조회 ' + ${product.views}"></div>
                         <div class="product-price text-28px" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + ' 원'"></div>
                         <div class="product-description text-15px" th:text="${product.detail}"></div>
@@ -97,5 +101,7 @@
 <script th:src="@{/js/user/header.js}"></script>
 <script th:src="@{/js/product/productDetail.js}"></script>
 <script th:src="@{/js/chat/chat.js}"></script>
+<script th:src="@{/js/common/recentViews.js}"></script>
+<script th:src="@{/js/common/searchBar.js}"></script>
 </body>
 </html>

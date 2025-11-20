@@ -188,7 +188,7 @@
     LEFT JOIN NORMAL N ON P.NO = N.NO2
     LEFT JOIN AUCTION A ON P.NO = A.NO2
     <where>
-            P.NAME LIKE '%' || #{value} || '%'
+            UPPER(P.NAME) LIKE '%' || UPPER(#{value}) || '%'
 
         <if test="category != null and category != ''">
             AND P.CATEGORY = (SELECT NO FROM CATEGORY WHERE NAME = #{category})

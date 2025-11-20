@@ -41,8 +41,9 @@ public class ProductController {
             @RequestParam(value="minPrice", required = false) Integer minPrice,
             @RequestParam(value="maxPrice", required = false) Integer maxPrice,
             @RequestParam(value="availableOnly", required = false) Boolean availableOnly,
-            Model model
+            Model model, HttpSession session
     ) {
+    	User loginUser = (User)session.getAttribute("loginUser");
         Map<String, Object> filters = new HashMap<>();
         filters.put("category", category);
         filters.put("location", location);
@@ -56,6 +57,7 @@ public class ProductController {
         model.addAttribute("products", products);
         model.addAttribute("categories", categories);
         model.addAttribute("filters", filters);
+        model.addAttribute("loginUser", loginUser);
 
         return "/list";
     }
@@ -196,7 +198,8 @@ public class ProductController {
              @RequestParam(value="minPrice", required = false) Integer minPrice,
              @RequestParam(value="maxPrice", required = false) Integer maxPrice,
              @RequestParam(value="availableOnly", required = false) Boolean availableOnly,
-             Model model) {
+             Model model, HttpSession session) {
+    	 User loginUser = (User)session.getAttribute("loginUser");
     	 Map<String, Object> filters = new HashMap<>();
          filters.put("category", category);
          filters.put("location", location);
@@ -208,8 +211,10 @@ public class ProductController {
     	List<ProductVO> list = productService.productSearch(filters);
     	
     	System.out.println("검색 값: " + value);
+    	System.out.println("상품 LIST: " + list);
     	model.addAttribute("filters", filters);
     	model.addAttribute("products", list);
+    	model.addAttribute("loginUser", loginUser);
     	
     	return "/list";
     }

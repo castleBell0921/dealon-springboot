@@ -12,7 +12,8 @@
 <div class="app-container">
   <div th:replace="~{common/header :: header}"></div>
   <div th:replace="~{common/searchBar :: searchBar}"></div>
-
+	
+	<input type="hidden" id="userNo" th:value="${loginUser.userNo}">
   <div class="all-product-container">
     <div th:replace="~{common/filterSidebar :: filterSidebar(categories=${categories}, filters=${filters})}"></div>
 
@@ -42,8 +43,12 @@
         </div>
       </section>
     </main>
+    <div th:replace="~{common/RecentViewed :: RecentViewed}"></div>
   </div>
 </div>
 <script th:src="@{/js/user/header.js}"></script>
+<script th:src="@{/js/common/searchBar.js}"></script>
+<script th:src="@{/js/common/recentViews.js}"></script>
+
 </body>
 </html>

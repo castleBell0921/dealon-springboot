@@ -17,6 +17,8 @@
         <div class="home-content-layout">
             <main class="home-main-content">
                 <section class="product-section">
+                	<input id="userNo" type="hidden" th:value="${session.loginUser != null ? session.loginUser.userNo : ''}">
+
                     <h2 class="section-title text-46px">전체 상품</h2>
                     <div class="product-list">
                         <div class="product-item">
@@ -99,5 +101,6 @@
 
 <script th:src="@{/js/user/header.js}"></script>
 <script th:src="@{/js/common/searchBar.js}"></script>
+<script th:src="@{/js/common/recentViews.js}"></script>
 </body>
 </html>

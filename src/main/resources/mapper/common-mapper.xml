@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dealOn.common.model.mapper.CommonMapper">
+
+	<insert id="recentSearchSave">
+    MERGE INTO user_recent_search urs
+	    USING (SELECT #{userNo} AS user_no, #{keyword} AS keyword FROM dual) src
+	    ON (urs.user_no = src.user_no AND urs.keyword = src.keyword)
+	    WHEN MATCHED THEN
+	        UPDATE SET created_date = SYSDATE
+	    WHEN NOT MATCHED THEN
+	        INSERT (user_no, keyword, created_date)
+	        VALUES (src.user_no, src.keyword, SYSDATE)
+	</insert>
+	<delete id="deleteOldSearches">
+	    DELETE FROM user_recent_search
+	    WHERE user_no = #{userNo}
+	      AND keyword IN (
+	          SELECT keyword FROM (
+	              SELECT keyword, ROW_NUMBER() OVER (ORDER BY created_date DESC) rn
+	              FROM user_recent_search
+	              WHERE user_no = #{userNo}
+	          ) WHERE rn > 10
+	      )
+	</delete>
+	<select id="getRecentSearch">
+		SELECT * 
+		FROM USER_RECENT_SEARCH
+		WHERE USER_NO=#{userNo}
+	</select>
+	
+
+</mapper>

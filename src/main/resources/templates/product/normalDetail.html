@@ -20,7 +20,7 @@
                 	<input type="hidden" th:value="${product.productNo}" id="productNo" name="productNo">
                 	<input type="hidden" th:value="${product.userNo}" id="productUserNo">
 
-                	<input type="hidden" th:value="${loginUser.userNo}" id="userNo">
+                	<input type="hidden" th:value="${loginUser != null} ? ${loginUser.userNo : 'guest'}" id="userNo">
 
                     <input type="hidden" th:value="${loginUser != null ? loginUser.userNo : 0}" id="loginUserNo">
 

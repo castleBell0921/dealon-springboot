@@ -17,7 +17,7 @@
         <div class="home-content-layout">
             <main class="home-main-content">
                 <section class="product-section">
-                	<input id="userNo" type="hidden" th:value="${session.loginUser != null ? session.loginUser.userNo : ''}">
+                	<input id="userNo" type="hidden" th:value="${session.loginUser != null ? session.loginUser.userNo : 'guest'}">
 
                     <h2 class="section-title text-46px">전체 상품</h2>
                     <div class="product-list">

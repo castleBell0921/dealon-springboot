@@ -13,7 +13,7 @@
   <div th:replace="~{common/header :: header}"></div>
   <div th:replace="~{common/searchBar :: searchBar}"></div>
 	
-	<input type="hidden" id="userNo" th:value="${loginUser.userNo}">
+	<input type="hidden" id="userNo" th:value="${loginUser != null ? loginUser.userNo : 'guest'}">
   <div class="all-product-container">
     <div th:replace="~{common/filterSidebar :: filterSidebar(categories=${categories}, filters=${filters})}"></div>
 

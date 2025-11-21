@@ -1,9 +1,24 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
 	const form = document.querySelector('#form');
 	const searchBar = document.querySelector('.searchbar-input');
-	const userNo = document.querySelector('#userNo');
+	const userNo = document.querySelector('#userNo').value;
 	const recentKeywordsContainer = document.querySelector('.popular-keywords');
+
+	if (userNo !== 'guest') {
+		try {
+			const res = await fetch(`/common/recent-search/${userNo}`);
+			console.log(res);
+			const data = await res.json(); // [{keyword: '검색어1'}, ...]
+			console.log(data);
+			const keywords = data.map(item => item.KEYWORD || item.keyword);
+			localStorage.setItem(`recentSearch_${userNo}`, JSON.stringify(keywords));
+		} catch (err) {
+			console.error(err);
+		}
+	}
+	
+	
 
 	// 초기 화면에 최근 검색어 불러오기
 	renderRecentKeywords();
@@ -30,30 +45,60 @@ document.addEventListener('DOMContentLoaded', () => {
 		handleSearch();
 	});
 
-	function handleSearch() {
+	async function handleSearch() {
 		const keyword = searchBar.value.trim();
 		if (!keyword) return;
 
-		const storageKey = `recentSearch_${userNo.value}`;
-		let list = JSON.parse(localStorage.getItem(storageKey) || "[]");
+		if (userNo == 'guest') {
+			const storageKey = `recentSearch_${userNo}`;
+			let list = JSON.parse(sessionStorage.getItem(storageKey) || "[]");
 
-		// 중복 제거 후 맨 앞에 추가
-		list = list.filter(item => item !== keyword);
-		list.unshift(keyword);
-		if (list.length > 10) list = list.slice(0, 10);
+			// 중복 제거 후 맨 앞에 추가
+			list = list.filter(item => item != keyword);
+			list.unshift(keyword);
+			if (list.length > 10) list = list.slice(0, 10);
 
-		// localStorage 저장
-		localStorage.setItem(storageKey, JSON.stringify(list));
+			sessionStorage.setItem(storageKey, JSON.stringify(list));
 
-		// 최근 검색어 화면에 업데이트
-		renderRecentKeywords();
+			// 최근 검색어 화면에 업데이트
+			renderRecentKeywords();
 
-		form.submit(); // 저장 후 제출
+			form.submit(); // 저장 후 제출
+		} else {
+			// 1. localStorage에도 저장 (UX용)
+			const storageKey = `recentSearch_${userNo}`;
+			let list = JSON.parse(localStorage.getItem(storageKey) || "[]");
+			list = list.filter(item => item != keyword);
+			list.unshift(keyword);
+			if (list.length > 10) list = list.slice(0, 10);
+			localStorage.setItem(storageKey, JSON.stringify(list));
+			renderRecentKeywords();
+
+			await saveSearchToDB(keyword);
+
+			form.submit(); // DB 저장 요청 후 제출 (submit 막지 않음)
+		}
+	}
+
+	async function saveSearchToDB(keyword) {
+		try {
+			await fetch('/common/recent-search', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ keyword: keyword })
+			});
+		} catch (err) {
+			console.error(err);
+		}
 	}
 
 	function renderRecentKeywords() {
-		const storageKey = `recentSearch_${userNo.value}`;
-		const list = JSON.parse(localStorage.getItem(storageKey) || "[]");
+		const storageKey = `recentSearch_${userNo}`;
+		const list = JSON.parse(
+					(userNo === 'guest' 
+						? sessionStorage.getItem(storageKey) 
+						: localStorage.getItem(storageKey)) || "[]"
+				);
 
 		if (!recentKeywordsContainer) return;
 
@@ -69,3 +114,4 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 });
+

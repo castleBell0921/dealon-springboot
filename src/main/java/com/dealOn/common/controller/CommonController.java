@@ -6,11 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.dealOn.common.model.service.CommonService;
 import com.dealOn.user.model.vo.User;
@@ -23,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("common")
 public class CommonController {
 	private final CommonService cService;
-	
+
 	@PostMapping("/recent-search")
 	public ResponseEntity<Void> recentSearch(@RequestBody Map<String, String> data, HttpSession session) {
 		HashMap<String, Object> map = new HashMap<String,Object>();
@@ -43,5 +39,14 @@ public class CommonController {
 	    return ResponseEntity.ok(recentList);
 	}
 
-	
+	@GetMapping("/location")
+	public ResponseEntity<Map<String, String>> getLocation(@RequestParam("lat") double lat,
+														   @RequestParam("lng") double lng) {
+		String region = cService.getRegionFromCoordinates(lat, lng);
+
+		Map<String, String> response = new HashMap<>();
+		response.put("region", region);
+
+		return ResponseEntity.ok(response);
+	}
 }

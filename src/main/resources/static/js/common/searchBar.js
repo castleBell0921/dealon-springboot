@@ -113,5 +113,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 			span.style.marginRight = '5px'; // optional: 간격
 		});
 	}
+
+	// 위치정보
+	const locationSpan = document.querySelector('.searchbar-location span');
+
+	// 1. 브라우저 좌표 요청
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				const lat = position.coords.latitude;
+				const lng = position.coords.longitude;
+				fetchAddressFromBackend(lat, lng);
+			},
+			(error) => {
+				console.error("위치 정보를 가져올 수 없습니다:", error);
+				locationSpan.textContent = "위치 정보 없음";
+			}
+		);
+	} else {
+		locationSpan.textContent = "Geolocaion 미지원";
+	}
+
+	// 2. 백엔드로 좌표 보내고 주소 받기
+	async function fetchAddressFromBackend(lat, lng) {
+		try {
+			const response = await fetch(`/common/location?lat=${lat}&lng=${lng}`);
+			if (response.ok) {
+				const data = await response.json();
+				locationSpan.textContent = data.region;
+			} else {
+				throw new Error('주소 변환 실패');
+			}
+		} catch (err) {
+			console.error(err);
+			locationSpan.textContent = "주소 로드 실패";
+		}
+	}
 });
 

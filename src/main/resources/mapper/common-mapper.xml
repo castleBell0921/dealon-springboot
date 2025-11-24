@@ -28,6 +28,26 @@
 		FROM USER_RECENT_SEARCH
 		WHERE USER_NO=#{userNo}
 	</select>
-	
+	<insert id="recentViewSave">
+    MERGE INTO user_recent_view urv
+	    USING (SELECT #{userNo} AS user_no, #{productNo} AS product_No FROM dual) src
+	    ON (urv.user_no = src.user_no AND urv.product_No = src.product_No)
+	    WHEN MATCHED THEN
+	        UPDATE SET created_date = SYSDATE
+	    WHEN NOT MATCHED THEN
+	        INSERT (user_no, product_no, created_date)
+	        VALUES (src.user_no, src.product_no, SYSDATE)
+	</insert>
+	<delete id="deleteOldView">
+	    DELETE FROM user_recent_view
+	    WHERE user_no = #{userNo}
+	      AND product_no IN (
+	          SELECT product_no FROM (
+	              SELECT product_No, ROW_NUMBER() OVER (ORDER BY created_date DESC) rn
+	              FROM user_recent_view
+	              WHERE user_no = #{userNo}
+	          ) WHERE rn > 10
+	      )
+	</delete>
 
 </mapper>

@@ -38,6 +38,26 @@ public class CommonController {
 	    System.out.print("최근 검색어: " + recentList);
 	    return ResponseEntity.ok(recentList);
 	}
+	
+	@PostMapping("/recent-view")
+	public ResponseEntity<Void> recentView(@RequestBody Map<String, String> data, HttpSession session) {
+		User loginUser = (User)session.getAttribute("loginUser");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		String productNo = data.get("productNo");
+		String productName = data.get("productName");
+		String productImage = data.get("productImage");
+		
+		map.put("productNo", productNo);
+		map.put("productName", productName);
+		map.put("productImage", productImage);
+		map.put("userNo", loginUser.getUserNo());
+		
+		cService.recentViewSave(map);
+		return ResponseEntity.ok().build();
+	}
+	
 
 	@GetMapping("/location")
 	public ResponseEntity<Map<String, String>> getLocation(@RequestParam("lat") double lat,

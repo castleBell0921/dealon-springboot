@@ -12,5 +12,7 @@ public interface CommonMapper {
 	void recentSearchSave(HashMap<String, Object> map);
 	void deleteOldSearches(HashMap<String, Object> map);
 	List<Map<String, Object>> getRecentSearch(String userNo);
+	void recentViewSave(HashMap<String, Object> map);
+	void deleteOldView(HashMap<String, Object> map);
 	
 }

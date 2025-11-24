@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 public class CommonService {
 	private final CommonMapper cMapper;
 
+
 	@Value("${google.maps.api-key}")
 	private String googleMapsApiKey;
 
@@ -29,6 +30,11 @@ public class CommonService {
 	}
 	public List<Map<String, Object>> getRecentSearch(String userNo) {
 		return cMapper.getRecentSearch(userNo);
+	}
+	public void recentViewSave(HashMap<String, Object> map) {
+		cMapper.recentViewSave(map);
+		cMapper.deleteOldView(map);
+		
 	}
 
 	public String getRegionFromCoordinates(double lat, double lng) {

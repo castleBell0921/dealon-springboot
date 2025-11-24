@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommonService {
 	private final CommonMapper cMapper;
+	
 	public void recentSearchSave(HashMap<String, Object> map) {
 		cMapper.recentSearchSave(map);
         cMapper.deleteOldSearches(map);
@@ -21,6 +22,11 @@ public class CommonService {
 	}
 	public List<Map<String, Object>> getRecentSearch(String userNo) {
 		return cMapper.getRecentSearch(userNo);
+	}
+	public void recentViewSave(HashMap<String, Object> map) {
+		cMapper.recentViewSave(map);
+		cMapper.deleteOldView(map);
+		
 	}
 
 }

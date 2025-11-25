@@ -107,8 +107,8 @@
     </select>
 
     <select id="findAllCategories" resultMap="categoryResultMap">
-        SELECT DISTINCT C.NO, C.NAME FROM CATEGORY C
-                                              JOIN PRODUCT P ON C.NO = P.CATEGORY
+        SELECT DISTINCT C.NO, C.NAME
+        FROM CATEGORY C
         ORDER BY C.NAME ASC
     </select>
 

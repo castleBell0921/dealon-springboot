@@ -48,10 +48,11 @@ public class ChatService {
 		data.put("productNo", productNo);
 
 		int result = chatMapper.createChatRoom(data);
-		if (result > 0) {
-			return (ChatRoom) chatMapper.findChatRoom(data);
-		}
-		return null;
+	    if (result > 0) {
+	        List<ChatRoom> rooms = chatMapper.findChatRoom(data);
+	        return rooms.isEmpty() ? null : rooms.get(0); // ✅ 첫 번째 채팅방만 반환
+	    }
+	    return null;
 	}
 
 	public ChatRoom findByChatNo(String chatNo, String userNo) {

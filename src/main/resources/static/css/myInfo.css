@@ -115,7 +115,7 @@
 
 /* 일반적인 텍스트 입력 필드 */
 .profile-form .form-row input[type="text"], .profile-form .form-row input[type="password"],
-	.profile-form .form-row input[type="email"] {
+	.profile-form {
 	flex-grow: 1; /* 남은 공간을 입력 필드가 차지 */
 	padding: 12px 16px; /* 패딩 확대 */
 	border-radius: 8px;
@@ -124,7 +124,15 @@
 	font-size: 14px;
 	margin-left: 20px; /* 레이블과 입력 필드 사이 간격 */
 }
-
+.form-row input[type="email"]{
+	flex-grow: 1; /* 남은 공간을 입력 필드가 차지 */
+	padding: 12px 16px; /* 패딩 확대 */
+	border-radius: 8px;
+	border: 1px solid #e6e6e6;
+	box-sizing: border-box;
+	font-size: 14px;
+	margin-left: 9px;
+}
 /* horizontal row (input + small button) */
 .horizontal {
 	display: flex; /* 이미 적용된 flex 유지 */

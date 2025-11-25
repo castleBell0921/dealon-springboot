@@ -96,4 +96,7 @@ public class CommonService {
 		return "위치 정보 없음";
 
 	}
+	public List<Map<String, Object>> getRecentView(String userNo) {
+		return cMapper.getRecentView(userNo);
+	}
 }

@@ -29,14 +29,27 @@
 		WHERE USER_NO=#{userNo}
 	</select>
 	<insert id="recentViewSave">
-    MERGE INTO user_recent_view urv
-	    USING (SELECT #{userNo} AS user_no, #{productNo} AS product_No FROM dual) src
-	    ON (urv.user_no = src.user_no AND urv.product_No = src.product_No)
+    	MERGE INTO user_recent_view urv
+	    USING (
+	        SELECT 
+	            #{userNo} AS user_no, 
+	            #{productNo} AS product_no, 
+	            #{productName} AS product_name, 
+	            #{productImage} AS product_image 
+	        FROM dual
+	    ) src
+	    ON (
+	        urv.user_no = src.user_no 
+	        AND urv.product_no = src.product_no
+	    )
 	    WHEN MATCHED THEN
-	        UPDATE SET created_date = SYSDATE
+	        UPDATE SET 
+	            urv.created_date = SYSDATE,
+	            urv.product_name = src.product_name,
+	            urv.product_image = src.product_image
 	    WHEN NOT MATCHED THEN
-	        INSERT (user_no, product_no, created_date)
-	        VALUES (src.user_no, src.product_no, SYSDATE)
+	        INSERT (user_no, product_no, created_date, product_name, product_image)
+	        VALUES (src.user_no, src.product_no, SYSDATE, src.product_name, src.product_image)
 	</insert>
 	<delete id="deleteOldView">
 	    DELETE FROM user_recent_view
@@ -46,8 +59,15 @@
 	              SELECT product_No, ROW_NUMBER() OVER (ORDER BY created_date DESC) rn
 	              FROM user_recent_view
 	              WHERE user_no = #{userNo}
-	          ) WHERE rn > 10
+	          ) WHERE rn > 4
 	      )
 	</delete>
+	<select id="getRecentView">
+		select *
+		from user_recent_view 
+		where user_no=#{userNo}
+		ORDER BY created_date DESC
+		
+	</select>
 
 </mapper>

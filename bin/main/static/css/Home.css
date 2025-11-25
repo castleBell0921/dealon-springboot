@@ -42,12 +42,16 @@
 }
 
 .product-list {
-    display: flex;
+    display: grid;
     gap: 20px; /* 간격 */
+    grid-template-columns: repeat(4, 1fr);
     /* justify-content: space-between; /* 5개 항목을 동일 간격으로 분배 시 사용 */
     /* flex-wrap: wrap; /* 여러 줄로 나열될 경우 필요 */
     margin-bottom: 20px; /* 목록 아래 간격 */
+    width: 100%;
 }
+
+
 
 .product-item {
     width: 290px; 

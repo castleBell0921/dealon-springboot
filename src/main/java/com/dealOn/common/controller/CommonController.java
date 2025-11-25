@@ -57,6 +57,12 @@ public class CommonController {
 		cService.recentViewSave(map);
 		return ResponseEntity.ok().build();
 	}
+	@GetMapping("/recent-view/{userNo}")
+	public ResponseEntity<List<Map<String, Object>>> getRecentView(@PathVariable("userNo") String userNo) {
+	    List<Map<String, Object>> recentList = cService.getRecentView(userNo);
+	    System.out.print("최근 검색어: " + recentList);
+	    return ResponseEntity.ok(recentList);
+	}
 	
 
 	@GetMapping("/location")

@@ -58,7 +58,10 @@
                     <section class="product-details-section">
                         <div class="product-location text-18px" th:text="${product.location}"></div>
                         <h1 class="product-title text-24px" th:text="${product.name}" id="productName"></h1>
-                        <div class="product-meta-info" th:text="${product.createDate} + '·조회 ' + ${product.views}"></div>
+                        <div class="product-meta-info">
+                            <span class="time-ago" th:data-date="${product.createDate}" th:text="${product.createDate}">날짜 </span>
+                            <span th:text="' · 조회 '+ ${product.views}+' · 찜 '+ ${product.wishlistCount}"> · 조회 0 · 찜 0 </span>
+                        </div>
                         <div class="product-price text-28px" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + ' 원'"></div>
                         <div class="product-description text-15px" th:text="${product.detail}"></div>
 

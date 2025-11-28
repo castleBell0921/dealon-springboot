@@ -34,6 +34,34 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    const elements = document.querySelectorAll(".time-ago");
+
+    elements.forEach(el => {
+        const dateString = el.getAttribute("data-date");
+        const date = new Date(dateString);
+        const now = new Date();
+
+        const diffMs = now - date;
+        const diffMinutes = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        let result = "";
+
+        if (diffMinutes < 1) {
+            result = "방금 전";
+        } else if (diffMinutes < 60) {
+            result = diffMinutes + "분 전";
+        } else if (diffHours < 24) {
+            result = diffHours + "시간 전";
+        } else {
+            result = diffDays + "일 전";
+        }
+
+        el.textContent = result;
+    });
+
+
 });
 
 function toggleWishlist(productNo) {

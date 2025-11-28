@@ -24,6 +24,7 @@ public class ProductVO {
     private int views; 
     private String userNo;
     private String status;
+    private int wishlistCount;
 
     // 썸네일 이미지
     private String thumbnailUrl;

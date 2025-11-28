@@ -12,8 +12,12 @@ body {
 .text-16px { font-size: 16px; }
 .text-18px { font-size: 18px; }
 .text-20px { font-size: 20px; }
+.text-22px { font-size: 22px; }
 .text-24px { font-size: 24px; }
 .text-28px { font-size: 28px; }
 .text-32px { font-size: 32px; }
 .text-36px { font-size: 36px; }
 .text-46px { font-size: 46px; }
+.fw-bold { font-weight: 700;}
+.fw-medium { font-weight: 500; }
+.fw-regular{ font-weight: 400; }

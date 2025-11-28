@@ -22,6 +22,7 @@
         <result property="startPrice" column="START_PRICE"/>
         <result property="currentPrice" column="CURRENT_PRICE"/>
         <result property="endDate" column="END_DATE"/>
+        <result property="wishlistCount" column="WISHLIST_COUNT"/>
     </resultMap>
 
     <resultMap id="categoryResultMap" type="com.dealOn.common.model.vo.CategoryVO">
@@ -46,7 +47,8 @@
         FROM IMAGES IM
         WHERE IM.ENTITY_TYPE = 'PRODUCT' AND IM.ENTITY_ID = P.NO
         ORDER BY IM.IMAGE_ID ASC
-        FETCH FIRST 1 ROW ONLY) AS THUMBNAIL_URL
+        FETCH FIRST 1 ROW ONLY) AS THUMBNAIL_URL,
+        (SELECT COUNT(*) FROM WISHLIST WHERE PRODUCT_NO = P.NO) AS WISHLIST_COUNT
         FROM PRODUCT P
         LEFT JOIN NORMAL N ON P.NO = N.NO2
         LEFT JOIN AUCTION A ON P.NO = A.NO2
@@ -89,7 +91,8 @@
             A.CURRENT_PRICE AS currentPrice,
             A.END_DATE,
             U.USER_NO,
-            CASE WHEN N.NO IS NOT NULL THEN 'NORMAL' ELSE 'AUCTION' END AS PRODUCT_TYPE
+            CASE WHEN N.NO IS NOT NULL THEN 'NORMAL' ELSE 'AUCTION' END AS PRODUCT_TYPE,
+            (SELECT COUNT(*) FROM WISHLIST WHERE PRODUCT_NO = P.NO) AS WISHLIST_COUNT
         FROM PRODUCT P
                  LEFT JOIN NORMAL N ON P.NO = N.NO2
                  LEFT JOIN AUCTION A ON P.NO = A.NO2
@@ -183,7 +186,8 @@
            AND IM.ENTITY_ID = P.NO
          ORDER BY IM.IMAGE_ID ASC
          FETCH FIRST 1 ROW ONLY
-        ) AS THUMBNAIL_URL
+        ) AS THUMBNAIL_URL,
+        (SELECT COUNT(*) FROM WISHLIST WHERE PRODUCT_NO = P.NO) AS WISHLIST_COUNT
     FROM PRODUCT P
     LEFT JOIN NORMAL N ON P.NO = N.NO2
     LEFT JOIN AUCTION A ON P.NO = A.NO2
@@ -229,7 +233,8 @@
         FROM IMAGES IM
         WHERE IM.ENTITY_TYPE = 'PRODUCT' AND IM.ENTITY_ID = P.NO
         ORDER BY IM.IMAGE_ID ASC
-        FETCH FIRST 1 ROW ONLY) AS THUMBNAIL_URL
+        FETCH FIRST 1 ROW ONLY) AS THUMBNAIL_URL,
+        (SELECT COUNT(*) FROM WISHLIST WHERE PRODUCT_NO = P.NO) AS WISHLIST_COUNT
         FROM PRODUCT P
         LEFT JOIN NORMAL N ON P.NO = N.NO2
         LEFT JOIN AUCTION A ON P.NO = A.NO2
@@ -260,4 +265,10 @@
         WHERE USER_NO = #{userNo}
           AND PRODUCT_NO = #{productNo}
     </delete>
+
+    <update id="increaseNormalViewCount" parameterType="int">
+        UPDATE NORMAL
+        SET VIEWS = VIEWS + 1
+        WHERE NO2 = #{productNo}
+    </update>
 </mapper>

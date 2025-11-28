@@ -36,6 +36,14 @@ public class ProductService {
         ProductVO productDetail = productMapper.findProductDetailById(productNo);
         log.info(">>>> DB 조회 결과: {}", productDetail);
         if (productDetail != null) {
+            if ("NORMAL".equals(productDetail.getProductType())) {
+                productMapper.increaseNormalViewCount(productNo);
+            } else if ("AUCTION".equals(productDetail.getProductType())) {
+                //productMapper.increaseAuctionViewCount(productNo);
+            }
+
+            // 화면에도 즉시 반영되도록 가져온 객체의 views 값을 1 증가시킴
+            productDetail.setViews(productDetail.getViews() + 1);
             List<String> imageUrls = productMapper.findImagesByProductNo(productNo);
             productDetail.setImageUrls(imageUrls);
         }

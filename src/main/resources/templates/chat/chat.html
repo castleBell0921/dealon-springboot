@@ -26,7 +26,7 @@
 		<div th:replace="~{common/searchBar :: searchBar}"></div>
 
 		<div class="chat-app-container">
-
+			<input type="hidden" th:value="${session.loginUser.userNo}" id="userNo">
 			<section class="panel chat-list-panel">
 				<div class="panel-header text-36px">
 					<a>전체 대화</a>
@@ -46,7 +46,19 @@
 						</div>
 						<div class="chat-meta">
 							<div class="timestamp"
-								th:text="${lastChat[chat.chatNo] != null} ? ${#temporals.format(lastChat[chat.chatNo].timestamp, 'yyyy-MM-dd HH:mm')} : ''"></div>
+							     th:with="
+							        msg=${lastChat[chat.chatNo]},
+							        msgTime=${msg != null} ? ${msg.timestamp} : null,
+							        msgDate=${msgTime != null} ? ${#temporals.format(msgTime, 'yyyy-MM-dd')} : null,
+							        today=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}
+							     "
+							     th:text="${msgTime} == null ? '' 
+							              : (${msgDate} == ${today} 
+							                    ? ${#temporals.format(msgTime,'a hh:mm')} 
+							                    : ${#temporals.format(msgTime,'yyyy-MM-dd HH:mm')})">
+							</div>
+
+
 							<img th:src="${chat.imageUrl}" class="thumbnail">
 						</div>
 					</li>
@@ -153,5 +165,6 @@
 
 	<script th:src="@{/js/user/header.js}"></script>
 	<script th:src="@{/js/chat/chat.js}"></script>
+	<script th:src="@{/js/common/searchBar.js}"></script>
 </body>
 </html>

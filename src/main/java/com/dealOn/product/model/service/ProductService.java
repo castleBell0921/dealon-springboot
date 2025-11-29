@@ -142,4 +142,8 @@ public class ProductService {
             return "added"; 
         }
     }
+
+	public List<ProductVO> getAllProduct() {
+		return productMapper.getAllProduct();
+	}
 }

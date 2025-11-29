@@ -55,16 +55,17 @@
 
 .product-item {
     width: 290px; 
-    border-radius: 8px;
     overflow: hidden;
     background-color: #fff; 
-    text-align: left; 
+    text-align: left;
+    margin-bottom: 50px;
 }
 
 .product-item .product-image-placeholder { /*.product-item 이거 안넣으면 상품페이지 css랑 겹치는데 이름이 같긴한데 왜겹치지 안불러왔는데*/
     width: 290px; 
     height: 290px; 
-    background-color: #eee; /* 회색 박스 색상 */
+    background-color: #eee;
+    border-radius: 16px;
     /* display: flex; */ /* 내부 텍스트 중앙 정렬 시 사용 */
     /* align-items: center; */
     /* justify-content: center; */
@@ -76,7 +77,6 @@
 }
 
 .product-title {
-    margin-bottom: 4px;
     color: #333;
     white-space: nowrap; /* 제목이 길면 줄바꿈 안 함 */
     overflow: hidden; /* 넘치는 부분 숨김 */
@@ -85,8 +85,7 @@
 
 .product-price {
     font-weight: bold;
-    margin-bottom: 8px;
-    color: #555;
+    color: #000;
 }
 
 .product-meta {

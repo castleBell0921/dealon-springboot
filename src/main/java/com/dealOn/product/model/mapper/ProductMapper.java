@@ -31,6 +31,7 @@ public interface ProductMapper {
 
     int deleteProduct(int productNo);
 
+    int increaseNormalViewCount(int productNo);
     // 위시리스트
     int checkWishlist(@Param("userNo") int userNo, @Param("productNo") int productNo);
     int insertWishlist(@Param("userNo") int userNo, @Param("productNo") int productNo);

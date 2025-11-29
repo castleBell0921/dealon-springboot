@@ -221,6 +221,32 @@ public class ChatController {
 		for (ChatMessage msg : lastMessage) {
 			lastChat.put(msg.getChatNo(), msg);
 		}
+		
+		chatList.sort((cr1, cr2) -> {
+		    // 각 채팅방의 마지막 메시지 timestamp 가져오기 (LocalDateTime)
+		    LocalDateTime t1 = Optional.ofNullable(lastChat.get(cr1.getChatNo()))
+		                               .map(ChatMessage::getTimestamp)
+		                               .orElse(null);
+
+		    LocalDateTime t2 = Optional.ofNullable(lastChat.get(cr2.getChatNo()))
+		                               .map(ChatMessage::getTimestamp)
+		                               .orElse(null);
+
+		    // 2. chatIn 메서드 정렬 로직 수정
+		    // 둘 다 메시지가 없는 경우 → 생성일 기준 내림차순
+		    if (t1 == null && t2 == null) {
+		        // ✅ 수정: RDB에서 받아온 createDate가 LocalDateTime이므로, 헬퍼 함수 없이 직접 비교
+		        if (cr1.getCreateDate() == null || cr2.getCreateDate() == null) return 0; // Null Check
+		        return cr2.getCreateDate().compareTo(cr1.getCreateDate());
+		    }
+
+		    // 한쪽만 메시지가 없는 경우 → 메시지 없는 방은 아래로
+		    if (t1 == null) return 1;
+		    if (t2 == null) return -1;
+
+		    // 둘 다 메시지가 있으면 timestamp 기준 내림차순
+		    return t2.compareTo(t1);
+		});
 
 		// 7. 모델에 데이터 추가
 		model.addAttribute("currentChat", currentChat);

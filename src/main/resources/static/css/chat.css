@@ -238,6 +238,8 @@
 .message {
 	align-self: flex-end; /* 오른쪽 정렬 */
 	margin-bottom: 20px;
+	display: flex;
+    justify-content: flex-end;
 }
 
 .message .message-bubble {
@@ -249,6 +251,10 @@
 	font-size: 16px;
 	cursor: pointer;
 	max-width: 70%;
+	max-height: none;
+	word-wrap: break-word; 
+    word-break: break-all;
+    text-align: left;
 }
 
 /* 받은 메시지: LI 태그 */

@@ -1,4 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
+	
+	function sendMessage(socket, chatInfo, loginUserNo, messageInput, messageList) {
+	       const message = messageInput.value.trim();
+	       if (!message) return;
+
+	       const now = new Date();
+	       const koreaTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (9 * 60 * 60000));
+	       const formattedTime = koreaTime.toISOString();
+
+	       const chatData = { chatNo: chatInfo.chatNo, senderNo: loginUserNo, message, timestamp: formattedTime };
+
+	       if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(chatData));
+
+	       const noMessageEl = messageList.querySelector('.no-message');
+	       if (noMessageEl) noMessageEl.remove();
+
+	       const time = new Date(chatData.timestamp).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+	       const newMsgHTML = `<li class="message"><div class="timestamp">${time}</div><div class="message-bubble">${message}</div></li>`;
+	       messageList.insertAdjacentHTML('beforeend', newMsgHTML);
+
+	       scrollToBottom(messageList.closest('.chat-view-panel'));
+	       updateChatList(chatInfo.chatNo);
+	       messageInput.value = '';
+	   }
 
 	// url에서 현재 채팅방 가져오기
 	function getCurrentChatNoFromUrl() {
@@ -197,16 +221,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			const response = await fetch(`/chat/detail/${chatNo}`);
 			if (!response.ok) throw new Error("서버 응답 오류");
 
-				const data = await response.json();
-				const chatInfo = data.chatInfo;
-				const messages = data.messages;
-				const loginUserNo = data.loginUser.userNo;
-	
-				// 채팅방 HTML 전체 렌더링 (드롭다운 메뉴 HTML 추가)
-				if ((loginUserNo == chatInfo.sellerNo && chatInfo.buyerStatus == 'Y') ||
-					(loginUserNo == chatInfo.buyerNo && chatInfo.sellerStatus == 'Y')) {
-					if (chatViewContainer) {
-						chatViewContainer.innerHTML = `
+			const data = await response.json();
+			const chatInfo = data.chatInfo;
+			const messages = data.messages;
+			const loginUserNo = data.loginUser.userNo;
+
+			// 채팅방 HTML 전체 렌더링 (드롭다운 메뉴 HTML 추가)
+			if ((loginUserNo == chatInfo.sellerNo && chatInfo.buyerStatus == 'Y') ||
+				(loginUserNo == chatInfo.buyerNo && chatInfo.sellerStatus == 'Y')) {
+				if (chatViewContainer) {
+					chatViewContainer.innerHTML = `
 							<div class="chat-header text-20px">
 								<span>${chatInfo.nickname || "이름 없음"}</span>
 								<button class="icon-button" id="toggleButton">☰</button>
@@ -255,21 +279,41 @@ document.addEventListener('DOMContentLoaded', () => {
 								</div>
 							</div>
 							<div class="message-area">
-								<ul class="message-list">
-									${messages.length > 0
-								? messages.map(msg => {
-									const time = new Date(msg.timestamp).toLocaleTimeString('ko-KR', {
-										hour: '2-digit',
-										minute: '2-digit',
-										hour12: false
-									});
-									return msg.senderNo == loginUserNo
-										? `<li class="message"><div class="timestamp">${time}</div><div class="message-bubble">${msg.message}</div></li>`
-										: `<li class="received"><div class="message-bubble">${msg.message}</div><div class="timestamp">${time}</div></li>`;
-								}).join('')
-								: `<li class="no-message"><p>💬 채팅을 시작해주세요!</p></li>`
-							}
-								</ul>
+							<ul class="message-list">
+																${messages.length > 0
+							? messages.map((msg, index, arr) => {
+								// 이전 메시지의 timestamp를 가져옵니다.
+								const prevTimestampStr = index > 0 ? arr[index - 1].timestamp : null;
+
+								// 💡 수정: formatTimestamp 함수를 사용하여 시간 포맷 적용
+								const formattedTime = formatTimestamp(msg.timestamp, prevTimestampStr);
+
+								// 💡 수정: 현재 메시지와 이전 메시지의 날짜가 다를 경우에만 날짜 구분선 렌더링
+								const currentDate = new Date(msg.timestamp).toISOString().split('T')[0];
+								const prevDate = index > 0 ? new Date(arr[index - 1].timestamp).toISOString().split('T')[0] : null;
+								const dateDividerHtml = (currentDate !== prevDate)
+									? `<li class="date-divider">${new Date(msg.timestamp).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}</li>`
+									: '';
+
+								// 💡 수정: <li class="message"> 내부의 timestamp 형식도 `time` 대신 `formattedTime`을 사용해야 하지만, 
+								// 여기서는 기존 `loadChatRoom`의 `HH:mm` 형식을 유지하기 위해 `time`을 사용하고,
+								// 날짜 구분선은 WebSocket 로직과 동일하게 날짜가 바뀔 때만 뜨도록 조정합니다. (기존 Thymeleaf와 동작 유사)
+								const time = new Date(msg.timestamp).toLocaleTimeString('ko-KR', {
+									hour: '2-digit',
+									minute: '2-digit',
+									hour12: false
+								});
+
+								return `
+							                                        ${dateDividerHtml}
+							                                        ${msg.senderNo == loginUserNo
+										? `<li class="message"><div class="timestamp" data-timestamp="${msg.timestamp}">${time}</div><div class="message-bubble">${msg.message}</div></li>`
+										: `<li class="received"><div class="message-bubble">${msg.message}</div><div class="timestamp" data-timestamp="${msg.timestamp}">${time}</div></li>`
+									}`;
+							}).join('')
+							: `<li class="no-message"><p>💬 채팅을 시작해주세요!</p></li>`
+						}
+															</ul>
 							</div>
 							<div class="input-area">
 								<button class="icon-button">+</button>
@@ -277,13 +321,13 @@ document.addEventListener('DOMContentLoaded', () => {
 								<button class="send-button">➤</button>
 							</div>
 						`;
-	
-						// **[수정]** 동적 로드 후 드롭다운 리스너 재부착
-						attachDropdownListeners(chatViewContainer);
-					}
-				} else {
-					if (chatViewContainer) {
-						chatViewContainer.innerHTML = `
+
+					// **[수정]** 동적 로드 후 드롭다운 리스너 재부착
+					attachDropdownListeners(chatViewContainer);
+				}
+			} else {
+				if (chatViewContainer) {
+					chatViewContainer.innerHTML = `
 				            <div class="chat-header text-20px">
 				                <span>${chatInfo.nickname || "이름 없음"}</span>
 								<button class="icon-button" id="toggleButton">☰</button>
@@ -334,18 +378,18 @@ document.addEventListener('DOMContentLoaded', () => {
 				            <div class="message-area">
 				                <ul class="message-list">
 				                    ${messages.length > 0
-								? messages.map(msg => {
-									const time = new Date(msg.timestamp).toLocaleTimeString('ko-KR', {
-										hour: '2-digit',
-										minute: '2-digit',
-										hour12: false
-									});
-									return msg.senderNo == loginUserNo
-										? `<li class="message"><div class="timestamp">${time}</div><div class="message-bubble">${msg.message}</div></li>`
-										: `<li class="received"><div class="message-bubble">${msg.message}</div><div class="timestamp">${time}</div></li>`;
-								}).join('')
-								: `<li class="no-message"><p>💬 채팅을 시작해주세요!</p></li>`
-							}
+							? messages.map(msg => {
+								const time = new Date(msg.timestamp).toLocaleTimeString('ko-KR', {
+									hour: '2-digit',
+									minute: '2-digit',
+									hour12: false
+								});
+								return msg.senderNo == loginUserNo
+									? `<li class="message"><div class="timestamp">${time}</div><div class="message-bubble">${msg.message}</div></li>`
+									: `<li class="received"><div class="message-bubble">${msg.message}</div><div class="timestamp">${time}</div></li>`;
+							}).join('')
+							: `<li class="no-message"><p>💬 채팅을 시작해주세요!</p></li>`
+						}
 	
 
 				                    <li class="system-message">
@@ -362,10 +406,10 @@ document.addEventListener('DOMContentLoaded', () => {
 				                <button class="send-button" disabled>➤</button>
 				            </div>
 				        `;
-						
-						attachDropdownListeners(chatViewContainer);
-					}
+
+					attachDropdownListeners(chatViewContainer);
 				}
+			}
 			// 1. **(수정 포인트)** 채팅방 로드 후 스크롤
 			// DOM 갱신 후 바로 스크롤
 			scrollToBottom();
@@ -430,58 +474,23 @@ document.addEventListener('DOMContentLoaded', () => {
 			socket.onerror = (error) => console.error("❌ WebSocket 에러 발생:", error);
 
 			socket.onclose = (event) => console.log(`⚠️ WebSocket 종료 (code: ${event.code}, reason: ${event.reason})`);
-
-			// send 버튼 이벤트
-			sendButton.addEventListener('click', () => {
-				const message = messageInput.value.trim();
-				if (!message) return;
-
-				const now = new Date();
-				const koreaTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (9 * 60 * 60000)); // UTC → KST
-				const formattedTime = koreaTime.toISOString();
-
-				const chatData = {
-					chatNo: chatInfo.chatNo,
-					senderNo: loginUserNo,
-					message: message,
-					timestamp: formattedTime
-				};
-
-				if (socket.readyState === WebSocket.OPEN) {
-					console.log("📤 메시지 전송:", chatData);
-					socket.send(JSON.stringify(chatData));
-				} else {
-					console.warn("⚠️ WebSocket 연결이 열려있지 않아 메시지 전송 실패");
+			
+			// sendButton / Enter 이벤트
+            sendButton.addEventListener('click', () => sendMessage(socket, chatInfo, loginUserNo, messageInput, messageList));
+            messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { 
+					e.preventDefault(); 
+					sendMessage(socket, chatInfo, loginUserNo, messageInput, messageList); 
 				}
+            });
 
-				// 👇 **[핵심 수정]** 내가 메시지를 보낼 때 '채팅을 시작해주세요!' 문구 제거
-				                const noMessageEl = messageList.querySelector('.no-message');
-								if (noMessageEl) noMessageEl.remove();
-				                // 👆 **[핵심 수정]**
-
-								const time = new Date(chatData.timestamp).toLocaleTimeString('ko-KR', {
-									hour: '2-digit',
-									minute: '2-digit',
-									hour12: false
-								});
-				const newMsgHTML = `<li class="message"><div class="timestamp">${time}</div><div class="message-bubble">${message}</div></li>`;
-
-								// 내가 보낸 메시지는 onmessage가 아닌 여기서 바로 렌더링 해야 사용자 경험이 좋습니다.
-								messageList.insertAdjacentHTML('beforeend', newMsgHTML);
-
-								// 3. **(수정 포인트)** 메시지 전송 후 스크롤
-								scrollToBottom();
-
-								updateChatList(chatInfo.chatNo);
-
-								messageInput.value = '';
-							});
+			
 		} catch (error) {
 			console.error("채팅방 로드 중 오류:", error);
 			alert("채팅방 정보를 불러오지 못했습니다.");
 		}
 	}
-
+	
 	// 채팅방 클릭 이벤트 (기존 로직 유지)
 	if (chatListContainer != null) {
 		chatListContainer.addEventListener('click', (e) => {
@@ -566,6 +575,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 	});
+	
+	
 });
 
 async function updateChatList(targetChatNo) {
@@ -585,47 +596,84 @@ async function updateChatList(targetChatNo) {
 
 			// 받은 리스트를 순회하며 <li> 항목을 생성합니다.
 			if (data.chatList && data.chatList.length > 0) {
-			    data.chatList.sort((a, b) => {
-			        const lastMsgA = data.lastChat[a.chatNo];
-			        const lastMsgB = data.lastChat[b.chatNo];
+				/*				data.chatList.sort((a, b) => {
+									const lastMsgA = data.lastChat[a.chatNo];
+									const lastMsgB = data.lastChat[b.chatNo];
+				
+									const timeA = lastMsgA ? new Date(lastMsgA.timestamp).getTime() : 0;
+									const timeB = lastMsgB ? new Date(lastMsgB.timestamp).getTime() : 0;
+				
+									return timeB - timeA; // 최신 메시지 먼저
+								});*/
 
-			        const timeA = lastMsgA ? new Date(lastMsgA.timestamp).getTime() : 0;
-			        const timeB = lastMsgB ? new Date(lastMsgB.timestamp).getTime() : 0;
+				let lastChatTimestamp = null;
 
-			        return timeB - timeA; // 최신 메시지 먼저
-			    });
+				data.chatList.forEach(chat => {
+					const lastMsg = data.lastChat[chat.chatNo];
+					const msgPreview = lastMsg ? (lastMsg.message.length > 11 ? lastMsg.message.substring(0, 11) + '...' : lastMsg.message) : '대화 내용이 없습니다.';
 
-			    data.chatList.forEach(chat => {
-			        const lastMsg = data.lastChat[chat.chatNo];
-			        const msgPreview = lastMsg ? (lastMsg.message.length > 11 ? lastMsg.message.substring(0, 11) + '...' : lastMsg.message) : '대화 내용이 없습니다.';
-			        const timestamp = lastMsg ? new Date(lastMsg.timestamp).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '';
+					let timestampText = '';
+					let currentTimestamp = lastMsg ? lastMsg.timestamp : null;
 
-			        const activeClass = chat.chatNo == targetChatNo ? 'active' : '';
+					if (currentTimestamp) {
+						// 💡 수정: formatTimestamp 함수를 사용하여 시간 포맷 적용
+						// lastChatTimestamp는 이전 방의 최종 메시지 시간이므로, 여기서는 단순히 현재 시간만 표시하는 로직을 사용합니다.
+						// (채팅 목록에서는 날짜 비교 없이 단순히 오늘/어제 구분만 하는 경우가 많습니다. '년월일 시간' 포맷 요구에 따라 `formatTimestamp`를 사용해 현재 방의 최종 시간만 포맷합니다.)
 
-			        newHtml += `
-			            <li class="chat-item ${activeClass}" data-chat-no="${chat.chatNo}">
-			                <div class="avatar">👤</div>
-			                <div class="chat-content">
-			                    <div class="user-name">${chat.nickname}</div>
-			                    <div class="message-preview">${msgPreview}</div>
-			                </div>
-			                <div class="chat-meta">
-			                    <div class="timestamp">${timestamp}</div>
-			                    <img src="${chat.imageUrl || '/img/default.png'}" class="thumbnail">
-			                </div>
-			            </li>
-			        `;
-			    });
+						const timestamp = new Date(currentTimestamp);
+						const now = new Date();
+						const isToday = timestamp.toDateString() === now.toDateString();
+
+						if (isToday) {
+							// 오늘: 시간만 (오후 03:54)
+							timestampText = timestamp.toLocaleTimeString('ko-KR', {
+								hour: '2-digit',
+								minute: '2-digit',
+								hour12: true
+							});
+						} else {
+							// 오늘 아님: 년월일 시간 (2025-11-27 23:16)
+							const datePart = timestamp.toLocaleDateString('ko-KR', {
+								year: 'numeric',
+								month: '2-digit',
+								day: '2-digit'
+							}).replace(/\./g, '-').slice(0, -1);
+
+							const timePart = timestamp.toLocaleTimeString('ko-KR', {
+								hour: '2-digit',
+								minute: '2-digit',
+								hour12: false // 24시간 형식
+							});
+
+							timestampText = `${datePart} ${timePart}`;
+						}
+					}
+
+					const activeClass = chat.chatNo == targetChatNo ? 'active' : '';
+
+					newHtml += `
+							            <li class="chat-item ${activeClass}" data-chat-no="${chat.chatNo}">
+							                <div class="avatar">👤</div>
+							                <div class="chat-content">
+							                    <div class="user-name">${chat.nickname}</div>
+							                    <div class="message-preview">${msgPreview}</div>
+							                </div>
+							                <div class="chat-meta">
+							                    <div class="timestamp" data-timestamp="${currentTimestamp || ''}">${timestampText}</div>
+							                    <img src="${chat.imageUrl || '/img/default.png'}" class="thumbnail">
+							                </div>
+							            </li>
+							        `;
+
+					// 다음 방을 위해 현재 시간 저장 (채팅 목록 순서 정렬을 위한 시간 추적 아님)
+					lastChatTimestamp = currentTimestamp;
+				});
 			}
 
 
 			chatListContainer.innerHTML = newHtml;
 
 			// 목록 갱신 후, 새로 생성된 채팅방으로 이동
-			if (targetChatNo) {
-				// 기존 loadChatRoom 함수를 호출하여 우측 화면을 갱신합니다.
-				loadChatRoom(targetChatNo);
-			}
 		} else {
 			console.error("채팅 목록을 불러오는 데 실패했습니다.");
 		}
@@ -634,6 +682,37 @@ async function updateChatList(targetChatNo) {
 	}
 }
 
+
+
+// 날짜를 원하는 형식으로 포맷하는 함수
+function formatTimestamp(timestampStr, lastTimestampStr) {
+	if (!timestampStr) return '';
+
+	const timestamp = new Date(timestampStr);
+	const lastTimestamp = lastTimestampStr ? new Date(lastTimestampStr) : null;
+
+	// 시간 (HH:mm) 포맷
+	const timeOnly = timestamp.toLocaleTimeString('ko-KR', {
+		hour: '2-digit',
+		minute: '2-digit',
+		hour12: false // 24시간 형식 (loadChatRoom과 통일)
+	});
+
+	// 날짜 (yyyy-MM-dd) 포맷
+	const dateOnly = timestamp.toLocaleDateString('ko-KR', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit'
+	}).replace(/\./g, '-').slice(0, -1); // 2025-11-27 형식
+
+	if (lastTimestamp && dateOnly === lastTimestamp.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '-').slice(0, -1)) {
+		// 날짜가 같으면 시간만 반환
+		return timeOnly;
+	} else {
+		// 날짜가 다르면 년월일 시간 반환
+		return `${dateOnly} ${timeOnly}`;
+	}
+}
 
 
 

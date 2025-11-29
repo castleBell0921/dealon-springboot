@@ -271,4 +271,16 @@
         SET VIEWS = VIEWS + 1
         WHERE NO2 = #{productNo}
     </update>
+    <select id="getAllProduct">
+    	SELECT DISTINCT P.NO AS PRODUCT_NO, P.NAME, NP.PRICE, NP.REGION, P.CREATE_DATE, NP.VIEWS, 
+		    	(SELECT IM.IMAGE_URL
+		        FROM IMAGES IM
+		        WHERE IM.ENTITY_TYPE = 'PRODUCT' AND IM.ENTITY_ID = P.NO
+		        ORDER BY IM.IMAGE_ID ASC
+		        FETCH FIRST 1 ROW ONLY) AS THUMBNAIL_URL
+		FROM PRODUCT P 
+		     JOIN NORMAL NP ON P.NO = NP.NO2
+		     JOIN IMAGES IMG ON ENTITY_ID = P.NO
+		WHERE P.STATUS = 'Y'
+    </select>
 </mapper>

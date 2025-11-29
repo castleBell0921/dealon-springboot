@@ -21,14 +21,15 @@
 
                     <h2 class="section-title text-46px">전체 상품</h2>
                     <div class="product-list">
-                        <div class="product-item">
-                            <div class="product-image-placeholder"></div>
+                        <div class="product-item" th:each="allList : ${allList}" id="product-bar">
+                        	<input type='hidden' class="productNo"  th:value="${allList.productNo}">
+                            <div class="product-image-placeholder" th:style="'background-image:url(' + ${allList.thumbnailUrl} + '); background-size:cover;'"></div>
                             <div class="product-details">
-                                <div class="product-title text-16px">[90] 칩스토어 뉴욕 항공점퍼</div>
-                                <div class="product-price text-16px">5,900 원</div>
+                                <div class="product-title text-16px" th:text="${allList.name}"></div>
+                                <div class="product-price text-16px" th:text="${allList.price}"></div>
                                 <div class="product-meta text-12px">
-                                    <span>이태원동</span>
-                                    <span>1일 전</span>
+                                    <span th:text="${allList.location}"></span>
+                                    <span th:text="${allList.createDate}"></span>
                                     <span class="meta-likes">찜 8</span>
                                 </div>
                             </div>
@@ -98,7 +99,7 @@
     	alert('[[${logoutSuccessMessage}]]');
     </script>
 </div>
-
+<script th:src="@{/js/common/main.js}"></script>
 <script th:src="@{/js/user/header.js}"></script>
 <script th:src="@{/js/common/searchBar.js}"></script>
 <script th:src="@{/js/common/recentViews.js}"></script>

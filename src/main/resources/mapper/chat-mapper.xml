@@ -41,6 +41,7 @@
 		<if test="chatNo != null">
 			AND CR.CHAT_NO = #{chatNo}
 		</if>
+		ORDER BY CR.CREATE_DATE DESC
 	</select>
 	<insert id="createChatRoom">
 		INSERT INTO CHAT_ROOM

@@ -34,7 +34,6 @@ public class ProductService {
 
     public ProductVO getProductDetail(int productNo) {
         ProductVO productDetail = productMapper.findProductDetailById(productNo);
-        log.info(">>>> DB 조회 결과: {}", productDetail);
         if (productDetail != null) {
             if ("NORMAL".equals(productDetail.getProductType())) {
                 productMapper.increaseNormalViewCount(productNo);

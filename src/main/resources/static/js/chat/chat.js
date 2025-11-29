@@ -472,7 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
 								// 3. **(수정 포인트)** 메시지 전송 후 스크롤
 								scrollToBottom();
 
-
+								updateChatList(chatInfo.chatNo);
 
 								messageInput.value = '';
 							});
@@ -585,29 +585,39 @@ async function updateChatList(targetChatNo) {
 
 			// 받은 리스트를 순회하며 <li> 항목을 생성합니다.
 			if (data.chatList && data.chatList.length > 0) {
-				data.chatList.forEach(chat => {
-					const lastMsg = data.lastChat[chat.chatNo];
-					const msgPreview = lastMsg ? (lastMsg.message.length > 11 ? lastMsg.message.substring(0, 11) + '...' : lastMsg.message) : '대화 내용이 없습니다.';
-					const timestamp = lastMsg ? new Date(lastMsg.timestamp).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '';
+			    data.chatList.sort((a, b) => {
+			        const lastMsgA = data.lastChat[a.chatNo];
+			        const lastMsgB = data.lastChat[b.chatNo];
 
-					// 현재 활성화된 채팅방을 표시하기 위한 클래스 추가 (옵션)
-					const activeClass = chat.chatNo == targetChatNo ? 'active' : '';
+			        const timeA = lastMsgA ? new Date(lastMsgA.timestamp).getTime() : 0;
+			        const timeB = lastMsgB ? new Date(lastMsgB.timestamp).getTime() : 0;
 
-					newHtml += `
-                        <li class="chat-item ${activeClass}" data-chat-no="${chat.chatNo}">
-                            <div class="avatar">👤</div>
-                            <div class="chat-content">
-                                <div class="user-name">${chat.nickname}</div>
-                                <div class="message-preview">${msgPreview}</div>
-                            </div>
-                            <div class="chat-meta">
-                                <div class="timestamp">${timestamp}</div>
-                                <img src="${chat.imageUrl || '/img/default.png'}" class="thumbnail">
-                            </div>
-                        </li>
-                    `;
-				});
+			        return timeB - timeA; // 최신 메시지 먼저
+			    });
+
+			    data.chatList.forEach(chat => {
+			        const lastMsg = data.lastChat[chat.chatNo];
+			        const msgPreview = lastMsg ? (lastMsg.message.length > 11 ? lastMsg.message.substring(0, 11) + '...' : lastMsg.message) : '대화 내용이 없습니다.';
+			        const timestamp = lastMsg ? new Date(lastMsg.timestamp).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '';
+
+			        const activeClass = chat.chatNo == targetChatNo ? 'active' : '';
+
+			        newHtml += `
+			            <li class="chat-item ${activeClass}" data-chat-no="${chat.chatNo}">
+			                <div class="avatar">👤</div>
+			                <div class="chat-content">
+			                    <div class="user-name">${chat.nickname}</div>
+			                    <div class="message-preview">${msgPreview}</div>
+			                </div>
+			                <div class="chat-meta">
+			                    <div class="timestamp">${timestamp}</div>
+			                    <img src="${chat.imageUrl || '/img/default.png'}" class="thumbnail">
+			                </div>
+			            </li>
+			        `;
+			    });
 			}
+
 
 			chatListContainer.innerHTML = newHtml;
 

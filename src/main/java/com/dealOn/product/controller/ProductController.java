@@ -122,7 +122,6 @@ public class ProductController {
         // 1. 상품 상세 정보 조회 (기존 getProductDetail 재사용)
         ProductVO product = productService.getProductDetail(productNo);
         // 디버깅로그
-        System.out.println("### DEBUG 2: Controller ###");
         if (product != null) {
             System.out.println("Category Name: " + product.getCategoryName());
             System.out.println("Category No: " + product.getCategoryNo());

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -89,14 +90,34 @@ public class ChatService {
 	}
 
 	public List<ChatMessage> getLastMessages(List<String> chatNos) {
-		Aggregation agg = Aggregation.newAggregation(Aggregation.match(Criteria.where("chatNo").in(chatNos)),
-				Aggregation.sort(Sort.Direction.DESC, "timestamp"),
-				Aggregation.group("chatNo").first(Aggregation.ROOT).as("lastMessage"));
 
-		AggregationResults<LastMessageWrapper> results = mongoTemplate.aggregate(agg, "CHAT", LastMessageWrapper.class);
+	    Aggregation agg = Aggregation.newAggregation(
 
-		return results.getMappedResults().stream().map(LastMessageWrapper::getLastMessage).toList();
+	        // 1) chatNo 필터링
+	        Aggregation.match(Criteria.where("chatNo").in(chatNos)),
+
+	        // ⭐ 2) timestamp가 null이면 null로 유지시키기
+	        Aggregation.addFields()
+	                .addFieldWithValue("timestamp", ConditionalOperators.ifNull("timestamp").then(null))
+	                .build(),
+
+	        // 3) timestamp 기준 최신 메시지 정렬
+	        Aggregation.sort(Sort.Direction.DESC, "timestamp"),
+
+	        // 4) chatNo 별로 가장 첫 문서(=최신 메시지)만 추출
+	        Aggregation.group("chatNo")
+	                .first(Aggregation.ROOT).as("lastMessage")
+	    );
+
+	    AggregationResults<LastMessageWrapper> results =
+	            mongoTemplate.aggregate(agg, "CHAT", LastMessageWrapper.class);
+
+	    return results.getMappedResults()
+	            .stream()
+	            .map(LastMessageWrapper::getLastMessage)
+	            .toList();
 	}
+
 
 	// Aggregation 결과 Wrapper
 	public static class LastMessageWrapper {

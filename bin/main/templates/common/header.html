@@ -20,6 +20,7 @@
 		</div>
 		<th:block th:if="${session.loginUser == null}">
 			<div class="topbar-actions">
+				<a th:href="@{/admin/main}"><button>관리자 접속 버튼</button></a>
 				<button id="loginButton">로그인 / 회원가입</button>
 			</div>
 		</th:block>

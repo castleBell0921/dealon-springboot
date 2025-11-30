@@ -10,12 +10,7 @@
 			<a th:href="@{/}" class="logoButton"></a>
 
 			<div class="category-container">
-				<span class="category-text">카테고리</span>
-				<div class="category-dropdown">
-					<a class="dropdown-item" th:href="@{/product/list}">전체 상품</a>
-					<a class="dropdown-item" th:href="@{/products/normalProduct}">중고 상품</a>
-					<a class="dropdown-item" th:href="@{/products/auctionProduct}">경매 상품</a>
-				</div>
+				<a class="category-text" th:href="@{/product/list}">전체 상품</a>
 			</div>
 		</div>
 		<th:block th:if="${session.loginUser == null}">

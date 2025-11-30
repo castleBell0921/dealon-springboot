@@ -1,5 +1,6 @@
 package com.dealOn;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -15,14 +16,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MainController {
 	private final ProductService pService;
-@GetMapping("/")
-public String home(Model model) {
-	List<ProductVO> allProduct = pService.getAllProduct();
-	model.addAttribute("allList", allProduct);
-	return "index";
-}
-	
 
-
+	@GetMapping("/")
+	public String home(Model model) {
+		List<ProductVO> allList = pService.getAllProduct();
+		List<ProductVO> topList = allList != null ? allList.subList(0, Math.min(8, allList.size())) : new ArrayList<>();
+		model.addAttribute("allList", topList);
+		return "index";
+	}
 
 }

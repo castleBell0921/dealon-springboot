@@ -439,35 +439,8 @@
   cursor: pointer;
   font-size: 20px;
   color: #555;
+  text-decoration: none;
 }
-
-.category-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 150px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  white-space: nowrap;
-}
-
-.dropdown-item {
-  padding: 10px 15px;
-  font-size: 14px;
-  color: #555;
-  cursor: pointer;
-  text-align: center;
-}
-
-.dropdown-item:hover {
-  background-color: #f0f0f0;
-  color: #000;
-}
-
 
 /* 유지: 판매하기 모달 */
 .sell-modal-overlay {
@@ -756,49 +729,7 @@
   opacity: 8%;
 }
 
-/* 헤더 드롭다운 */
-/* 카테고리 드롭다운 컨테이너 */
-.category-container {
-  position: relative; /* 드롭다운 메뉴의 기준점 */
-  display: inline-block;
-  cursor: pointer;
-}
 
-/* 드롭다운 메뉴 (평소에는 숨김) */
-.category-dropdown {
-  display: none; /* 평소에는 보이지 않도록 설정 */
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 150px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  white-space: nowrap;
-}
-
-/* 컨테이너에 마우스를 올리면 드롭다운 메뉴를 보여줌 */
-.category-container:hover .category-dropdown {
-  display: block;
-}
-
-/* 드롭다운 메뉴 안의 각 항목 */
-.dropdown-item {
-  display: block; /* a 태그를 블록 요소로 만들어 영역 전체 클릭 가능하게 함 */
-  padding: 10px 15px;
-  font-size: 14px;
-  color: #555;
-  text-align: center;
-  text-decoration: none; /* 링크 밑줄 제거 */
-}
-
-.dropdown-item:hover {
-  background-color: #f0f0f0;
-  color: #000;
-}
 
 /* 돋보기 버튼 스타일 추가/수정 */
 .search-btn {

@@ -143,7 +143,7 @@ public class ProductService {
         }
     }
 
-	public List<ProductVO> getAllProduct() {
-		return productMapper.getAllProduct();
+	public List<ProductVO> getAllProduct(Map<String, Object> filters) {
+		return productMapper.getAllProduct(filters);
 	}
 }

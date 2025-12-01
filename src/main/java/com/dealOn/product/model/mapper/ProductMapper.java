@@ -37,4 +37,6 @@ public interface ProductMapper {
     int insertWishlist(@Param("userNo") int userNo, @Param("productNo") int productNo);
     int deleteWishlist(@Param("userNo") int userNo, @Param("productNo") int productNo);
 	List<ProductVO> getAllProduct(Map<String, Object> filters);
+	List<ProductVO> getBestProduct(Map<String, Object> filters);
+	List<ProductVO> getRecentProduct(Map<String, Object> filters);
 }

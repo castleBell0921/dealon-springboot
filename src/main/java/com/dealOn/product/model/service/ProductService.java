@@ -146,4 +146,13 @@ public class ProductService {
 	public List<ProductVO> getAllProduct(Map<String, Object> filters) {
 		return productMapper.getAllProduct(filters);
 	}
+
+	public List<ProductVO> getBestProduct(Map<String, Object> filters) {
+		return productMapper.getBestProduct(filters);
+	}
+
+	public List<ProductVO> getRecentProduct(Map<String, Object> filters) {
+		// TODO Auto-generated method stub
+		return productMapper.getRecentProduct(filters);
+	}
 }

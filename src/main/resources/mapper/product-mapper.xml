@@ -307,4 +307,78 @@
             AND N.STATE != 'N'
         </if>
     </select>
+    <select id="getBestProduct">
+    	SELECT DISTINCT P.NO AS PRODUCT_NO, P.NAME, NP.PRICE, NP.REGION, P.CREATE_DATE, P.sales_location as location, NP.VIEWS, 
+		    	(SELECT IM.IMAGE_URL
+		        FROM IMAGES IM
+		        WHERE IM.ENTITY_TYPE = 'PRODUCT' AND IM.ENTITY_ID = P.NO
+		        ORDER BY IM.IMAGE_ID ASC
+		        FETCH FIRST 1 ROW ONLY) AS THUMBNAIL_URL,
+		        (SELECT COUNT(*) FROM WISHLIST WHERE PRODUCT_NO = P.NO) AS WISHLIST_COUNT,
+		        CASE
+		        WHEN NP.NO IS NOT NULL THEN 'USED'
+		        ELSE 'AUCTION'
+		        END AS PRODUCT_TYPE
+		FROM PRODUCT P 
+		     JOIN NORMAL NP ON P.NO = NP.NO2
+		     JOIN IMAGES IMG ON ENTITY_ID = P.NO
+		WHERE P.STATUS = 'Y'
+        <if test="category != null and category != ''">
+            AND P.CATEGORY = (SELECT NO FROM CATEGORY WHERE NAME = #{category})
+        </if>
+
+        <if test="location != null and location != ''">
+            AND P.SALES_LOCATION LIKE '%' || #{location} || '%'
+        </if>
+
+        <if test="minPrice != null">
+            AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &gt;= #{minPrice}
+        </if>
+
+        <if test="maxPrice != null">
+            AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &lt;= #{maxPrice}
+        </if>
+
+        <if test="availableOnly == true">
+            AND N.STATE != 'N'
+        </if>
+        ORDER BY NP.VIEWS DESC
+    </select>
+    <select id="getRecentProduct">
+    	 	SELECT DISTINCT P.NO AS PRODUCT_NO, P.NAME, NP.PRICE, NP.REGION, P.CREATE_DATE, P.sales_location as location, NP.VIEWS, 
+		    	(SELECT IM.IMAGE_URL
+		        FROM IMAGES IM
+		        WHERE IM.ENTITY_TYPE = 'PRODUCT' AND IM.ENTITY_ID = P.NO
+		        ORDER BY IM.IMAGE_ID ASC
+		        FETCH FIRST 1 ROW ONLY) AS THUMBNAIL_URL,
+		        (SELECT COUNT(*) FROM WISHLIST WHERE PRODUCT_NO = P.NO) AS WISHLIST_COUNT,
+		        CASE
+		        WHEN NP.NO IS NOT NULL THEN 'USED'
+		        ELSE 'AUCTION'
+		        END AS PRODUCT_TYPE
+		FROM PRODUCT P 
+		     JOIN NORMAL NP ON P.NO = NP.NO2
+		     JOIN IMAGES IMG ON ENTITY_ID = P.NO
+		WHERE P.STATUS = 'Y'
+        <if test="category != null and category != ''">
+            AND P.CATEGORY = (SELECT NO FROM CATEGORY WHERE NAME = #{category})
+        </if>
+
+        <if test="location != null and location != ''">
+            AND P.SALES_LOCATION LIKE '%' || #{location} || '%'
+        </if>
+
+        <if test="minPrice != null">
+            AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &gt;= #{minPrice}
+        </if>
+
+        <if test="maxPrice != null">
+            AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &lt;= #{maxPrice}
+        </if>
+
+        <if test="availableOnly == true">
+            AND N.STATE != 'N'
+        </if>
+        ORDER BY P.create_date DESC
+    </select>
 </mapper>

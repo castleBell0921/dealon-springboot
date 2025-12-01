@@ -33,13 +33,20 @@ public class MainController {
 		filters.put("maxPrice", maxPrice);
 		filters.put("availableOnly", availableOnly != null);
 		List<ProductVO> allList = pService.getAllProduct(filters);
-		List<ProductVO> topList = allList != null ? allList.subList(0, Math.min(8, allList.size())) : new ArrayList<>();
-
-		model.addAttribute("allList", topList);
+		List<ProductVO> topAllList = allList != null ? allList.subList(0, Math.min(8, allList.size())) : new ArrayList<>();
+		
+		List<ProductVO> bestList = pService.getBestProduct(filters);
+		List<ProductVO>  topBestList = bestList != null ? bestList.subList(0, Math.min(8,  bestList.size())) : new ArrayList<>();
+		
+		List<ProductVO> recentList = pService.getRecentProduct(filters);
+		List<ProductVO> topRecentList = recentList != null ? recentList.subList(0, Math.min(8,  recentList.size())) : new ArrayList<>();
+		
+		model.addAttribute("allList", topAllList).addAttribute("bestList", topBestList).addAttribute("recentList", topRecentList);
+		
 		return "index";
 	}
 
-	@GetMapping("/products/allProduct")
+	@GetMapping("/products/mainProduct")
 	public String moreProduct(@RequestParam(value = "source") String source, Model model,
 			@RequestParam(value = "category", required = false) String category,
 			@RequestParam(value = "location", required = false) String location,
@@ -58,9 +65,13 @@ public class MainController {
 			model.addAttribute("products", list);
 			model.addAttribute("filters", filters);
 		} else if (source.equals("bestProduct")) {
-
+			List<ProductVO> list = pService.getBestProduct(filters);
+			model.addAttribute("products", list);
+			model.addAttribute("filters", filters);
 		} else {
-
+			List<ProductVO> list = pService.getRecentProduct(filters);
+			model.addAttribute("products", list);
+			model.addAttribute("filters", filters);
 		}
 		return "moreProductList";
 	}

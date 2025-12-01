@@ -57,41 +57,83 @@
                 </section>
 
                 <section class="product-section">
+                	<input id="userNo" type="hidden" th:value="${session.loginUser != null ? session.loginUser.userNo : 'guest'}">
+
                     <h2 class="section-title text-46px">인기 상품</h2>
                     <div class="product-list">
-                        <div class="product-item">
-                            <div class="product-image-placeholder"></div>
-                            <div class="product-details">
-                                <div class="product-title text-16px">[90] 칩스토어 뉴욕 항공점퍼</div>
-                                <div class="product-price text-16px">5,900 원</div>
-                                <div class="product-meta text-12px">
-                                    <span>이태원동</span>
-                                    <span>1일 전</span>
-                                    <span class="meta-likes">찜 8</span>
-                                </div>
-                            </div>
-                        </div>
+                       <a th:each="product : ${bestList}" th:href="@{/product/detail/{id}(id=${product.productNo})}" style="text-decoration: none; color: inherit;">
+			            <div class="product-item">
+			              <div class="product-image-placeholder" th:style="'background-image:url(' + ${product.thumbnailUrl} + '); background-size:cover;'">
+			                <span class="product-type"
+			                      th:styleappend="${product.productType == 'USED'} ? 'background-color:blue;' : 'background-color:red;'"
+			                      th:text="${product.productType == 'USED' ? '중고' : '경매'}"></span>
+			              </div>
+			              <div class="product-details">
+			                <div class="product-title text-20px fw-medium" th:text="${product.name}">상품명</div>
+			                <div class="product-price text-22px fw-bold">
+			                  <span th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')}"></span>
+			                  <span class="text-16px"> 원</span>
+			                </div>
+			
+			                <div class="product-meta text-14px fw-medium">
+			                  <div>
+			                    <span class="location" th:attr="data-location=${product.location}">위치</span>
+			                    <span> | </span>
+			                    <span class="time-ago" th:attr="data-date=${product.createDate}">등록일</span>
+			                  </div>
+			                  <span class="meta-likes">
+			                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 30 30" width="22" height="22" style="vertical-align: -6px; fill: #888888;">
+			                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+			                    </svg>
+			                    <span th:text="${product.wishlistCount}">0</span>
+			                  </span>
+			
+			                </div>
+			              </div>
+			            </div>
+			          </a>
                     </div>
-                    <a href="/products/popular" class="more-button-link"><button class="more-button text-16px">더보기</button></a>
+                    <a href="/products/mainProduct?source=bestProduct" class="more-button-link"><button class="more-button text-16px">더보기</button></a>
                 </section>
 
                 <section class="product-section">
-                    <h2 class="section-title text-46px">최신 등록 상품</h2>
+                	<input id="userNo" type="hidden" th:value="${session.loginUser != null ? session.loginUser.userNo : 'guest'}">
+
+                    <h2 class="section-title text-46px">인기 상품</h2>
                     <div class="product-list">
-                        <div class="product-item">
-                            <div class="product-image-placeholder"></div>
-                            <div class="product-details">
-                                <div class="product-title text-16px">[90] 칩스토어 뉴욕 항공점퍼</div>
-                                <div class="product-price text-16px">5,900 원</div>
-                                <div class="product-meta text-12px">
-                                    <span>이태원동</span>
-                                    <span>1일 전</span>
-                                    <span class="meta-likes">찜 8</span>
-                                </div>
-                            </div>
-                        </div>
+                       <a th:each="product : ${recentList}" th:href="@{/product/detail/{id}(id=${product.productNo})}" style="text-decoration: none; color: inherit;">
+			            <div class="product-item">
+			              <div class="product-image-placeholder" th:style="'background-image:url(' + ${product.thumbnailUrl} + '); background-size:cover;'">
+			                <span class="product-type"
+			                      th:styleappend="${product.productType == 'USED'} ? 'background-color:blue;' : 'background-color:red;'"
+			                      th:text="${product.productType == 'USED' ? '중고' : '경매'}"></span>
+			              </div>
+			              <div class="product-details">
+			                <div class="product-title text-20px fw-medium" th:text="${product.name}">상품명</div>
+			                <div class="product-price text-22px fw-bold">
+			                  <span th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')}"></span>
+			                  <span class="text-16px"> 원</span>
+			                </div>
+			
+			                <div class="product-meta text-14px fw-medium">
+			                  <div>
+			                    <span class="location" th:attr="data-location=${product.location}">위치</span>
+			                    <span> | </span>
+			                    <span class="time-ago" th:attr="data-date=${product.createDate}">등록일</span>
+			                  </div>
+			                  <span class="meta-likes">
+			                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 30 30" width="22" height="22" style="vertical-align: -6px; fill: #888888;">
+			                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+			                    </svg>
+			                    <span th:text="${product.wishlistCount}">0</span>
+			                  </span>
+			
+			                </div>
+			              </div>
+			            </div>
+			          </a>
                     </div>
-                    <a href="/products/recent" class="more-button-link"><button class="more-button text-16px">더보기</button></a>
+                    <a href="/products/mainProduct?source=recentProduct" class="more-button-link"><button class="more-button text-16px">더보기</button></a>
                 </section>
             </main>
 

@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <aside class="filter-sidebar-container" th:fragment="filterSidebar(categories, filters)">
-  <form th:action="@{/products/list}" method="get" id="filter-form">
+  <form id="filter-form" onsubmit="return false;">
     <div class="filter-section">
       <div class="filter-section-header">
         <h2 class="filter-title text-20px">필터</h2>
-        <a th:href="@{/products/list}" class="filter-reset-button text-14px">초기화</a>
+        <a href="javascript:location.reload()" class="filter-reset-button text-14px">초기화</a>
       </div>
       <label class="filter-checkbox-label text-18px">
-        <input type="checkbox" name="availableOnly" class="filter-checkbox" th:checked="${filters.availableOnly}" /> 거래 가능만 보기
+        <input type="checkbox" id="availableOnly" name="availableOnly" class="filter-checkbox" /> 거래 가능만 보기
       </label>
     </div>
 
@@ -17,7 +17,7 @@
       <h2 class="filter-title text-20px">위치</h2>
       <ul class="filter-list">
         <li th:each="loc : ${ {'서울특별시 용산구', '이태원동', '한남동', '이촌동', '후암동'} }" class="filter-list-item">
-          <input type="radio" th:id="'loc-' + ${loc}" name="location" th:value="${loc}" class="filter-radio" th:checked="${loc == filters.location}" onchange="this.form.submit()"/>
+          <input type="radio" th:id="'loc-' + ${loc}" name="location" th:value="${loc}" class="filter-radio" />
           <label th:for="'loc-' + ${loc}" class="filter-label text-18px" th:text="${loc}">위치</label>
         </li>
       </ul>
@@ -26,8 +26,12 @@
     <div class="filter-section">
       <h2 class="filter-title text-20px">카테고리</h2>
       <ul class="filter-list">
+        <li class="filter-list-item">
+          <input type="radio" id="cat-all" name="category" value="all" class="filter-radio" checked />
+          <label for="cat-all" class="filter-label text-18px">전체</label>
+        </li>
         <li th:each="cat : ${categories}" class="filter-list-item">
-          <input type="radio" th:id="'cat-' + ${cat.name}" name="category" th:value="${cat.name}" class="filter-radio" th:checked="${cat.name == filters.category}" onchange="this.form.submit()"/>
+          <input type="radio" th:id="'cat-' + ${cat.name}" name="category" th:value="${cat.name}" class="filter-radio" />
           <label th:for="'cat-' + ${cat.name}" class="filter-label text-18px" th:text="${cat.name}">카테고리명</label>
         </li>
       </ul>
@@ -37,10 +41,10 @@
       <h2 class="filter-title text-20px">가격</h2>
       <ul class="filter-list">
         <li class="filter-list-item price-input-item">
-          <input type="number" name="minPrice" placeholder="0" class="price-input text-16px" th:value="${filters.minPrice}" />
+          <input type="number" id="minPrice" name="minPrice" placeholder="0" class="price-input text-16px" />
           <span class="text-16px price-input-separator">-</span>
-          <input type="number" name="maxPrice" placeholder="0" class="price-input text-16px" th:value="${filters.maxPrice}" />
-          <button type="submit" class="price-apply-button text-16px">적용</button>
+          <input type="number" id="maxPrice" name="maxPrice" placeholder="0" class="price-input text-16px" />
+          <button type="button" id="price-apply-btn" class="price-apply-button text-16px">적용</button>
         </li>
       </ul>
     </div>

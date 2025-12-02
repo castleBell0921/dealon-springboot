@@ -34,13 +34,13 @@ public class MainController {
 		filters.put("maxPrice", maxPrice);
 		filters.put("availableOnly", availableOnly != null);
 		List<ProductVO> allList = pService.getAllProduct(filters);
-		List<ProductVO> topAllList = allList != null ? allList.subList(0, Math.min(8, allList.size())) : new ArrayList<>();
+		List<ProductVO> topAllList = allList != null ? allList.subList(0, Math.min(20, allList.size())) : new ArrayList<>();
 		
 		List<ProductVO> bestList = pService.getBestProduct(filters);
-		List<ProductVO>  topBestList = bestList != null ? bestList.subList(0, Math.min(8,  bestList.size())) : new ArrayList<>();
+		List<ProductVO>  topBestList = bestList != null ? bestList.subList(0, Math.min(20,  bestList.size())) : new ArrayList<>();
 		
 		List<ProductVO> recentList = pService.getRecentProduct(filters);
-		List<ProductVO> topRecentList = recentList != null ? recentList.subList(0, Math.min(8,  recentList.size())) : new ArrayList<>();
+		List<ProductVO> topRecentList = recentList != null ? recentList.subList(0, Math.min(20,  recentList.size())) : new ArrayList<>();
 		
 		model.addAttribute("allList", topAllList).addAttribute("bestList", topBestList).addAttribute("recentList", topRecentList);
 		

@@ -10,20 +10,29 @@
 }
 
 .home-main-content {
-    flex-grow: 1; /* 남은 공간 모두 차지 width 정하면 가로길이 우선적용*/
-    width: 1610px; 
-    flex-shrink: 0; /* 너비가 줄어들지 않도록 설정 */
+    flex-grow: 1;
+    width: 1610px;
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
 .product-section {
     margin-bottom: 40px; 
 }
 
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-right: 10px; /* 우측 여백 살짝 줌 */
+}
+
 .section-title {
     font-weight: bold;
-    margin-bottom: 20px; 
     color: #333;
-    text-align: left; 
+    text-align: left;
+    margin-bottom: 0; /* 기존 margin 제거 (flex align 사용) */
 }
 
 /*.product-type {*/
@@ -43,22 +52,48 @@
 
 .product-list {
     display: grid;
-    gap: 20px; /* 간격 */
-    grid-template-columns: repeat(4, 1fr);
-    /* justify-content: space-between; /* 5개 항목을 동일 간격으로 분배 시 사용 */
-    /* flex-wrap: wrap; /* 여러 줄로 나열될 경우 필요 */
-    margin-bottom: 20px; /* 목록 아래 간격 */
+    gap: 20px;
+    grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개 */
+    margin-bottom: 20px;
     width: 100%;
 }
 
+.product-list.active {
+    cursor: grabbing;
+}
+.horizontal-container {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    width: 100%;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.horizontal-container::-webkit-scrollbar {
+    display: none;
+}
+.horizontal-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 
+.horizontal-container.active {
+    cursor: grabbing; /* 잡은 손 모양 */
+}
 
 .product-item {
-    width: 290px; 
+    width: 290px;
+    flex-shrink: 0;
     overflow: hidden;
-    background-color: #fff; 
+    background-color: #fff;
     text-align: left;
-    margin-bottom: 50px;
+}
+.product-item img,
+.product-image-placeholder {
+    pointer-events: none; /* 이미지를 마우스로 끌 수 없게 함 */
+    -webkit-user-drag: none;
 }
 
 .product-item .product-image-placeholder { /*.product-item 이거 안넣으면 상품페이지 css랑 겹치는데 이름이 같긴한데 왜겹치지 안불러왔는데*/
@@ -101,6 +136,10 @@
     /* 찜 아이콘 스타일은 추가 필요 */
 }
 
+.more-button-link {
+    text-decoration: none;
+    display: inline-block;
+}
 
 .more-button {
     display: block; 
@@ -112,6 +151,7 @@
     color: #673AB7;
     cursor: pointer;
     transition: background-color, color 0.3s ease;
+    text-decoration: none;
 }
 
 .more-button:hover {
@@ -120,7 +160,31 @@
 }
 
 .list-main-content {
-    flex-grow: 1; /* 남은 공간 모두 차지 width 정하면 가로길이 우선적용*/
+    flex-grow: 1;
     width: 1150px;
-    flex-shrink: 0; /* 너비가 줄어들지 않도록 설정 */
+    flex-shrink: 0;
+}
+
+.custom-scrollbar {
+    width: 100%;
+    height: 4px; /* 얇은 두께 */
+    background-color: #f5f5f5;
+    border-radius: 2px;
+    margin-top: 15px;
+    position: relative;
+    overflow: hidden;
+    pointer-events: none; /* 클릭 불가능하게 */
+    user-select: none;
+}
+
+/* 스크롤바 막대 */
+.scrollbar-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #d1d1d1;
+    border-radius: 2px;
+    width: 0; /* JS로 계산 */
+    transition: left 0.1s ease-out; /* 부드러운 움직임 */
 }

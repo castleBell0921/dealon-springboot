@@ -26,20 +26,20 @@
     text-align: left; 
 }
 
-.product-type {
-    top: 10px;          /* 위에서 10px 떨어짐 */
-    right: 10px;        /* 오른쪽에서 10px 떨어짐 */
-    background-color: rgba(0, 0, 0, 0.7); /* 더 불투명하게 */
-    color: white;       /* 흰색 글자 */
-    padding: 4px 12px;   /* 패딩 */
-    border-radius: 4px; /* 둥근 모서리 */
-    font-size: 12px;    /* 작은 글자 크기 */
-    font-weight: bold;  /* 글자 굵게 */
-    z-index: 10;        /* 다른 요소 위에 표시되도록 z-index 설정 */
-    margin-left: 13rem;
-    margin-bottom: 15rem;
-    opacity: 0.7    ;
-}
+/*.product-type {*/
+/*    top: 10px;          !* 위에서 10px 떨어짐 *!*/
+/*    right: 10px;        !* 오른쪽에서 10px 떨어짐 *!*/
+/*    background-color: rgba(0, 0, 0, 0.7); !* 더 불투명하게 *!*/
+/*    color: white;       !* 흰색 글자 *!*/
+/*    padding: 4px 12px;   !* 패딩 *!*/
+/*    border-radius: 4px; !* 둥근 모서리 *!*/
+/*    font-size: 12px;    !* 작은 글자 크기 *!*/
+/*    font-weight: bold;  !* 글자 굵게 *!*/
+/*    z-index: 10;        !* 다른 요소 위에 표시되도록 z-index 설정 *!*/
+/*    margin-left: 13rem;*/
+/*    margin-bottom: 15rem;*/
+/*    opacity: 0.7    ;*/
+/*}*/
 
 .product-list {
     display: grid;

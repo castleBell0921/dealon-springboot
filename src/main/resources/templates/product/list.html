@@ -30,9 +30,9 @@
              th:data-price="${product.currentPriceUnified}">
             <div class="product-item">
               <div class="product-image-placeholder" th:style="'background-image:url(' + ${product.thumbnailUrl} + '); background-size:cover;'">
-                <span class="product-type"
-                      th:styleappend="${product.productType == 'USED'} ? 'background-color:blue;' : 'background-color:red;'"
-                      th:text="${product.productType == 'USED' ? '중고' : '경매'}"></span>
+<!--                <span class="product-type"-->
+<!--                      th:styleappend="${product.productType == 'USED'} ? 'background-color:blue;' : 'background-color:red;'"-->
+<!--                      th:text="${product.productType == 'USED' ? '중고' : '경매'}"></span>-->
               </div>
               <div class="product-details">
                 <div class="product-title text-20px fw-medium" th:text="${product.name}">상품명</div>

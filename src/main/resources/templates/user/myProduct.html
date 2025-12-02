@@ -21,7 +21,7 @@
 		<div th:replace="~{user/sideBar :: sidebar}"></div>
 
 		<main class="my-main-content">
-			<h2 class="section-title text-36px">내 상품 관리</h2>
+<!--			<h2 class="section-title text-36px">내 상품 관리</h2>-->
 
 			<div class="tabs-container">
 				<div class="tabs" id="productTabs">
@@ -39,13 +39,22 @@
 				   th:href="@{/product/detail/{id}(id=${product.productNo})}"
 				   style="text-decoration: none; color: inherit;"
 				   class="product-link"
-				   th:data-state="${product.productState}">
+				   th:data-state="${product.productState}"
+				   th:data-product-no="${product.productNo}">
 
 					<div class="product-item">
 						<div class="product-image-placeholder" th:style="'background-image:url(' + ${product.thumbnailUrl} + '); background-size:cover;'">
-<!--                        <span class="product-type"-->
-<!--							  th:styleappend="${product.productType == 'USED'} ? 'background-color:blue;' : 'background-color:red;'"-->
-<!--							  th:text="${product.productType == 'USED' ? '중고' : '경매'}"></span>-->
+							<button class="more-option-btn" type="button">&#8942;</button>
+							<div class="product-overlay">
+								<div class="overlay-content">
+									<div class="status-group">
+										<button type="button" class="status-btn text-20px fw-medium" data-status-type="A">판매중</button>
+										<button type="button" class="status-btn text-20px fw-medium" data-status-type="R">예약중</button>
+										<button type="button" class="status-btn text-20px fw-medium" data-status-type="S">판매완료</button>
+									</div>
+									<button type="button" class="close-overlay-btn text-20px fw-medium">닫기</button>
+								</div>
+							</div>
 						</div>
 						<div class="product-details">
 							<div class="product-title text-20px fw-medium" th:text="${product.name}">상품명</div>

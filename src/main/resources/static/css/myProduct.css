@@ -1,134 +1,174 @@
-.main-wrap {
-    display: flex;
-    max-width: 1500px; /* 현재 좁다면 이 값을 더 큰 값(예: 1400px, 1600px)으로 설정 */
-    margin: 40px 0rem; /* 상하 여백 확대 */
-    gap: 50px; /* 사이드바와 메인 영역 간격 확대 */
-    align-items: flex-start;
-}
-
-/* 내 상품 리스트 영역 */
-.product-list-area {
-	margin-top: 30px;
-	/* width: 1500px; 원하는 본문 너비 (예시로 1000px 설정) */
-	flex: 1;
-	flex-direction: column;
+.my-page-container {
 	display: flex;
-	padding-left: 50px; /* 사이드바와의 적절한 간격 확보 */
+	max-width: 1500px;
+	margin: 40px auto;
+	gap: 50px;
+	align-items: flex-start;
 }
 
-/* 탭 메뉴 스타일 */
+.my-main-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.my-product-list-area {
+	margin-top: 30px;
+	width: 100%;
+}
+
+.tabs-container {
+	position: relative;
+	width: 100%;
+	margin-bottom: 20px;
+	border-bottom: 2px solid #eee;
+}
+
 .tabs {
 	display: flex;
 	align-items: center;
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 20px;
+	gap: 30px;
+	position: relative;
 }
 
 .tab-item {
-	padding: 10px 15px;
-	font-size: 1rem;
-	color: #777;
-	text-decoration: none;
+	padding: 10px 5px;
+	font-size: 1.1rem;
+	color: #999;
+	cursor: pointer;
 	font-weight: 500;
-	transition: color 0.2s;
+	transition: color 0.3s;
+	text-align: center;
 	position: relative;
-	top: 1px; /* border-bottom을 탭 아래로 이동 */
 }
 
 .tab-item.active {
 	color: #000;
 	font-weight: 700;
-	border-bottom: 2px solid #000; /* 활성 탭 아래의 진한 선 */
 }
 
-.total-count {
-	margin-left: auto;
-	font-size: 0.9rem;
-	color: #777;
+.tab-indicator {
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	height: 2px;
+	background-color: #000;
+	transition: all 0.3s ease;
+	pointer-events: none;
 }
 
-/* 상품 그리드 레이아웃 */
-.product-grid {
-	display: grid;
-	/* 한 줄에 4개의 상품이 보이도록 설정 */
-	grid-template-columns: repeat(4, 1fr);
-	gap: 20px; /* 상품 카드 사이의 간격 */
-}
-
-.product-card {
-	border: 1px solid #eee; /* 선택적으로 테두리 추가 */
-	border-radius: 6px;
-	overflow: hidden;
-	cursor: pointer;
-	transition: box-shadow 0.2s;
-	width: 100%;
-}
-
-.product-card:hover {
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 호버 시 그림자 효과 */
-}
-
-/* 이미지 플레이스홀더 (실제 이미지가 없을 경우) */
 .product-image-placeholder {
-	width: 100%;
-	/* 1:1 비율을 위한 padding-bottom 트릭 */
-	padding-bottom: 100%;
-	background-color: #f7f7f7;
-	position: relative; /* ✅ 이미지의 절대 위치 기준점 */
-
-	/* 기존 임시 정렬 코드는 제거하거나 주석 처리 */
-	/* display: flex; 
-       justify-content: center;
-       align-items: center; */
+	position: relative;
 }
 
-/* 👇 **[핵심 수정]** 내부 <img> 태그가 부모를 꽉 채우도록 설정 */
-.product-image-placeholder img {
-	position: absolute; /* ✅ 부모(.product-image-placeholder) 기준으로 절대 위치 */
+.more-option-btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 32px;
+	height: 32px;
+	background: rgba(255, 255, 255, 0.9);
+	border: 1px solid #eee;
+	border-radius: 28%;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
+	z-index: 10;
+	line-height: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #555;
+	transition: all 0.2s;
+}
+
+.more-option-btn:hover {
+	background: #fff;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+	color: #000;
+}
+
+.product-overlay {
+	display: none;
+	position: absolute;
 	top: 0;
 	left: 0;
-	width: 100%; /* ✅ 너비 100% */
-	height: 100%; /* ✅ 높이 100% */
-	/* 이미지가 1:1 비율을 유지하며 잘리지 않게 채우는 속성 */
-	object-fit: cover;
-	/* 둥근 모서리가 있다면 부모와 동일하게 적용 */
+	width: 100%;
+	height: 100%;
+	background-color: rgba(217, 217, 217, 0.75);
+	backdrop-filter: blur(3px);
+	z-index: 20;
+	justify-content: center;
+	align-items: center;
 	border-radius: inherit;
 }
 
-/* 상품 정보 텍스트 */
-.product-info {
-	padding: 0px 25px;
-}
-
-.product-name {
-	font-size: 1rem;
-	font-weight: 500;
-	color: #333;
-	margin-bottom: 5px;
-	/* 이름이 길 경우 ... 처리 */
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	margin-left: -5px;
-}
-
-.product-price {
-	font-size: 1.1rem;
-	font-weight: 700;
-	color: #333;
-	margin-bottom: 10px;
-}
-
-.product-meta {
+.overlay-content {
+	background: transparent;
+	width: 85%;
 	display: flex;
-	gap: 10px;
-	font-size: 1rem;
-	color: #999;
-	margin-top: 0px;
-	margin-left: -9px;
+	flex-direction: column;
+	animation: popIn 0.2s ease-out;
 }
 
-.h1 {
-	margin-right: 0;
-	margin-top: -5px;
+@keyframes popIn {
+	from { transform: scale(0.9); opacity: 0; }
+	to { transform: scale(1); opacity: 1; }
+}
+@keyframes popOut {
+	from { transform: scale(1); opacity: 1; }
+	to { transform: scale(0.9); opacity: 0; }
+}
+.overlay-content.closing {
+	animation: popOut 0.2s ease-in forwards;
+}
+
+.status-group {
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.status-btn {
+	width: 100%;
+	padding: 14px 0;
+	border: none;
+	background-color: rgba(217, 217, 217, 0.70);
+	cursor: pointer;
+	color: black;
+	transition: background 0.2s;
+	border-bottom: 1px solid rgba(167, 167, 167, 0.4);
+}
+
+.status-group .status-btn:last-child {
+	border-bottom: none;
+}
+
+.close-overlay-btn {
+	width: 100%;
+	padding: 14px 0;
+	border: none;
+	background-color: rgba(246, 246, 246, 0.92);
+	cursor: pointer;
+	color: #333;
+	transition: background 0.2s;
+	margin-top: 10px;
+	border-radius: 12px;
+	box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.status-btn:last-of-type {
+	border-bottom: none;
+}
+
+.status-btn:hover {
+	background-color: rgba(181, 181, 181, 0.9);
+}
+.close-overlay-btn:hover {
+	background-color: rgb(255, 255, 255);
+}
+.status-btn.current-status {
+	color: #ff4d4f;
+	cursor: default;
+	background-color: rgba(217, 217, 217, 0.85);
 }

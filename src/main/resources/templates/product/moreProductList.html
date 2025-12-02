@@ -21,12 +21,18 @@
       <section class="product-section">
         <h2 class="section-title text-36px">상품 목록</h2>
         <div class="product-list">
-          <a th:each="product : ${products}" th:href="@{/product/detail/{id}(id=${product.productNo})}" style="text-decoration: none; color: inherit;">
+          <a th:each="product : ${products}"
+             th:href="@{/product/detail/{id}(id=${product.productNo})}"
+             style="text-decoration: none; color: inherit;"
+             class="product-link"
+             th:data-category="${product.categoryName}"
+             th:data-state="${product.productState}"
+             th:data-price="${product.currentPriceUnified}">
             <div class="product-item">
               <div class="product-image-placeholder" th:style="'background-image:url(' + ${product.thumbnailUrl} + '); background-size:cover;'">
-                <span class="product-type"
-                      th:styleappend="${product.productType == 'USED'} ? 'background-color:blue;' : 'background-color:red;'"
-                      th:text="${product.productType == 'USED' ? '중고' : '경매'}"></span>
+<!--                <span class="product-type"-->
+<!--                      th:styleappend="${product.productType == 'USED'} ? 'background-color:blue;' : 'background-color:red;'"-->
+<!--                      th:text="${product.productType == 'USED' ? '중고' : '경매'}"></span>-->
               </div>
               <div class="product-details">
                 <div class="product-title text-20px fw-medium" th:text="${product.name}">상품명</div>
@@ -64,5 +70,6 @@
 <script th:src="@{/js/common/searchBar.js}"></script>
 <script th:src="@{/js/common/recentViews.js}"></script>
 <script th:src="@{/js/product/list.js}"></script>
+<script th:src="@{/js/common/filter.js}"></script>
 </body>
 </html>

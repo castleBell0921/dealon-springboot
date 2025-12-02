@@ -99,7 +99,7 @@
                 <section class="product-section">
                 	<input id="userNo" type="hidden" th:value="${session.loginUser != null ? session.loginUser.userNo : 'guest'}">
 
-                    <h2 class="section-title text-46px">인기 상품</h2>
+                    <h2 class="section-title text-46px">최근 등록 상품</h2>
                     <div class="product-list">
                        <a th:each="product : ${recentList}" th:href="@{/product/detail/{id}(id=${product.productNo})}" style="text-decoration: none; color: inherit;">
 			            <div class="product-item">

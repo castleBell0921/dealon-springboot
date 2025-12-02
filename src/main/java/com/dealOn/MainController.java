@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dealOn.common.model.vo.CategoryVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,6 +60,9 @@ public class MainController {
 		filters.put("minPrice", minPrice);
 		filters.put("maxPrice", maxPrice);
 		filters.put("availableOnly", availableOnly != null);
+
+		List<CategoryVO> categories = pService.findAllCategories();
+		model.addAttribute("categories", categories);
 
 		if (source.equals("allProduct")) {
 			List<ProductVO> list = pService.getAllProduct(filters);

@@ -43,14 +43,32 @@ document.addEventListener('DOMContentLoaded', () => {
 		window.addEventListener('resize', updateScrollbar);
 		new ResizeObserver(updateScrollbar).observe(slider);
 		updateScrollbar();
-		
-		
+
+
 		// 드래그 로직
 		let isDown = false;
 		let startX;
 		let scrollLeft;
 		let isDragging = false;
-		
+
+		// 관성 변수
+		let velX = 0;
+		let momentumID;
+		let lastPageX;
+		let lastTime = 0;
+
+		// [추가] 관성 함수 (감속 애니메이션)
+		const beginMomentum = () => {
+			cancelAnimationFrame(momentumID);
+			const loop = () => {
+				if (Math.abs(velX) < 0.1) return;
+				slider.scrollLeft -= velX * 1; // 스크롤 이동
+				velX *= 0.98; // 마찰력 적용 (숫자가 높을수록 더 미끄러짐)
+				momentumID = requestAnimationFrame(loop);
+			};
+			loop();
+		};
+
 		// 마우스 누름
 		slider.addEventListener('mousedown', (e) => {
 			isDown = true;
@@ -58,6 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			slider.classList.add('active');
 			startX = e.pageX - slider.offsetLeft;
 			scrollLeft = slider.scrollLeft;
+
+			//  관성 초기화
+			lastPageX = e.pageX;
+			velX = 0;
+			cancelAnimationFrame(momentumID);
 		});
 
 		// 마우스 떠남
@@ -73,6 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			setTimeout(() => {
 				isDragging = false;
 			}, 100);
+
+			// [추가] 관성 시작 (멈춘 상태가 아니면)
+			const timeDelta = Date.now() - lastTime;
+			if (timeDelta > 50) velX = 0;
+			beginMomentum();
 		});
 
 		// 마우스 움직임
@@ -88,6 +116,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (Math.abs(walk) > 5) {
 				isDragging = true;
 			}
+
+			// [추가] 현재 속도 계산
+			const now = Date.now();
+			lastTime = now;
+			const deltaX = e.pageX - lastPageX;
+			lastPageX = e.pageX;
+			velX = deltaX;
 		});
 
 		// 드래그시 이미지 클릭 방지

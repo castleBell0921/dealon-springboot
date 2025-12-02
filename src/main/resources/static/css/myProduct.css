@@ -1,27 +1,22 @@
-/* 1. 레이아웃 컨테이너 (사이드바와 메인을 감싸는 부모) */
 .my-page-container {
-	display: flex; /* 핵심: 가로 배치 */
+	display: flex;
 	max-width: 1500px;
-	margin: 40px auto; /* 중앙 정렬 */
-	gap: 50px; /* 사이드바와 간격 */
+	margin: 40px auto;
+	gap: 50px;
 	align-items: flex-start;
 }
 
-/* 2. 메인 컨텐츠 영역 */
 .my-main-content {
-	flex: 1; /* 남은 공간 모두 차지 */
+	flex: 1;
 	display: flex;
 	flex-direction: column;
-	/* padding-left는 gap이 있으므로 제외해도 되지만, 필요시 추가 */
 }
 
-/* 3. 상품 리스트 영역 */
 .my-product-list-area {
 	margin-top: 30px;
 	width: 100%;
 }
 
-/* 4. 탭 메뉴 스타일 */
 .tabs-container {
 	position: relative;
 	width: 100%;
@@ -52,7 +47,6 @@
 	font-weight: 700;
 }
 
-/* 움직이는 밑줄 */
 .tab-indicator {
 	position: absolute;
 	bottom: -2px;
@@ -61,4 +55,120 @@
 	background-color: #000;
 	transition: all 0.3s ease;
 	pointer-events: none;
+}
+
+.product-image-placeholder {
+	position: relative;
+}
+
+.more-option-btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 32px;
+	height: 32px;
+	background: rgba(255, 255, 255, 0.9);
+	border: 1px solid #eee;
+	border-radius: 28%;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
+	z-index: 10;
+	line-height: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #555;
+	transition: all 0.2s;
+}
+
+.more-option-btn:hover {
+	background: #fff;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+	color: #000;
+}
+
+.product-overlay {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(217, 217, 217, 0.75);
+	backdrop-filter: blur(3px);
+	z-index: 20;
+	justify-content: center;
+	align-items: center;
+	border-radius: inherit;
+}
+
+.overlay-content {
+	background: transparent;
+	width: 85%;
+	display: flex;
+	flex-direction: column;
+	animation: popIn 0.2s ease-out;
+}
+
+@keyframes popIn {
+	from { transform: scale(0.9); opacity: 0; }
+	to { transform: scale(1); opacity: 1; }
+}
+@keyframes popOut {
+	from { transform: scale(1); opacity: 1; }
+	to { transform: scale(0.9); opacity: 0; }
+}
+.overlay-content.closing {
+	animation: popOut 0.2s ease-in forwards;
+}
+
+.status-group {
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.status-btn {
+	width: 100%;
+	padding: 14px 0;
+	border: none;
+	background-color: rgba(217, 217, 217, 0.70);
+	cursor: pointer;
+	color: black;
+	transition: background 0.2s;
+	border-bottom: 1px solid rgba(167, 167, 167, 0.4);
+}
+
+.status-group .status-btn:last-child {
+	border-bottom: none;
+}
+
+.close-overlay-btn {
+	width: 100%;
+	padding: 14px 0;
+	border: none;
+	background-color: rgba(246, 246, 246, 0.92);
+	cursor: pointer;
+	color: #333;
+	transition: background 0.2s;
+	margin-top: 10px;
+	border-radius: 12px;
+	box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.status-btn:last-of-type {
+	border-bottom: none;
+}
+
+.status-btn:hover {
+	background-color: rgba(181, 181, 181, 0.9);
+}
+.close-overlay-btn:hover {
+	background-color: rgb(255, 255, 255);
+}
+.status-btn.current-status {
+	color: #ff4d4f;
+	cursor: default;
+	background-color: rgba(217, 217, 217, 0.85);
 }

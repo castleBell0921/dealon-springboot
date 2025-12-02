@@ -6,12 +6,11 @@
     border-right: 1px solid #eee;
     min-height: 600px;
     margin-top: 10px; /* 위쪽 여백 추가 */
+    text-align: left;
 }
 
 .sidebar-title {
-    font-size: 20px;
     margin: 0 0 18px 0;
-    font-weight: 700;
 }
 
 .sidebar-section {
@@ -19,9 +18,7 @@
 }
 
 .section-title {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
 }
 
 .sidebar-menu {
@@ -31,16 +28,21 @@
 }
 
 .sidebar-menu li {
-    margin: 10px 0;
+    margin: 15px 0;
 }
 
 .sidebar-menu a {
     color: #333;
     text-decoration: none;
-    font-size: 15px;
 }
 
 .sidebar-menu a.active {
-    color: #6a4dfc;
-    font-weight: 600;
+    color: #9966CC;
+    font-weight: 500;
+}
+
+.sidebar-title,
+.section-title,
+.sidebar-menu li a {
+    text-align: left;
 }

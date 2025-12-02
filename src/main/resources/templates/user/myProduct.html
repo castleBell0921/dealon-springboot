@@ -1,51 +1,88 @@
-<!-- src/main/resources/templates/user/profile.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>내 정보 수정</title>
-<link rel="stylesheet" th:href="@{/css/App.css}">
-<link rel="stylesheet" th:href="@{/css/common.css}">
-<link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
-<link rel="stylesheet" th:href="@{/css/myProduct.css}">
+	<meta charset="UTF-8">
+	<title>내 상품 관리</title>
+
+	<link rel="stylesheet" th:href="@{/css/App.css}">
+	<link rel="stylesheet" th:href="@{/css/common.css}">
+	<link rel="stylesheet" th:href="@{/css/Home.css}">
+	<link rel="stylesheet" th:href="@{/css/font.css}">
+
+	<link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
+	<link rel="stylesheet" th:href="@{/css/myProduct.css}">
 </head>
 <body>
-	<div class="app-container">
-		<div th:replace="~{common/header :: header}"></div>
-		<div th:replace="~{common/searchBar :: searchBar}"></div>
+<div class="app-container">
+	<div th:replace="~{common/header :: header}"></div>
+	<div th:replace="~{common/searchBar :: searchBar}"></div>
 
-		<main class="main-wrap">
-			<div th:replace="~{user/sidebar :: sidebar}"></div>
-			
-			<section class="product-list-area">
-				<h1 class="h1">내 상품</h1>
-				<div class="tabs">
-					<a class="tab-item active" href="#">전체</a> 
-					<a class="tab-item"href="#">판매중</a> 
-					<a class="tab-item" href="#">예약중</a> 
-					<a class="tab-item" href="#">판매완료</a>
+	<div class="my-page-container">
+		<div th:replace="~{user/sideBar :: sidebar}"></div>
+
+		<main class="my-main-content">
+			<h2 class="section-title text-36px">내 상품 관리</h2>
+
+			<div class="tabs-container">
+				<div class="tabs" id="productTabs">
+					<div class="tab-item active" data-filter="all">전체</div>
+					<div class="tab-item" data-filter="A">판매중</div>
+					<div class="tab-item" data-filter="R">예약중</div>
+					<div class="tab-item" data-filter="S">판매완료</div>
+					<div class="tab-indicator" id="tabIndicator"></div>
 				</div>
+			</div>
 
-				<div class="product-grid">
+			<div class="product-list my-product-list-area">
 
-					<div class="product-card" th:each="list:${productList}">
-						<div class="product-image-placeholder">
-							<img th:src="${list.thumbnailUrl}">
+				<a th:each="product : ${productList}"
+				   th:href="@{/product/detail/{id}(id=${product.productNo})}"
+				   style="text-decoration: none; color: inherit;"
+				   class="product-link"
+				   th:data-state="${product.productState}">
+
+					<div class="product-item">
+						<div class="product-image-placeholder" th:style="'background-image:url(' + ${product.thumbnailUrl} + '); background-size:cover;'">
+<!--                        <span class="product-type"-->
+<!--							  th:styleappend="${product.productType == 'USED'} ? 'background-color:blue;' : 'background-color:red;'"-->
+<!--							  th:text="${product.productType == 'USED' ? '중고' : '경매'}"></span>-->
 						</div>
-						<div class="product-info">
-							<p class="product-name" th:text="${list.name}"></p>
-							<p class="product-price" th:text="${list.price}"></p>
-							<div class="product-meta">
-								<span class="views">👁️ 5</span> <span class="likes">❤️ 8</span>
+						<div class="product-details">
+							<div class="product-title text-20px fw-medium" th:text="${product.name}">상품명</div>
+							<div class="product-price text-22px fw-bold">
+								<span th:text="${#numbers.formatInteger(product.currentPriceUnified, 3, 'COMMA')}"></span>
+								<span class="text-16px"> 원</span>
+							</div>
+
+							<div class="product-meta text-14px fw-medium">
+								<div>
+									<span class="location" th:attr="data-location=${product.location}">위치</span>
+									<span> | </span>
+									<span class="time-ago" th:attr="data-date=${product.createDate}">등록일</span>
+								</div>
+								<span class="meta-likes">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 30 30" width="22" height="22" style="vertical-align: -6px; fill: #888888;">
+                              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                            <span th:text="${product.wishlistCount}">0</span>
+                          </span>
 							</div>
 						</div>
 					</div>
-				</div>
+				</a>
 
-			</section>
+				<p th:if="${#lists.isEmpty(productList)}" style="width:100%; text-align:center; margin-top: 50px; color:#888;">등록된 상품이 없습니다.</p>
+
+				<p id="no-filter-result" style="display:none; width:100%; text-align:center; margin-top: 50px; color:#888;">해당하는 상품이 없습니다.</p>
+			</div>
 		</main>
 	</div>
-	<script th:src="@{/js/user/header.js}"></script>
-	<script th:src="@{/js/user/myInfo.js}"></script>
+</div>
+
+<script th:src="@{/js/user/header.js}"></script>
+<script th:src="@{/js/common/searchBar.js}"></script>
+<script th:src="@{/js/common/recentViews.js}"></script>
+<script th:src="@{/js/user/myInfo.js}"></script>
+<script th:src="@{/js/user/myProduct.js}"></script>
 </body>
 </html>

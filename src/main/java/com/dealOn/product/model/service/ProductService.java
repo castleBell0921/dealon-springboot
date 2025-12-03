@@ -1,6 +1,7 @@
 package com.dealOn.product.model.service;
 
 
+import com.dealOn.chat.model.vo.ChatRoom;
 import com.dealOn.common.S3Service;
 import com.dealOn.common.model.vo.CategoryVO;
 import com.dealOn.product.model.vo.AddProductVO;
@@ -154,5 +155,10 @@ public class ProductService {
 	public List<ProductVO> getRecentProduct(Map<String, Object> filters) {
 		// TODO Auto-generated method stub
 		return productMapper.getRecentProduct(filters);
+	}
+
+	public int updateStatus(ProductVO product) {
+		return productMapper.updateStatus(product);
+		
 	}
 }

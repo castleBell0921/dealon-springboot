@@ -21,6 +21,7 @@ public class ChatRoom {
     private String imageUrl;
     private String sellerStatus;
     private String buyerStatus;
+    private String detail;
 
     
 }

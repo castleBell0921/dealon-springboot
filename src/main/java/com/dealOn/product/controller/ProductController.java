@@ -7,11 +7,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dealOn.chat.model.service.ChatService;
+import com.dealOn.chat.model.vo.ChatRoom;
 import com.dealOn.common.model.vo.CategoryVO;
 import com.dealOn.product.model.service.ProductService;
 import com.dealOn.product.model.vo.AddProductVO;
@@ -27,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 
     private final ProductService productService;
+    private final ChatService chatService;
 
 
     @GetMapping("/list")
@@ -251,5 +262,35 @@ public class ProductController {
         }
         // ProductService의 메서드 호출
         return productService.toggleWishlist(Integer.parseInt(loginUser.getUserNo()), productNo);
+    }
+    
+    @PostMapping("/updateStatus")
+    public ResponseEntity<?> updateStatus(@RequestBody ProductVO product ) {
+    	// A: 판매중, R: 예약중, S: 판매완료
+    	HashMap<Object, Object> result = new HashMap<Object, Object>();
+    	if(product.getStatus() != null ) {
+    		int data = productService.updateStatus(product);
+    		if(!product.getStatus().equals("S")) {
+	    		if(data > 0) {
+	    			result.put("state", "성공");
+	    			return ResponseEntity.ok(result);
+	    		} else {
+	    			result.put("state", "실패");
+	    			return ResponseEntity.status(404).body(result);
+	    		}
+    		} else {
+    			if(data > 0) {
+					 List<ChatRoom> chatList = chatService.selectChatRoom(product);
+					 result.put("data", chatList);	
+    				return ResponseEntity.ok(result);
+    			} else {
+    				result.put("state", "실패");
+    				return ResponseEntity.status(404).body(result);
+    			}
+    		}
+    	} else {
+    		return ResponseEntity.status(404).body("업데이트할 상품을 찾을 수 없습니다.");
+    	}
+    	
     }
 }

@@ -18,6 +18,7 @@ import com.dealOn.chat.model.mapper.ChatMapper;
 import com.dealOn.chat.model.repository.ChatMessageNoSqlRepository;
 import com.dealOn.chat.model.vo.ChatMessage;
 import com.dealOn.chat.model.vo.ChatRoom;
+import com.dealOn.product.model.vo.ProductVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -178,6 +179,10 @@ public class ChatService {
 	public void updateStatus(String chatNo, String userOption) {
         chatMapper.updateStatus(chatNo, userOption);
 
+	}
+
+	public List<ChatRoom> selectChatRoom(ProductVO product) {
+		return chatMapper.selectChatRoom(product);
 	}
 	
 	

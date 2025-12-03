@@ -39,4 +39,5 @@ public interface ProductMapper {
 	List<ProductVO> getAllProduct(Map<String, Object> filters);
 	List<ProductVO> getBestProduct(Map<String, Object> filters);
 	List<ProductVO> getRecentProduct(Map<String, Object> filters);
+	int updateStatus(ProductVO product);
 }

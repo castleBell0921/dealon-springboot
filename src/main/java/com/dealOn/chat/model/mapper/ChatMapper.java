@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dealOn.chat.model.vo.ChatRoom;
+import com.dealOn.product.model.vo.ProductVO;
 
 @Mapper
 public interface ChatMapper {
@@ -32,4 +33,6 @@ public interface ChatMapper {
 	int updateStatus(@Param("chatNo") String chatNo, @Param("userOption") String userOption);
 
 	ChatRoom findByChatNoIgnoreStatus(String chatNo);
+
+	List<ChatRoom> selectChatRoom(ProductVO product);
 }

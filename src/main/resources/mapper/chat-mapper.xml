@@ -206,5 +206,15 @@
 		LEFT JOIN NORMAL NP ON P.NO = NP.NO2
 		WHERE CR.CHAT_NO = #{chatNo}
 	</select>
+	<select id="selectChatRoom">
+		SELECT CR.CHAT_NO, CR.BUYER_NO, CR.SELLER_NO, CR.CREATE_DATE, CR.PRODUCT_NO, P.NAME, P.DETAIL, U.NICKNAME 
+		FROM CHAT_ROOM CR 
+			 JOIN PRODUCT P ON CR.PRODUCT_NO = P.NO
+			 JOIN USERS U ON CR.BUYER_NO = U.USER_NO
+		WHERE cr.PRODUCT_NO=#{productNo}
+		and cr.buyer_status = 'Y' 
+		and cr.seller_status = 'Y'
+		order by cr.create_date desc
+	</select>
 
 </mapper>

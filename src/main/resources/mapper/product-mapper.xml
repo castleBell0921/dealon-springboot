@@ -386,4 +386,9 @@
         </if>
         ORDER BY P.create_date DESC
     </select>
+    <update id="updateStatus">
+    	update normal
+    	set state = #{status}
+    	where no2=#{productNo}
+    </update>
 </mapper>

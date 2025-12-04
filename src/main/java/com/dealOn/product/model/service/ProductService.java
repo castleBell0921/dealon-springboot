@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -160,5 +161,9 @@ public class ProductService {
 	public int updateStatus(ProductVO product) {
 		return productMapper.updateStatus(product);
 		
+	}
+
+	public int createReview(HashMap<String, String> map) {
+		return productMapper.createReview(map);
 	}
 }

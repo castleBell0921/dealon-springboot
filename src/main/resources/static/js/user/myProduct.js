@@ -1,16 +1,19 @@
 let chatListModal;
 let chatListContainer;
 let closeModalBtn;
-let confirmSelectionBtn;
+let confirmSelectionBtn = document.getElementById('confirmSelectionBtn');
+let selectedProductLink = null;
+
 
 document.addEventListener('DOMContentLoaded', () => {
 	chatListModal = document.getElementById('chatListModal');
-    chatListContainer = document.getElementById('chatListContainer');
-    closeModalBtn = document.getElementById('closeModalBtn');
-    confirmSelectionBtn = document.getElementById('confirmSelectionBtn');
-    
-    // 💡 초기 상태를 확실히 hidden으로 설정
-    if (chatListModal) {
+	chatListContainer = document.getElementById('chatListContainer');
+	closeModalBtn = document.getElementById('closeModalBtn');
+	 // 💡 여기서 초기화
+
+
+	// 💡 초기 상태를 확실히 hidden으로 설정
+	if (chatListModal) {
 		chatListModal.classList.add('hidden');
 	}
 
@@ -22,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// 더보기 버튼, 상품 상태변경 ajax
 	setupMoreOptions();
-	
+
 
 
 	if (closeModalBtn) {
@@ -34,6 +37,60 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 });
+
+
+
+if (confirmSelectionBtn) {
+	confirmSelectionBtn.addEventListener('click', async () => {
+
+		// 1. 체크된 모든 체크박스를 선택
+		const checkedCheckboxes = document.querySelectorAll('#chatListContainer input[type="checkbox"]:checked');
+
+		if (checkedCheckboxes.length === 0) {
+			alert("알림을 보낼 대상 채팅방을 하나 이상 선택해주세요.");
+			return;
+		}
+
+		checkedCheckboxes.forEach(async checkbox => {
+			const chatNo = checkbox.dataset.chatNo;
+
+			// buyerNo 가져오기 (숨겨진 인풋 필드 찾기)
+			const parentDiv = checkbox.closest('.flex');
+			const buyerInput = parentDiv ? parentDiv.querySelector('input[type="hidden"]') : null;
+			const buyerNo = buyerInput ? buyerInput.value : null;
+			const productNo = selectedProductLink ? selectedProductLink.dataset.productNo : null;
+
+
+			console.log('상품번호:', productNo);
+
+			
+			console.log('buyerNo: ' + buyerNo);
+			console.log('chatNo: ' + chatNo);
+
+
+
+			// 2. 수집된 데이터를 서버로 POST 요청
+			try {
+				const response = await fetch(`/product/reviewCreate?chatNo=${chatNo}&buyerNo=${buyerNo}&productNo=${productNo}`);
+				if (response.ok) {
+					alert('선택된 구매자들에게 알림 전송이 완료되었습니다.');
+				} else {
+					throw new Error('알림 전송 서버 응답 실패');
+				}
+
+				// 3. 모달 닫기
+				if (chatListModal) {
+					chatListModal.classList.add('hidden');
+					chatListModal.classList.remove('flex');
+				}
+
+			} catch (error) {
+				console.error("알림 전송 중 오류 발생:", error);
+				alert('알림 전송 중 오류가 발생했습니다. (자세한 내용은 콘솔 확인)');
+			}
+		});
+	});
+}
 
 
 
@@ -73,10 +130,12 @@ function formatTimeAndLocation() {
 
 function showChatListModal(chatList, productLink, newStatus) {
 	
+	selectedProductLink = productLink;
+	
 	if (!chatListContainer || !chatListModal) {
-        console.error("모달 관련 DOM 요소를 찾을 수 없습니다. DOMContentLoaded 초기화 확인 필요.");
-        return;
-    }
+		console.error("모달 관련 DOM 요소를 찾을 수 없습니다. DOMContentLoaded 초기화 확인 필요.");
+		return;
+	}
 	chatListContainer.innerHTML = ''; // 기존 리스트 초기화
 
 	if (chatList.length === 0) {
@@ -95,7 +154,7 @@ function showChatListModal(chatList, productLink, newStatus) {
 				                       id="chat-${chat.chatNo}" 
 				                       data-chat-no="${chat.chatNo}" 
 				                       class="h-5 w-5 text-purple-600 rounded border-gray-300 focus:ring-purple-500">
-				                
+				                <input type="hidden" id="buyerNo" value="${chat.buyerNo}">
 									   <label for="chat-${chat.chatNo}" class="text-gray-800 font-medium flex items-center space-x-2">
 		                                       <span class="font-bold text-gray-900">${chat.nickname}</span> 
 		   				                </label>
@@ -103,7 +162,7 @@ function showChatListModal(chatList, productLink, newStatus) {
 				        `;
 		chatListContainer.appendChild(listItem);
 	});
-	
+
 	chatListModal.classList.remove('hidden');
 	chatListModal.classList.add('flex'); // 중앙 정렬을 위해 flex로 변경
 }
@@ -164,13 +223,13 @@ function finalizeStatusChange(productLink, newStatus) {
 	if (overlay) {
 		overlay.style.display = 'none';
 	}
-	
+
 	alert(`상품 상태가 ${newStatus === 'A' ? '판매중' : newStatus === 'R' ? '예약중' : '판매완료'}으로 변경되었습니다.`);
-	
+
 	// 3. 필터링 상태에 따라 목록 새로고침/숨김
 	if (newStatus === 'S') {
 		// 판매완료는 목록에서 사라져야 하므로 새로고침 또는 DOM 제거가 안전
-		location.reload(); 
+		location.reload();
 	} else {
 		// 현재 활성화된 탭에 따라 상품 목록의 표시 여부를 재평가합니다.
 		const activeTab = document.querySelector('.tab-item.active');
@@ -290,11 +349,6 @@ function setupMoreOptions() {
 					// 오버레이 닫기
 					const overlay = btn.closest('.product-overlay');
 					overlay.style.display = 'none';
-
-
-
-
-
 
 				})
 				.catch(error => {

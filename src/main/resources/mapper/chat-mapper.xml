@@ -213,7 +213,7 @@
 			 JOIN USERS U ON CR.BUYER_NO = U.USER_NO
 		WHERE cr.PRODUCT_NO=#{productNo}
 		and cr.buyer_status = 'Y' 
-		and cr.seller_status = 'Y'
+		and cr.seller_status = 'Y'	
 		order by cr.create_date desc
 	</select>
 

@@ -291,6 +291,21 @@ public class ProductController {
     	} else {
     		return ResponseEntity.status(404).body("업데이트할 상품을 찾을 수 없습니다.");
     	}
-    	
     }
+    @GetMapping("/reviewCreate")
+    public String reviewCreate(@RequestParam("chatNo") String chatNo, @RequestParam("buyerNo") String buyerNo, @RequestParam("productNo") String productNo,  HttpSession session) {
+    	User loginUser = (User)session.getAttribute("loginUser");
+//    	System.out.println("buyerNo: " + buyerNo);
+//    	System.out.println("chatNo: " + chatNo);
+    	HashMap<String, String> map = new HashMap<String, String>();
+    	map.put("buyerNo", buyerNo);
+    	map.put("chatNo", chatNo);
+    	map.put("productNo", productNo);
+    	map.put("sellerNo", loginUser.getUserNo());
+    	
+    	int createResult = productService.createReview(map);
+    	
+    	return "";
+    }
+    
 }

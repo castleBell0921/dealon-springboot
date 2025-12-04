@@ -391,4 +391,8 @@
     	set state = #{status}
     	where no2=#{productNo}
     </update>
+    <insert id="createReview">
+    	insert into review (product_no, seller_no, buyer_no,create_date)
+    	values(#{productNo},#{sellerNo},#{buyerNo},sysdate)
+    </insert>
 </mapper>

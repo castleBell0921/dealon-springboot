@@ -6,9 +6,16 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dealOn.common.model.service.CommonService;
+import com.dealOn.common.model.vo.ReviewVO;
 import com.dealOn.user.model.vo.User;
 
 import jakarta.servlet.http.HttpSession;
@@ -35,7 +42,7 @@ public class CommonController {
 	@GetMapping("/recent-search/{userNo}")
 	public ResponseEntity<List<Map<String, Object>>> getRecentSearch(@PathVariable("userNo") String userNo) {
 	    List<Map<String, Object>> recentList = cService.getRecentSearch(userNo);
-	    System.out.print("최근 검색어: " + recentList);
+	    System.out.println("최근 검색어: " + recentList);
 	    return ResponseEntity.ok(recentList);
 	}
 	
@@ -60,7 +67,7 @@ public class CommonController {
 	@GetMapping("/recent-view/{userNo}")
 	public ResponseEntity<List<Map<String, Object>>> getRecentView(@PathVariable("userNo") String userNo) {
 	    List<Map<String, Object>> recentList = cService.getRecentView(userNo);
-	    System.out.print("최근 검색어: " + recentList);
+	    System.out.println("최근 검색어: " + recentList);
 	    return ResponseEntity.ok(recentList);
 	}
 	
@@ -74,5 +81,16 @@ public class CommonController {
 		response.put("region", region);
 
 		return ResponseEntity.ok(response);
+	}
+	
+	
+	@GetMapping("/myReviewState")
+	@ResponseBody
+	public List<ReviewVO> myReviewState(HttpSession session) {
+		User loginUser = (User)session.getAttribute("loginUser");
+		List<ReviewVO> data = cService.myReviewState(loginUser.getUserNo());
+		
+		System.out.println("review: " + data);
+		return data;
 	}
 }

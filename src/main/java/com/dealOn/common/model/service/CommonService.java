@@ -4,15 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.dealOn.common.model.mapper.CommonMapper;
+import com.dealOn.common.model.vo.ReviewVO;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
@@ -98,5 +99,8 @@ public class CommonService {
 	}
 	public List<Map<String, Object>> getRecentView(String userNo) {
 		return cMapper.getRecentView(userNo);
+	}
+	public List<ReviewVO> myReviewState(String userNo) {
+		return cMapper.myReviewState(userNo);
 	}
 }

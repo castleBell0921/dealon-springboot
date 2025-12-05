@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.dealOn.common.model.vo.ReviewVO;
+
 @Mapper
 public interface CommonMapper {
 
@@ -15,5 +17,6 @@ public interface CommonMapper {
 	void recentViewSave(HashMap<String, Object> map);
 	void deleteOldView(HashMap<String, Object> map);
 	List<Map<String, Object>> getRecentView(String userNo);
+	List<ReviewVO> myReviewState(String userNo);
 	
 }

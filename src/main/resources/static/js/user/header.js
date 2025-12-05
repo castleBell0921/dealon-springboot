@@ -65,3 +65,47 @@ googleBtn.addEventListener('click',  () => {
 		window.location.href = "/auth/google/auth-url";
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('logoutButton')) { // 로그인 상태 확인을 위한 임시 DOM 요소
+		myReviewState();
+		updateNotificationBadge();
+    }
+});
+
+async function myReviewState() {
+  	try {
+		const res = await fetch(`/common/myReviewState`)
+		
+		if(!res.ok) {
+			throw new Eerror(`오류 발생!`);
+		}
+		
+		const reviewList = await res.json();
+		
+		console.log("서버에서 받은 리뷰 데이터:", reviewList);
+		
+		return reviewList;
+	} catch {
+		console.error("리뷰 상태를 가져오는 중 오류 발생:", error);
+        return []; // 오류 발생 시 빈 배열 반환
+	}
+}
+
+// 💡 페이지 로드 시 알림 뱃지 업데이트 함수
+async function updateNotificationBadge() {
+    const data = await myReviewState();
+    
+    // readStatus가 'N'인 (미확인) 리뷰의 개수를 필터링하여 셉니다.
+    const unreadCount = data.length;
+    
+    const notificationBadge = document.getElementById('notificationBadge');
+
+    if (notificationBadge) {
+        if (unreadCount > 0) {
+            notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            notificationBadge.style.display = 'block'; // 0보다 크면 표시
+        } else {
+            notificationBadge.style.display = 'none'; // 0이면 숨김
+        }
+    }
+}

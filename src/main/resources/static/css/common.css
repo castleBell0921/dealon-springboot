@@ -746,3 +746,44 @@
   transform: translateY(-50%); /* ✅ 설정: 정확히 수직 중앙 정렬 */
   z-index: 10; /* ✅ 설정: 입력창보다 위로 오도록 */
 }
+
+/* common.css 또는 해당 헤더의 CSS 파일에 추가 */
+
+.notification-icon-container {
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    height: 40px; /* 버튼 높이와 유사하게 설정 */
+    width: 40px; 
+    padding: 0;
+    margin-right: 15px; /* 채팅하기 버튼과의 간격 */
+    color: #333; /* 아이콘 색상 */
+    transition: color 0.2s;
+}
+
+.notification-icon-container:hover {
+    color: #6a0dad; /* 마우스 오버 시 색상 변경 */
+}
+
+.notification-icon {
+    width: 28px; /* 아이콘 크기 */
+    height: 28px;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 18px; /* 아이콘 우측 상단으로 이동 */
+    right: -10px;
+    background-color: #ff4d4f; /* 빨간색 배경 */
+    color: white;
+    font-size: 10px; /* 작은 폰트 크기 */
+    font-weight: bold;
+    border-radius: 50%; /* 원형 모양 */
+    padding: 2px 5px; /* 패딩 조정 */
+    min-width: 18px; /* 최소 너비 지정 */
+    text-align: center;
+    line-height: 14px;
+    height: 18px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.2);
+    display: none; /* JS로 0보다 클 때만 표시 */
+}

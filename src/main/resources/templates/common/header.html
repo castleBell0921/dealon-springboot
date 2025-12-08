@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/myProduct.css}">
 </head>
 <body>
-
 	<header class="topbar-container text-20px" th:fragment="header">
 		<div class="left-header-section">
 			<a th:href="@{/}" class="logoButton"></a>
@@ -21,7 +21,27 @@
 		</th:block>
 		<th:block th:if="${session.loginUser != null}">
 			<div class="topbar-actions">
-				<a th:href="@{/user/notifications}" id="notificationLink" class="notification-icon-container">
+				<!-- 알림 선택 모달 -->
+				<div id="chatListModal" class="chat-modal-overlay hidden">
+				    <div class="chat-modal">
+				        
+				        <!-- 상단 타이틀 + 닫기 버튼 -->
+				        <div class="chat-modal-header">
+				            <h2>알림 선택</h2>
+				            <button id="closeModalBtn" class="chat-modal-close">×</button>
+				        </div>
+				
+				        <ul id="chatListContainer" class="chat-list-container"></ul>
+				
+				        <!-- 하단 확인 버튼 -->
+				        <button id="confirmSelectionBtn" class="chat-modal-confirm">
+				            선택한 사람에게 알림 보내기
+				        </button>
+				
+				    </div>
+				</div>
+				
+				<a id="notificationLink" class="notification-icon-container">
 				    <svg xmlns="http://www.w3.org/2000/svg" 
 				         fill="none" 
 				         viewBox="0 0 24 24" 
@@ -34,7 +54,7 @@
 				
 				    <span id="notificationBadge" class="notification-badge" style="display:none;">0</span>
 				</a>
-
+				
 				<a th:href="@{/chat/chatRoom}"><button>채팅하기</button></a> 
 				<a th:href="@{/product/form}"><button>판매하기</button></a>
 				<a th:href="@{/user/myProduct}"><button>마이페이지</button></a>

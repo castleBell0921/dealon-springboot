@@ -1,7 +1,7 @@
 let chatListModal;
 let chatListContainer;
 let closeModalBtn;
-let confirmSelectionBtn = document.getElementById('confirmSelectionBtn');
+let confirmSelectionBtn;
 let selectedProductLink = null;
 
 
@@ -9,31 +9,33 @@ document.addEventListener('DOMContentLoaded', () => {
 	chatListModal = document.getElementById('chatListModal');
 	chatListContainer = document.getElementById('chatListContainer');
 	closeModalBtn = document.getElementById('closeModalBtn');
-	 // 💡 여기서 초기화
-
+	const notificationLink = document.getElementById('notificationLink'); 
+	confirmSelectionBtn = document.getElementById('confirmSelectionBtn'); 
+	
 
 	// 💡 초기 상태를 확실히 hidden으로 설정
 	if (chatListModal) {
 		chatListModal.classList.add('hidden');
 	}
 
-	// 날짜 / 위치 글자 포맷
+
 	formatTimeAndLocation();
-
-	// 상품 상태 필터
 	setupTabs();
-
-	// 더보기 버튼, 상품 상태변경 ajax
 	setupMoreOptions();
 
-
+	
+	document.body.addEventListener('click', (e) => {
+        // 클릭된 요소가 notificationLink이거나 그 자식(svg, span)인 경우
+        const target = e.target.closest('#notificationLink');
+        
+        if (target) {
+			document.getElementById("chatListModal").style.display = "flex";
+            }
+    });  
 
 	if (closeModalBtn) {
 		closeModalBtn.addEventListener('click', () => {
-			if (chatListModal) {
-				chatListModal.classList.add('hidden');
-				chatListModal.classList.remove('flex');
-			}
+			document.getElementById("chatListModal").style.display = "none";
 		});
 	}
 });
@@ -129,42 +131,55 @@ function formatTimeAndLocation() {
 }
 
 function showChatListModal(chatList, productLink, newStatus) {
-	
-	selectedProductLink = productLink;
-	
-	if (!chatListContainer || !chatListModal) {
-		console.error("모달 관련 DOM 요소를 찾을 수 없습니다. DOMContentLoaded 초기화 확인 필요.");
-		return;
-	}
-	chatListContainer.innerHTML = ''; // 기존 리스트 초기화
+    selectedProductLink = productLink;
+    
+    // 1. 요소 존재 확인
+    if (!chatListContainer || !chatListModal) {
+        chatListContainer = document.getElementById('chatListContainer');
+        chatListModal = document.getElementById('chatListModal');
+    }
 
-	if (chatList.length === 0) {
-		alert("관련된 채팅방이 없습니다. 상태 변경을 완료합니다.");
-		finalizeStatusChange(productLink, newStatus);
-		return;
-	}
+    chatListContainer.innerHTML = ''; // 기존 리스트 초기화
 
-	chatList.forEach(chat => {
-		// chat 객체는 { chatNo: 1, nickname: "판매자B", lastMessage: "..." } 형태라고 가정
-		const listItem = document.createElement('li');
-		listItem.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg border';
-		listItem.innerHTML = `
-				            <div class="flex items-center space-x-3">
-				                <input type="checkbox" 
-				                       id="chat-${chat.chatNo}" 
-				                       data-chat-no="${chat.chatNo}" 
-				                       class="h-5 w-5 text-purple-600 rounded border-gray-300 focus:ring-purple-500">
-				                <input type="hidden" id="buyerNo" value="${chat.buyerNo}">
-									   <label for="chat-${chat.chatNo}" class="text-gray-800 font-medium flex items-center space-x-2">
-		                                       <span class="font-bold text-gray-900">${chat.nickname}</span> 
-		   				                </label>
-				            </div>
-				        `;
-		chatListContainer.appendChild(listItem);
-	});
+    // 2. 데이터 유효성 검사 (서버에서 'data' 속성에 담아 보냈는지 확인)
+    // 로그상 review: [ReviewVO...] 이므로 chatList가 배열인지 체크
+    const listToRender = Array.isArray(chatList) ? chatList : [];
 
-	chatListModal.classList.remove('hidden');
-	chatListModal.classList.add('flex'); // 중앙 정렬을 위해 flex로 변경
+    if (listToRender.length === 0) {
+        alert("알림을 보낼 대상 채팅방이 없습니다.");
+        finalizeStatusChange(productLink, newStatus);
+        return;
+    }
+
+    // 3. 루프 돌며 li 추가
+    listToRender.forEach(chat => {
+        const listItem = document.createElement('li');
+        // 필드명 주의: 서버 로그의 ReviewVO 필드명(buyerNo 등)과 일치해야 함
+        
+        listItem.innerHTML = `
+          <div class="chat-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #eee;">
+              <div class="chat-left" style="display:flex; align-items:center;">
+                  <input type="checkbox"
+                         data-chat-no="${chat.chatNo || '0'}"
+                         class="chat-checkbox">
+                  <div class="chat-text" style="margin-left:10px;">
+                      <p class="chat-title" style="font-weight:bold;">
+                          구매자(${chat.buyerNo})님에게 후기 요청
+                      </p>
+                      <p class="chat-desc" style="font-size:12px; color:gray;">
+                          판매 완료에 따른 후기 알림을 전송합니다.
+                      </p>
+                  </div>
+              </div>
+              <input type="hidden" value="${chat.buyerNo}">
+          </div>
+        `;
+        chatListContainer.appendChild(listItem);
+    });
+
+    // 4. 모달 표시
+    chatListModal.style.display = 'flex';
+    chatListModal.classList.remove('hidden');
 }
 
 function setupTabs() {

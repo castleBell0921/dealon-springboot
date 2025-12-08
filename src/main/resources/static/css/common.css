@@ -787,3 +787,144 @@
     box-shadow: 0 0 3px rgba(0,0,0,0.2);
     display: none; /* JS로 0보다 클 때만 표시 */
 }
+
+/* 모달 전체 배경 (검은 반투명 배경) */
+.chat-modal-overlay {
+    position: fixed;
+    inset: 0; /* top, bottom, left, right 0 */
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none; /* 기본 숨김 */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* 모달 본체 */
+.chat-modal {
+    background-color: #fff;
+    width: 90%;
+    max-width: 640px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    padding: 24px;
+}
+
+/* 모달 상단 영역 */
+.chat-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+/* 제목 */
+.chat-modal-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937; /* text-gray-900 비슷한 색 */
+}
+
+/* 닫기 버튼 */
+.chat-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #9ca3af; /* gray-400 */
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.chat-modal-close:hover {
+    color: #4b5563; /* gray-600 */
+}
+
+/* 리스트 컨테이너 */
+.chat-list-container {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chat-list-container li + li {
+    margin-top: 16px; /* space-y-4 */
+}
+
+/* 확인 버튼 */
+.chat-modal-confirm {
+    width: 100%;
+    margin-top: 24px;
+    background-color: #7e22ce; /* purple-600 */
+    color: white;
+    padding: 12px 0;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.chat-modal-confirm:hover {
+    background-color: #6b21a8; /* purple-700 */
+}
+
+/* hidden 클래스 (공통적으로 display:none 처리) */
+.hidden {
+    display: none;
+}
+
+.chat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.chat-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px; /* space-x-3 대체 */
+}
+
+.chat-checkbox {
+  margin-top: 4px;
+  width: 20px;
+  height: 20px;
+  accent-color: #7e3af2; /* 보라색 체크박스 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.chat-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #6b21a8; /* 보라색 계열 */
+  margin: 0;
+}
+
+.chat-desc {
+  font-size: 13px;
+  color: #777;
+  margin-top: 4px;
+}
+
+.chat-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.chat-close:hover {
+  color: #555;
+}
+ 

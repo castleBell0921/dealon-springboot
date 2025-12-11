@@ -11,12 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewVO {
 	private String readStatus;
-	private String reviewNo;
-	private String productNo;
-	private String sellerNo;
-	private String buyerNo;
+	private int reviewNo;
+	private int productNo;
+	private int sellerNo;
+	private int buyerNo;
 	private String reviewText;
 	private String status;
 	private float rateScore;
 	private Date createDate;
+	private String sellerNickname;
+	private String buyerNickname;
 }

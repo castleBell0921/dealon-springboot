@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.dealOn.chat.model.service.ChatService;
 import com.dealOn.chat.model.vo.ChatRoom;
 import com.dealOn.common.model.vo.CategoryVO;
+import com.dealOn.common.model.vo.ReviewVO;
 import com.dealOn.product.model.service.ProductService;
 import com.dealOn.product.model.vo.AddProductVO;
 import com.dealOn.product.model.vo.ProductVO;
@@ -293,11 +294,12 @@ public class ProductController {
     	}
     }
     @GetMapping("/reviewCreate")
-    public String reviewCreate(@RequestParam("chatNo") String chatNo, @RequestParam("buyerNo") String buyerNo, @RequestParam("productNo") String productNo,  HttpSession session) {
+    public String reviewCreate(@RequestParam("chatNo") int chatNo, @RequestParam("buyerNo") int buyerNo, @RequestParam("productNo") int productNo,  HttpSession session) {
+    	System.out.println("BackEnd in!");
     	User loginUser = (User)session.getAttribute("loginUser");
-//    	System.out.println("buyerNo: " + buyerNo);
-//    	System.out.println("chatNo: " + chatNo);
-    	HashMap<String, String> map = new HashMap<String, String>();
+    	System.out.println("buyerNo: " + buyerNo);
+    	System.out.println("chatNo: " + chatNo);
+    	HashMap<Object, Object> map = new HashMap<Object, Object>();
     	map.put("buyerNo", buyerNo);
     	map.put("chatNo", chatNo);
     	map.put("productNo", productNo);
@@ -305,7 +307,22 @@ public class ProductController {
     	
     	int createResult = productService.createReview(map);
     	
+    	if(createResult > 0) {
+    		return "redirect:/user/myProduct";
+    	}
     	return "";
     }
     
+    @GetMapping("/getReview")
+    @ResponseBody
+    public List<ReviewVO> getReview(HttpSession session) {
+    	User loginUser = (User)session.getAttribute("loginUser");
+    	
+    	List<ReviewVO> data = productService.getReview(loginUser.getUserNo());
+    	System.out.println("data: " + data);
+    	if(data != null) {
+    		return data;
+    	}
+    	return null;
+    }
 }

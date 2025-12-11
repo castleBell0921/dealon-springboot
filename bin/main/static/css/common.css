@@ -870,7 +870,7 @@
 
 /* hidden 클래스 (공통적으로 display:none 처리) */
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .chat-item {
@@ -927,4 +927,217 @@
 .chat-close:hover {
   color: #555;
 }
- 
+
+/* 🔔 알림 모달 배경 */
+.notification-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 10px;
+  z-index: 1000;
+}
+
+/* 🔔 알림 모달 본체 */
+.notification-modal {
+  background-color: #fff;
+  width: 46rem;
+  min-height: 46rem;
+  max-height: 80vh;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  overflow-y: auto;
+  margin-top: 111px;
+  margin-right: 220px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 상단 헤더 */
+.notification-modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 18px;
+  position: relative;
+}
+
+.notification-modal-header h2 {
+  margin: 0;
+  color: #222;
+}
+
+.notification-modal-close {
+  position: absolute;
+  right: 16px;
+  top: 10px;
+  border: none;
+  background: none;
+  font-size: 22px;
+  color: #777;
+  cursor: pointer;
+}
+
+.notification-modal-close:hover {
+  color: #444;
+}
+
+/* 리스트 기본 구조 */
+.notification-list {
+  list-style: none;
+  margin: 0;
+  padding: 12px 16px;
+}
+
+/* 각 알림 항목 */
+.notification-item {
+  background-color: #faf9ff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  flex-direction: column;
+  justify-content: flex-start;
+  display: flex;
+  text-align: left; /* 좌측 정렬 */
+  
+}
+
+.notification-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 후기 도착 (보라 톤) */
+.notification-item.type-review-received {
+  padding: 41px 0px;
+  background-color: #f9f8fb;
+  border: 1px solid #ebe4ff;
+}
+
+/* 거래 완료 (밝은 회색) */
+.notification-item.type-transaction-complete {
+  padding: 41px 0px;
+  background-color: #f9f8fb;
+  border: 1px solid #e8e6ee;
+}
+
+/* 닫기 버튼 */
+.notification-item button {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #999;
+  cursor: pointer;
+}
+
+.notification-item button:hover {
+  color: #666;
+}
+
+/* 알림 내용 */
+.notification-content {
+  display: flex;
+  justify-content: space-between; /* 좌우 공간 분배 */
+  align-items: flex-start; /* 상단 정렬 */
+  gap: 10px;
+}
+
+.notification-left {
+  /* ⚠️ 추가: 왼쪽 영역 (닉네임 + 메시지)이 차지하는 비율 */
+  flex-basis: 45%; 
+  min-width: 0;
+}
+
+.notification-right {
+  /* ⚠️ 추가: 오른쪽 영역 (후기 내용)이 차지하는 비율 */
+  flex-basis: 55%; 
+  min-width: 0;
+  padding-left: 10px; /* 구분선처럼 보이도록 좌측 패딩 추가 */
+  border-left: 1px solid #eee; /* 좌우 내용 분리를 위한 구분선 */
+}
+
+.notification-left .main-text {
+  margin: 13px; /* 불필요한 마진 제거 */
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 6px;
+  color: #222;
+}
+
+.notification-right .detail-text {
+  margin: 0; /* 불필요한 마진 제거 */
+  font-size: 16px;
+  color: #666;
+  font-weight: 500;
+  line-height: 1.5;
+  word-break: keep-all;
+  padding: 6px 8px;
+
+}
+
+/* 닉네임 강조 */
+.user-nickname {
+  color: #7a42ff;
+  font-weight: 600;
+}
+
+/* 알림 없을 때 */
+.notification-empty-item {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* 스크롤바 */
+.notification-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-modal::-webkit-scrollbar-thumb {
+  background-color: #d0c8ff;
+  border-radius: 10px;
+}
+
+.notification-right .detail-text.buyer-prompt {
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* 닫기 버튼 */
+.notification-item .close-notification-item {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+/* 추가된 .flex 클래스 */
+.flex {
+	display: flex;	
+}
+

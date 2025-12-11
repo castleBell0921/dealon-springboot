@@ -109,3 +109,41 @@ async function updateNotificationBadge() {
         }
     }
 }
+
+// 모달 열기
+function openNotificationModal() {
+  const modal = document.getElementById('notificationModal');
+  modal.classList.remove('hidden');
+
+  const list = document.getElementById('notificationList');
+  list.innerHTML = '';
+
+  // 예시 데이터
+  const notifications = [
+    { sender: '구름 시나모롤', message: '보낸 후기가 도착했어요.' },
+    { sender: '항항항님', message: '거래가 완료되었습니다.' },
+    { sender: '구름 시나모롤', message: '새로운 후기가 도착했어요!' },
+  ];
+
+  notifications.forEach((n) => {
+    const li = document.createElement('li');
+    li.className = 'notification-item';
+    li.innerHTML = `
+      <strong>${n.sender}</strong>님이 보낸 알림이에요.<br>
+      <p>${n.message}</p>
+      <button onclick="removeNotification(this)">×</button>
+    `;
+    list.appendChild(li);
+  });
+}
+
+// 알림 개별 삭제
+function removeNotification(btn) {
+  btn.closest('li').remove();
+}
+
+// 닫기 버튼
+document.getElementById('closeNotificationBtn').addEventListener('click', () => {
+  document.getElementById('notificationModal').classList.add('hidden');
+});
+

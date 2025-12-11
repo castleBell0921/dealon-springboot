@@ -1,6 +1,7 @@
 package com.dealOn.product.model.mapper;
 
 import com.dealOn.common.model.vo.CategoryVO;
+import com.dealOn.common.model.vo.ReviewVO;
 import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.product.model.vo.AddProductVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -41,5 +42,6 @@ public interface ProductMapper {
 	List<ProductVO> getBestProduct(Map<String, Object> filters);
 	List<ProductVO> getRecentProduct(Map<String, Object> filters);
 	int updateStatus(ProductVO product);
-	int createReview(HashMap<String, String> map);
+	int createReview(HashMap<Object, Object> map);
+	List<ReviewVO> getReview(String userNo);
 }

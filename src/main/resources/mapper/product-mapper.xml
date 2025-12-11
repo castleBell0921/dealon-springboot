@@ -395,4 +395,24 @@
     	insert into review (product_no, seller_no, buyer_no,create_date)
     	values(#{productNo},#{sellerNo},#{buyerNo},sysdate)
     </insert>
+   <select id="getReview">
+	    SELECT 
+	        r.product_no, 
+	        r.seller_no, 
+	        r.buyer_no, 
+	        r.create_date, 
+	        r.review_text, 
+	        r.status, 
+	        r.rate_score,
+	        -- 판매자 닉네임을 seller_nickname으로 가져옴
+	        u_seller.nickname AS seller_nickname, 
+	        -- 구매자 닉네임을 buyer_nickname으로 가져옴
+	        u_buyer.nickname AS buyer_nickname
+	    FROM 
+	        review r
+	        JOIN users u_seller ON r.seller_no = u_seller.user_no 
+	        JOIN users u_buyer ON r.buyer_no = u_buyer.user_no 
+	    WHERE 
+	        r.seller_no = #{userNo} OR r.buyer_no = #{userNo}
+	</select>
 </mapper>

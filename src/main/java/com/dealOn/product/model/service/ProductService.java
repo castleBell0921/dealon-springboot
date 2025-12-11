@@ -4,6 +4,7 @@ package com.dealOn.product.model.service;
 import com.dealOn.chat.model.vo.ChatRoom;
 import com.dealOn.common.S3Service;
 import com.dealOn.common.model.vo.CategoryVO;
+import com.dealOn.common.model.vo.ReviewVO;
 import com.dealOn.product.model.vo.AddProductVO;
 import com.dealOn.product.model.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
@@ -163,7 +164,11 @@ public class ProductService {
 		
 	}
 
-	public int createReview(HashMap<String, String> map) {
+	public int createReview(HashMap<Object, Object> map) {
 		return productMapper.createReview(map);
+	}
+
+	public List<ReviewVO> getReview(String userNo) {
+		return productMapper.getReview(userNo);
 	}
 }

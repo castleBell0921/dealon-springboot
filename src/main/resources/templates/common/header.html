@@ -3,6 +3,7 @@
 <head>
 <link rel="stylesheet" th:href="@{/css/common.css}">
 <link rel="stylesheet" th:href="@{/css/myProduct.css}">
+<link rel="stylesheet" th:href="@{/css/font.css}">
 </head>
 <body>
 	<header class="topbar-container text-20px" th:fragment="header">
@@ -21,23 +22,20 @@
 		</th:block>
 		<th:block th:if="${session.loginUser != null}">
 			<div class="topbar-actions">
-				<!-- 알림 선택 모달 -->
-				<div id="chatListModal" class="chat-modal-overlay hidden">
-				    <div class="chat-modal">
+				<!-- 메인페이지 알람 버튼 모달 -->
+				<div id="notificationModal" class="notification-modal-overlay hidden">
+				    <div class="notification-modal">
 				        
 				        <!-- 상단 타이틀 + 닫기 버튼 -->
-				        <div class="chat-modal-header">
-				            <h2>알림 선택</h2>
-				            <button id="closeModalBtn" class="chat-modal-close">×</button>
+				        <div class="notification-modal-header">
+				            <h2 class="h2">알림</h2>
+				            <button id="closeNotificationBtn" class="notification-modal-close">×</button>
 				        </div>
 				
-				        <ul id="chatListContainer" class="chat-list-container"></ul>
-				
-				        <!-- 하단 확인 버튼 -->
-				        <button id="confirmSelectionBtn" class="chat-modal-confirm">
-				            선택한 사람에게 알림 보내기
-				        </button>
-				
+				        <!-- 알림 리스트 -->
+				        <ul id="notificationList" class="notification-list">
+				            <!-- 여기에 JS로 li append -->
+				        </ul>
 				    </div>
 				</div>
 				

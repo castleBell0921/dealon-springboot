@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${seller.nickname} + '님의 상점'">판매자 페이지</title>
+
+    <link rel="stylesheet" th:href="@{/css/App.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/seller.css}">
+</head>
+<body>
+<div class="app-container">
+    <div th:replace="~{common/header :: header}"></div>
+    <div th:replace="~{common/searchBar :: searchBar}"></div>
+
+    <div class="seller-page-wrapper">
+
+        <section class="seller-info-section">
+            <div class="seller-profile-large">
+                <div class="seller-avatar-large">
+                    <img th:src="${seller.imageUrl != null ? seller.imageUrl : '/image/default-avatar.png'}"
+                         alt="판매자 프로필"/>
+                </div>
+                <div class="seller-name-large text-32px fw-bold" th:text="${seller.nickname}">닉네임</div>
+            </div>
+
+            <div class="trust-gauge-large">
+                <div class="trust-label-large text-16px fw-medium">
+                    <span>Trust Gauge</span>
+                    <span class="trust-percent" th:text="${seller.trustScore != 0.0 ? seller.trustScore : 36.5} + '%'">36.5%</span>
+                </div>
+                <div class="trust-bar-large">
+                    <div class="trust-fill-large"
+                         th:style="'width:' + ${seller.trustScore != 0.0 ? seller.trustScore : 36.5} + '%;'"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="tabs-container">
+            <div class="tabs">
+                <div class="tab-item text-20px fw-bold active" onclick="showTab('products', this)">
+                    판매 상품 <span th:text="${#lists.size(products)}"></span>
+                </div>
+                <div class="tab-item text-20px fw-bold" onclick="showTab('reviews', this)">
+                    거래 후기 <span th:text="${#lists.size(reviews)}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-products" class="tab-content active">
+
+            <div class="product-list">
+                <a th:each="product : ${products}"
+                   th:href="@{/product/detail/{id}(id=${product.productNo})}"
+                   style="text-decoration: none; color: inherit;"
+                   class="product-link">
+
+                    <div class="product-item">
+                        <div class="product-image-placeholder"
+                             th:style="'background-image:url(' + ${product.thumbnailUrl} + '); background-size:cover;'">
+
+                            <div class="product-overlay" th:if="${product.productState == 'R'}">
+                                <span class="overlay-text text-24px fw-bold">예약중</span>
+                            </div>
+                            <div class="product-overlay" th:if="${product.productState == 'S'}">
+                                <span class="overlay-text text-24px fw-bold">판매완료</span>
+                            </div>
+                        </div>
+
+                        <div class="product-details">
+                            <div class="product-title text-20px fw-medium" th:text="${product.name}">상품명</div>
+                            <div class="product-price text-22px fw-bold">
+                                <span th:text="${#numbers.formatInteger(product.currentPriceUnified, 3, 'COMMA')}"></span>
+                                <span class="text-16px"> 원</span>
+                            </div>
+
+                            <div class="product-meta text-14px fw-medium">
+                                <div>
+                                    <span class="location" th:text="${product.location}">위치</span>
+                                    <span> | </span>
+                                    <span class="time-ago" th:attr="data-date=${product.createDate}">등록일</span>
+                                </div>
+                                <span class="meta-likes">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 30 30" width="22" height="22" style="vertical-align: -6px; fill: #888888;">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                    <span th:text="${product.wishlistCount}">0</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <p th:if="${#lists.isEmpty(products)}" class="no-data-msg text-16px">판매 중인 상품이 없습니다.</p>
+        </div>
+
+        <div id="tab-reviews" class="tab-content">
+            <div class="review-list-container">
+                <div th:each="review : ${reviews}" class="review-item">
+                    <img th:src="${review.buyerProfileImage != null ? review.buyerProfileImage : '/image/default-avatar.png'}"
+                         class="buyer-profile-img" alt="구매자 프로필">
+
+                    <div class="review-content">
+                        <div class="review-header">
+                            <span class="buyer-nickname text-18px fw-bold" th:text="${review.buyerNickname}">구매자</span>
+                            <span class="review-divider">|</span>
+                            <div class="review-rating text-14px fw-bold">
+                                <span style="color:#FFD700;">★</span>
+                                <span th:text="${review.rateScore}">5.0</span>
+                            </div>
+                            <span class="review-divider">|</span>
+                            <span class="time-ago text-13px" th:attr="data-date=${review.createDate}">날짜</span>
+                        </div>
+                        <div class="review-text text-16px" th:text="${review.reviewText}">내용</div>
+                    </div>
+                    <a th:if="${review.productThumbnail != null}"
+                       th:href="@{/product/detail/{id}(id=${review.productNo})}"
+                       class="review-product-link">
+                        <img th:src="${review.productThumbnail}" class="review-product-img" alt="상품 이미지">
+                    </a>
+                </div>
+            </div>
+            <p th:if="${#lists.isEmpty(reviews)}" class="no-data-msg text-16px">등록된 거래 후기가 없습니다.</p>
+        </div>
+
+    </div>
+</div>
+
+<script th:src="@{/js/user/header.js}"></script>
+<script th:src="@{/js/common/searchBar.js}"></script>
+<script th:src="@{/js/user/seller.js}"></script>
+</body>
+</html>

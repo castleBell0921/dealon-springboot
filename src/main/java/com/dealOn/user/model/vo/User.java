@@ -18,6 +18,6 @@ public class User {
 	private String socialId;
 	private String accessToken;
 	private String imageUrl;
-	
-
+	private String uuid;
+	private double trustScore;
 }

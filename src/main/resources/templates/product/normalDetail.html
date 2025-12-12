@@ -17,10 +17,10 @@
             <main class="product-main-content">
                 <div class="breadcrumb text-13px" th:text="'홈 > ' + ${product.categoryName}"></div>
                 <div class="product-info-container">
-                	<input type="hidden" th:value="${product.productNo}" id="productNo" name="productNo">
-                	<input type="hidden" th:value="${product.userNo}" id="productUserNo">
+                    <input type="hidden" th:value="${product.productNo}" id="productNo" name="productNo">
+                    <input type="hidden" th:value="${product.userNo}" id="productUserNo">
 
-                	<input type="hidden" th:value="${loginUser != null ? loginUser.userNo : 'guest'}" id="userNo">
+                    <input type="hidden" th:value="${loginUser != null ? loginUser.userNo : 'guest'}" id="userNo">
 
                     <input type="hidden" th:value="${loginUser != null ? loginUser.userNo : 0}" id="loginUserNo">
 
@@ -37,10 +37,16 @@
                                 <span class="current-image-index">1</span> / <span th:text="${#lists.size(product.imageUrls)}"></span>
                             </div>
                         </div>
-                        <div class="product-seller-info">
+
+                        <div class="product-seller-info"
+                             style="cursor: pointer;"
+                             th:data-url="@{/user/seller/{id}(id=${product.sellerNickname} + '-' + ${product.sellerUuid})}"
+                             onclick="location.href=this.getAttribute('data-url')">
+
                             <div class="seller-profile">
                                 <div class="seller-avatar-placeholder">
                                     <img th:if="${product.sellerProfileImage != null}" th:src="${product.sellerProfileImage}" alt="판매자 프로필"/>
+                                    <img th:unless="${product.sellerProfileImage != null}" th:src="@{/image/default-avatar.png}" alt="기본 프로필"/>
                                 </div>
                                 <div class="seller-name text-20px fw-medium" th:text="${product.sellerNickname}"></div>
                             </div>
@@ -54,6 +60,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </section>
                     <section class="product-details-section">
                         <div class="product-location text-18px fw-medium" th:text="${product.location}"></div>

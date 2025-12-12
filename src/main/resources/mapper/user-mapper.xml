@@ -84,4 +84,28 @@
     SET pwd = #{pwd}
     WHERE id = #{id}
 </update>
+
+<select id="findUserByUuid" resultType="com.dealOn.user.model.vo.User">
+	SELECT * FROM USERS WHERE UUID = #{uuid}
+</select>
+
+<select id="findReviewsBySellerNo" resultType="com.dealOn.user.model.vo.Seller">
+	SELECT
+		R.REVIEW_NO,
+		R.REVIEW_TEXT,
+		R.CREATE_DATE,
+		R.RATE_SCORE,
+		R.BUYER_NO,
+		R.PRODUCT_NO,
+		U.NICKNAME AS BUYER_NICKNAME,
+		(SELECT IMAGE_URL FROM IMAGES WHERE ENTITY_TYPE='USER' AND ENTITY_ID=U.USER_NO AND ROWNUM=1)
+		    AS BUYER_PROFILE_IMAGE,
+		(SELECT IMAGE_URL FROM IMAGES WHERE ENTITY_TYPE = 'PRODUCT' AND ENTITY_ID = R.PRODUCT_NO ORDER BY IMAGE_ID ASC FETCH FIRST 1 ROW ONLY)
+		    AS PRODUCT_THUMBNAIL
+	FROM REVIEW R
+			 JOIN USERS U ON R.BUYER_NO = U.USER_NO
+	WHERE R.SELLER_NO = #{userNo} AND R.REVIEW_TEXT IS NOT NULL
+	ORDER BY R.CREATE_DATE DESC
+</select>
+
 </mapper>

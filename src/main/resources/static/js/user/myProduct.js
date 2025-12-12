@@ -23,134 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	if(notificationModal) {
 		notificationModal.classList.add('hidden');
 	}
-	
-	document.addEventListener('click', (e) => {
-			const link = e.target.closest('#notificationLink');
-			
-			if (link) {
-				e.preventDefault(); 
-				
-				if (notificationModal) {
-					notificationModal.classList.remove('hidden'); 
-					notificationModal.style.display = 'flex'; 
-					
-					fetch(`product/getReview`, {
-						method: 'GET',
-						headers: {
-							'Content-Type': 'application/json',
-						}					
-					})
-					.then(response => {
-						if(response.ok) {
-							return response.json();
-						}
-						throw new Error('서버 통신 실패');
-					})
-					.then(data => {
-					        const reviewList = data;
-					        const currentUserNo = String(userNo); // userNo를 문자열로 통일하여 비교
-					        const notificationBadge = document.querySelector('#notificationBadge');
-							
-					        notificationList.innerHTML = ''; // 리스트 초기화
-					        
-					        // 🔔 데이터가 비어있을 때 알림
-					        if (reviewList.length === 0) {
-					            notificationList.innerHTML = '<li class="notification-empty-item">새로운 알림이 없습니다.</li>';
-					            return;
-					        }
-							
-							notificationBadge.innerText = reviewList.length;
-							
-					        for(const reviewItem of reviewList) {
-					            let listItemHtml = '';
-					            
-					            // 1. 현재 사용자(currentUserNo)가 판매자일 때 (후기 도착 알림)
-					            if(String(reviewItem.sellerNo) === currentUserNo) {
-					                // reviewText가 있으면 후기 도착 알림
-					                if(reviewItem.reviewText != null) {
-					                    const reviewerName = reviewItem.buyerNickname || `구매자(${reviewItem.buyerNo})`; // 닉네임 없을 시 대체
-					                    
-					                    listItemHtml = `
-					                        <li class="notification-item type-review-received" data-review-no="${reviewItem.reviewNo}">
-					                            <div class="notification-content">
-					                                <div class="notification-left">
-					                                    <p class="main-text fw-bold">
-					                                        <span class="user-nickname">${reviewerName}</span>님이 보낸 후기가 도착했어요.
-					                                    </p>
-					                                </div>
-					                                <div class="notification-right fw-regular">
-	                                                    <p class="detail-text">${reviewItem.reviewText}</p>
-					                                </div>
-					                            </div>
-					                        </li>
-					                    `;
-					                }
-					            } 
-					            // 2. 현재 사용자(currentUserNo)가 구매자일 때 (거래 완료 및 후기 요청 알림)
-					            else if (String(reviewItem.buyerNo) === currentUserNo) {
-					                // reviewText가 아직 없으면 후기 요청 알림
-					                if(reviewItem.reviewText == null) {
-					                    const sellerName = reviewItem.sellerNickname || `판매자(${reviewItem.sellerNo})`; // 닉네임 없을 시 대체
-					                    
-					                    listItemHtml = `
-					                        <li class="notification-item type-transaction-complete" data-review-no="${reviewItem.reviewNo}">
-					                            <div class="notification-content">
-					                                <div class="notification-left">
-					                                    <p class="main-text fw-bold">
-					                                        <span class="user-nickname">${sellerName}</span>님과의 거래가 완료되었습니다.
-					                                    </p>
-					                                </div>
-					                                <div class="notification-right">
-	                                                    <p class="detail-text buyer-prompt fw-regular">구매자로 선택되었습니다. 후기를 남겨주시면 서로에게 도움이 돼요!</p>
-					                                </div>
-					                            </div>
-					                        </li>
-					                    `;
-					                }
-					            }
-					            
-					            // 🚨 생성된 HTML을 리스트에 추가합니다.
-					            if (listItemHtml) {
-					                const tempDiv = document.createElement('div'); // 임시 div 사용
-					                tempDiv.innerHTML = listItemHtml.trim();
-					                // <li> 요소만 ul에 추가
-					                notificationList.appendChild(tempDiv.firstChild);
-					            }
-					        }
-					    })
-	                .catch(error => {
-						console.error('알림 데이터 로드 중 에러 발생:', error);
-						// 사용자에게 알림 목록을 불러오지 못했음을 알림
-	                    notificationList.innerHTML = '<li>알림을 불러오는 데 실패했습니다.</li>'; 
-					});
-				}
-			}        
-        // 🚨 모달 외부 클릭 시 닫기 로직 (추가된 코드)
-        const closeBtn = e.target.closest('#closeNotificationBtn');
-        if (closeBtn && notificationModal) {
-            notificationModal.classList.add('hidden');
-            notificationModal.style.display = 'none';
-        }
-        
-        const isClickedOutside = notificationModal && !link && !e.target.closest('#notificationModal');
-        if (isClickedOutside) {
-            notificationModal.classList.add('hidden');
-            notificationModal.style.display = 'none'; 
-        }
-        
-        // 🚨 개별 알림 닫기 버튼 로직 (추가 권장)
-        const closeItemBtn = e.target.closest('.close-notification-item');
-        if (closeItemBtn) {
-            // 해당 알림 항목을 DOM에서 제거
-            closeItemBtn.closest('.notification-item').remove();
-            // 필요하다면 서버에 해당 알림을 '읽음'으로 처리하는 AJAX 요청을 추가
-        }
 	});
 
 	formatTimeAndLocation();
 	setupTabs();
 	setupMoreOptions();        
-    });  
 
 if (closeModalBtn) {
 	closeModalBtn.addEventListener('click', () => {
@@ -487,6 +364,7 @@ function setupMoreOptions() {
 					}
 					
 					if (newStatus == 'S') {
+						productLink.dataset.state = newStatus;
 						showChatListModal(data.data, productLink, newStatus);
 					}
 

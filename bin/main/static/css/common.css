@@ -759,6 +759,7 @@
     margin-right: 15px; /* 채팅하기 버튼과의 간격 */
     color: #333; /* 아이콘 색상 */
     transition: color 0.2s;
+    display: flex;
 }
 
 .notification-icon-container:hover {

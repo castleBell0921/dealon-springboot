@@ -70,9 +70,10 @@
 		
 	</select>
 	<select id="myReviewState">
-		select *
+		select distinct *
 		from review
-		where buyer_no = #{userNo} and
+		where (buyer_no = #{userNo} or
+			  seller_no = #{userNo}) and
 			  read_status = 'N'
 	</select>
 </mapper>

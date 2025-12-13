@@ -44,4 +44,5 @@ public interface ProductMapper {
 	int updateStatus(ProductVO product);
 	int createReview(HashMap<Object, Object> map);
 	List<ReviewVO> getReview(String userNo);
+	int deleteReview(int productNo);
 }

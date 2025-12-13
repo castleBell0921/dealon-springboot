@@ -2,6 +2,7 @@ package com.dealOn.user.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import com.dealOn.user.model.vo.Seller;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -50,7 +51,7 @@ public class UserController {
 	public String SignUp(@ModelAttribute User user, RedirectAttributes ra) {
 		// 비밀번호 암호화
 		user.setPwd(bcrypt.encode(user.getPwd()));
-
+		user.setUuid(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 12));
 		try {
 			// 회원가입 서비스 호출
 			int result = uService.insertUser(user);

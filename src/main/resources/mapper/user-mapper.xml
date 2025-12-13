@@ -15,10 +15,10 @@
 	</select>
 	<insert id="insertUser">
     INSERT INTO users (
-    	id,pwd,phone,email,nickname,trust,region,badge,name, social_id
+    	id,pwd,phone,email,nickname,trust,region,badge,name, social_id,uuid
     ) 
     VALUES (
-    	#{id},#{pwd},#{phone},#{email},#{nickname},0, 'default', 'default', #{name}, #{socialId}
+    	#{id},#{pwd},#{phone},#{email},#{nickname},0, 'default', 'default', #{name}, #{socialId}, #{uuid}
     )
 </insert>
 <select id="login">

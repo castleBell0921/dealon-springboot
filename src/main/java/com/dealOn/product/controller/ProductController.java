@@ -266,14 +266,24 @@ public class ProductController {
     }
     
     @PostMapping("/updateStatus")
-    public ResponseEntity<?> updateStatus(@RequestBody ProductVO product ) {
+    public ResponseEntity<?> updateStatus(@RequestBody ProductVO product,HttpSession session ) {
     	// A: 판매중, R: 예약중, S: 판매완료
+    	String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+    	
     	HashMap<Object, Object> result = new HashMap<Object, Object>();
     	if(product.getStatus() != null ) {
     		int data = productService.updateStatus(product);
+    		int resultData=0;
     		if(!product.getStatus().equals("S")) {
 	    		if(data > 0) {
+	    			List <ReviewVO> beforeData = productService.getReview(userNo);
+	    			for (ReviewVO review : beforeData) {
+	    			    if (review.getProductNo() == product.getProductNo()) {
+	    			    	resultData = productService.deleteReview(product.getProductNo());
+	    			    }
+	    			}
 	    			result.put("state", "성공");
+	    			result.put("resultData", resultData);
 	    			return ResponseEntity.ok(result);
 	    		} else {
 	    			result.put("state", "실패");

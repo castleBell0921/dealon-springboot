@@ -163,6 +163,16 @@
        alert('[[${logoutSuccessMessage}]]');
     </script>
 </div>
+<div th:if="${successMessage}">
+    <script th:if="successMessage">
+       alert('[[${successMessage}]]');
+    </script>
+</div>
+<div th:if="${errorMessage}">
+    <script th:if="errorMessage">
+       alert('[[${errorMessage}]]');
+    </script>
+</div>
 <script th:src="@{/js/common/main.js}"></script>
 <script th:src="@{/js/user/header.js}"></script>
 <script th:src="@{/js/common/searchBar.js}"></script>

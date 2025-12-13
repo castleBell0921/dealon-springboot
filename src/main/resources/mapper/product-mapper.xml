@@ -416,4 +416,8 @@
 	    WHERE 
 	        r.seller_no = #{userNo} OR r.buyer_no = #{userNo}
 	</select>
+	<delete id="deleteReview">
+		delete from review
+		where product_no = #{productNo}
+	</delete>
 </mapper>

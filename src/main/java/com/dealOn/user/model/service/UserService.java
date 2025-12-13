@@ -1,11 +1,11 @@
 package com.dealOn.user.model.service;
 
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.dealOn.user.model.vo.Seller;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.dealOn.common.S3Service;
 import com.dealOn.user.model.mapper.UserMapper;
@@ -114,5 +114,13 @@ public class UserService {
 		data.put("pwd", encodedPwd);
 		
 	    mapper.updatePassword(data);
+	}
+
+	public User findUserByUuid(String uuid) {
+		return mapper.findUserByUuid(uuid);
+	}
+
+	public List<Seller> findReviewsBySellerNo(String userNo) {
+		return mapper.findReviewsBySellerNo(userNo);
 	}
 }

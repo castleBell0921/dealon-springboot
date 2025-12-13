@@ -87,6 +87,7 @@
             C.NAME AS CATEGORY_NAME,
             P.CATEGORY AS CATEGORY_NO, U.NICKNAME AS SELLER_NICKNAME,
             U.IMAGEURL AS SELLER_PROFILE_IMAGE,
+            U.UUID AS SELLER_UUID,
             U.TRUST AS SELLER_TRUST,
             N.PRICE AS price,
             N.STATE AS PRODUCT_STATE,
@@ -415,4 +416,8 @@
 	    WHERE 
 	        r.seller_no = #{userNo} OR r.buyer_no = #{userNo}
 	</select>
+	<delete id="deleteReview">
+		delete from review
+		where product_no = #{productNo}
+	</delete>
 </mapper>

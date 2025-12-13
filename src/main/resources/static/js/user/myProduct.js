@@ -328,6 +328,8 @@ function setupMoreOptions() {
 			e.stopPropagation();
 
 			// ajax에 쓸 값
+			const currentStatusBtn = btn.parentElement.querySelector('.current-status');
+			const beforeStatus = currentStatusBtn.dataset.statusType;
 			const newStatus = btn.dataset.statusType; // 변경할 상태 (판중 A, 예약 R, 판완 S)
 			const productLink = btn.closest('.product-link');
 			const productNo = productLink.dataset.productNo; // 상품 번호
@@ -354,9 +356,16 @@ function setupMoreOptions() {
 				.then(data => {
 					console.log("서버 응답:", data); // JSON 전체 구조 확인
 					if(newStatus != 'S') {
-						alert('상품 상태가 변경되었습니다.');
-						// 성공 시 UI 즉시 반영 = 데이터속성 업데이트
-						productLink.dataset.state = newStatus;
+						if(beforeStatus == 'S') {
+							alert('기존에 있던 상대방의 리뷰 알람이 삭제되었습니다.');
+							alert('상품 상태가 변경되었습니다.');
+							// 성공 시 UI 즉시 반영 = 데이터속성 업데이트
+							productLink.dataset.state = newStatus;
+						} else {
+							alert('상품 상태가 변경되었습니다.');
+							// 성공 시 UI 즉시 반영 = 데이터속성 업데이트
+							productLink.dataset.state = newStatus;
+						}
 	
 					} else if(newStatus == 'S'&&  data.length < 0){
 						alert('판매 할 대상이 없습니다.');

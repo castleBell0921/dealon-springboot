@@ -2,16 +2,13 @@ package com.dealOn.user.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
+import com.dealOn.user.model.vo.Seller;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -54,7 +51,7 @@ public class UserController {
 	public String SignUp(@ModelAttribute User user, RedirectAttributes ra) {
 		// 비밀번호 암호화
 		user.setPwd(bcrypt.encode(user.getPwd()));
-
+		user.setUuid(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 12));
 		try {
 			// 회원가입 서비스 호출
 			int result = uService.insertUser(user);
@@ -243,7 +240,41 @@ public class UserController {
 	    model.addAttribute("sentMessage", "임시 비밀번호가 이메일로 발송되었습니다.");
 	    return "/findPwd";
 	}
-	
+
+
+
+	@GetMapping("/seller/{pathId}")
+	public String sellerPage(@PathVariable("pathId") String pathId, Model model) {
+
+		// 1. 유효성 검사 및 UUID 추출
+		int lastHyphenIdx = pathId.lastIndexOf('-');
+
+		if (lastHyphenIdx == -1 || lastHyphenIdx == pathId.length() - 1) {
+			// 형식이 맞지 않거나 UUID가 없는 경우 메인으로 리다이렉트
+			return "redirect:/";
+		}
+
+		// 닉네임에 하이픈이 있을때 대비 뒤에서부터
+		String uuid = pathId.substring(lastHyphenIdx + 1);
+
+		// 판매자
+		User seller = uService.findUserByUuid(uuid);
+		if (seller == null) {
+			return "redirect:/"; // 존재하지 않는 판매자
+		}
+
+		// 판매상품
+		List<ProductVO> productList = pService.findByUserNoProducts(seller.getUserNo());
+
+		// 후기
+		List<Seller> reviewList = uService.findReviewsBySellerNo(seller.getUserNo());
+
+		model.addAttribute("seller", seller);
+		model.addAttribute("products", productList);
+		model.addAttribute("reviews", reviewList);
+
+		return "user/sellerPage";
+	}
 	
 
 	

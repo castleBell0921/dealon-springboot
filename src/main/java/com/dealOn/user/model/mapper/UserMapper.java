@@ -1,8 +1,10 @@
 package com.dealOn.user.model.mapper;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.dealOn.user.model.vo.Seller;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.dealOn.user.model.vo.User;
@@ -36,4 +38,9 @@ public interface UserMapper {
 
 	void updatePassword(HashMap<String, String> data);
 
+	// UUID 유저 조회
+	User findUserByUuid(String uuid);
+
+	// 후기 조회
+	List<Seller> findReviewsBySellerNo(String userNo);
 }

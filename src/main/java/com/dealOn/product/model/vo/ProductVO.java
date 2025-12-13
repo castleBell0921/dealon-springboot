@@ -37,6 +37,7 @@ public class ProductVO {
     private String sellerProfileImage; 
     private List<String> imageUrls; // 상품의 모든 이미지 URL 리스트
     private int sellerTrust;
+    private String sellerUuid;
 
     // 일반 상품 정보
     private String productState;

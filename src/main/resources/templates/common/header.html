@@ -39,24 +39,16 @@
 				    </div>
 				</div>
 				
-				<a id="notificationLink" class="notification-icon-container">
-				    <svg xmlns="http://www.w3.org/2000/svg" 
-				         fill="none" 
-				         viewBox="0 0 24 24" 
-				         stroke-width="1.8" 
-				         stroke="currentColor" 
-				         class="notification-icon">
-				        <path stroke-linecap="round" stroke-linejoin="round" 
-				              d="M14.857 17.082a1.5 1.5 0 0 0 1.143-1.45V11a5.25 5.25 0 0 0-10.5 0v4.632a1.5 1.5 0 0 0 1.143 1.45l.6.15a1.5 1.5 0 0 1 1.05 1.43v.338a2.25 2.25 0 1 0 4.5 0v-.338a1.5 1.5 0 0 1 1.05-1.43l.6-.15z" />
-				    </svg>
-				
-				    <span id="notificationBadge" class="notification-badge" style="display:none;">0</span>
-				</a>
+
 				
 				<a th:href="@{/chat/chatRoom}"><button>채팅하기</button></a> 
 				<a th:href="@{/product/form}"><button>판매하기</button></a>
 				<a th:href="@{/user/myProduct}"><button>마이페이지</button></a>
 				<button type="button" id="logoutButton">로그아웃</button>
+				<a id="notificationLink" class="notification-icon-container">
+					<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 32 18"><path fill="#555555" d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6zM7.58 4.08L6.15 2.65C3.75 4.48 2.17 7.3 2.03 10.5h2a8.445 8.445 0 0 1 3.55-6.42zm12.39 6.42h2c-.15-3.2-1.73-6.02-4.12-7.85l-1.42 1.43a8.495 8.495 0 0 1 3.54 6.42z"/></svg>
+					<span id="notificationBadge" class="notification-badge" style="display:none;">0</span>
+				</a>
 			</div>
 		</th:block>
 		<div id="loginModal" class="modal">

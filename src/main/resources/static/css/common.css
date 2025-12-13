@@ -14,6 +14,9 @@
   cursor: pointer;
   color: #555;
 }
+.topbar-actions{
+  display: flex;
+}
 
 .topbar-actions button {
   background-color: transparent;
@@ -760,6 +763,7 @@
     color: #333; /* 아이콘 색상 */
     transition: color 0.2s;
     display: flex;
+    cursor: pointer;
 }
 
 .notification-icon-container:hover {
@@ -965,7 +969,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 1px solid #eee;
   padding: 12px 16px;
   font-weight: 600;
   font-size: 18px;
@@ -1001,10 +1004,10 @@
 
 /* 각 알림 항목 */
 .notification-item {
-  background-color: #faf9ff;
-  border-radius: 12px;
-  padding: 14px 16px;
-  margin-bottom: 10px;
+  background-color: rgba(222, 214, 227, 0.3);
+  border-radius: 21px;
+  padding: 0px 10px;
+  margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   position: relative;
@@ -1012,6 +1015,8 @@
   justify-content: flex-start;
   display: flex;
   text-align: left; /* 좌측 정렬 */
+  margin-left: 20px;
+  margin-right: 20px;
   
 }
 
@@ -1020,19 +1025,19 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* 후기 도착 (보라 톤) */
-.notification-item.type-review-received {
-  padding: 41px 0px;
-  background-color: #f9f8fb;
-  border: 1px solid #ebe4ff;
-}
+/*!* 후기 도착 (보라 톤) *!*/
+/*.notification-item.type-review-received {*/
+/*  padding: 41px 0px;*/
+/*  background-color: #f9f8fb;*/
+/*  border: 1px solid #ebe4ff;*/
+/*}*/
 
-/* 거래 완료 (밝은 회색) */
-.notification-item.type-transaction-complete {
-  padding: 41px 0px;
-  background-color: #f9f8fb;
-  border: 1px solid #e8e6ee;
-}
+/*!* 거래 완료 (밝은 회색) *!*/
+/*.notification-item.type-transaction-complete {*/
+/*  padding: 41px 0px;*/
+/*  background-color: #f9f8fb;*/
+/*  border: 1px solid #e8e6ee;*/
+/*}*/
 
 /* 닫기 버튼 */
 .notification-item button {
@@ -1056,6 +1061,7 @@
   justify-content: space-between; /* 좌우 공간 분배 */
   align-items: flex-start; /* 상단 정렬 */
   gap: 10px;
+  padding: 15px 15px 15px 40px;
 }
 
 .notification-left {
@@ -1073,29 +1079,24 @@
 }
 
 .notification-left .main-text {
-  margin: 13px; /* 불필요한 마진 제거 */
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 28px;
   line-height: 1.4;
-  margin-bottom: 6px;
   color: #222;
 }
 
 .notification-right .detail-text {
   margin: 0; /* 불필요한 마진 제거 */
-  font-size: 16px;
-  color: #666;
-  font-weight: 500;
+  font-size: 20px;
+  color: #878787;
   line-height: 1.5;
   word-break: keep-all;
-  padding: 6px 8px;
 
 }
 
 /* 닉네임 강조 */
 .user-nickname {
-  color: #7a42ff;
-  font-weight: 600;
+  color: #9966CC;
+  font-weight: 400;
 }
 
 /* 알림 없을 때 */
@@ -1118,10 +1119,7 @@
 }
 
 .notification-right .detail-text.buyer-prompt {
-    padding: 6px 8px;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 500;
+    padding: 28px 0px;
 }
 
 /* 닫기 버튼 */

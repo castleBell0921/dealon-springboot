@@ -189,8 +189,8 @@ document.addEventListener('click', (e) => {
 				                        <li class="notification-item type-review-received" data-review-no="${reviewItem.reviewNo}">
 				                            <div class="notification-content">
 				                                <div class="notification-left">
-				                                    <p class="main-text fw-bold">
-				                                        <span class="user-nickname">${reviewerName}</span>님이 보낸 후기가 도착했어요.
+				                                    <p class="main-text fw-regular">
+				                                        <span class="user-nickname">${reviewerName}</span>님이 보낸 <br/>후기가 도착했어요.
 				                                    </p>
 				                                </div>
 				                                <div class="notification-right fw-regular">
@@ -211,8 +211,8 @@ document.addEventListener('click', (e) => {
 				                        <li class="notification-item type-transaction-complete" data-review-no="${reviewItem.reviewNo}">
 				                            <div class="notification-content">
 				                                <div class="notification-left">
-				                                    <p class="main-text fw-bold">
-				                                        <span class="user-nickname">${sellerName}</span>님과의 거래가 완료되었습니다.
+				                                    <p class="main-text fw-regular">
+				                                        <span class="user-nickname">${sellerName}</span>님과의 거래가 <br/> 완료되었습니다.
 				                                    </p>
 				                                </div>
 				                                <div class="notification-right">

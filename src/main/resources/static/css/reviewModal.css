@@ -1,0 +1,94 @@
+.review-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* 딤 배경 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.review-modal {
+  background: #fff;
+  width: 50rem; /* 이미지처럼 조금 더 넓게 조정 */
+  max-height:33rem;
+  border-radius: 29px; /* 모서리 둥글게 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 그림자 강화 */
+  padding: 40px;
+  position: relative;
+  text-align: left;
+}
+
+/* 3. 닫기 버튼 */
+.close-btn {
+  position: absolute;
+  top: 25px; /* 이미지에서 약간 아래로 */
+  right: 25px;
+  font-size: 24px; /* 더 크게 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999; /* 기본 색상을 조금 연하게 */
+  line-height: 1;
+}
+.close-btn:hover {
+    color: #555;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.highlight {
+  color: #8a63d9; /* 이미지처럼 보라색 계열 */
+  font-weight: 700;
+}
+
+.sub-text {
+  color: #777; /* 조금 더 진하게 */
+  font-size: 15px;
+  margin-bottom: 35px; /* 제목과의 간격 */
+}
+
+/* 7. 후기 내용 박스 (이미지의 연보라색 배경) */
+.review-box {
+  /* 이미지의 연한 보라색 배경에 맞춤 */
+  background: rgba(222, 214, 227, 0.2); 
+  border-radius: 12px;
+  padding: 25px; /* 내부 여백 증가 */
+  line-height: 1.8;
+  color: #444;
+  font-size: 16px; /* 폰트 크기 증가 */
+  margin-bottom: 40px;
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+
+/* 8. 완료 버튼 */
+.submit-btn {
+  /* 버튼을 중앙에 배치하기 위한 컨테이너 속성 */
+  display: block; 
+  width: fit-content; /* 내용에 맞는 너비 */
+  
+  /* 스타일 */
+  background: #9266dc; /* 이미지의 보라색 */
+  color: white;
+  font-weight: 600;
+  font-size: 17px;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 45px; /* 좌우 패딩 증가 */
+  margin: 0 auto; /* 중앙 정렬 */
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.submit-btn:hover {
+  background: #7c58c4;
+}

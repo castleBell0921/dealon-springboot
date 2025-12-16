@@ -405,9 +405,8 @@
 	        r.review_text, 
 	        r.status, 
 	        r.rate_score,
-	        -- 판매자 닉네임을 seller_nickname으로 가져옴
+	        r.review_no,
 	        u_seller.nickname AS seller_nickname, 
-	        -- 구매자 닉네임을 buyer_nickname으로 가져옴
 	        u_buyer.nickname AS buyer_nickname
 	    FROM 
 	        review r
@@ -420,4 +419,37 @@
 		delete from review
 		where product_no = #{productNo}
 	</delete>
+	 <select id="getMySellList">
+        SELECT
+            P.NO AS PRODUCT_NO,
+            P.USER_NO,
+            P.NAME,
+            P.SALES_LOCATION AS LOCATION,
+            R.REVIEW_TEXT,
+            R.REVIEW_NO,
+            TO_CHAR(P.CREATE_DATE, 'YYYY-MM-DD') AS CREATE_DATE,
+            COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) AS CURRENT_PRICE_UNIFIED,
+            COALESCE(TO_NUMBER(N.VIEWS), TO_NUMBER(A.VIEWS)) AS VIEWS,
+            CASE
+                WHEN N.NO IS NOT NULL THEN 'USED'
+                ELSE 'AUCTION'
+                END AS PRODUCT_TYPE,
+            (SELECT IM.IMAGE_URL
+             FROM IMAGES IM
+             WHERE IM.ENTITY_TYPE = 'PRODUCT' AND IM.ENTITY_ID = P.NO
+             ORDER BY IM.IMAGE_ID ASC
+                 FETCH FIRST 1 ROW ONLY) AS THUMBNAIL_URL,
+            (SELECT COUNT(*) FROM WISHLIST WHERE PRODUCT_NO = P.NO) AS WISHLIST_COUNT,
+
+            N.STATE AS PRODUCT_STATE
+
+        FROM PRODUCT P
+                 LEFT JOIN NORMAL N ON P.NO = N.NO2
+                 LEFT JOIN AUCTION A ON P.NO = A.NO2
+                 LEFT JOIN REVIEW R ON P.NO = R.PRODUCT_NO
+        WHERE P.USER_NO = #{userNo} and
+        	  N.STATE = 'S' and 
+        	  P.STATUS = 'Y'
+        ORDER BY P.CREATE_DATE DESC
+    </select>
 </mapper>

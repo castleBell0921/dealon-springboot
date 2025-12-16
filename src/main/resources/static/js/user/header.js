@@ -142,7 +142,7 @@ document.addEventListener('click', (e) => {
 	const link = e.target.closest('#notificationLink');
 	const userNo = document.querySelector('#userNo').value;
 
-
+	
 
 	if (link) {
 		e.preventDefault();
@@ -261,6 +261,93 @@ document.addEventListener('click', (e) => {
 		closeItemBtn.closest('.notification-item').remove();
 		// 필요하다면 서버에 해당 알림을 '읽음'으로 처리하는 AJAX 요청을 추가
 	}
+	
+	const clickedElement = e.target;
+	    
+	    // 🚨 1. 알림 항목(LI)을 찾기 위해 closest() 사용
+	    // '거래 완료 알림' 항목을 클릭했는지 확인합니다.
+	    const notificationItem = clickedElement.closest('.notification-item.type-transaction-complete');
+	    
+	    // 🚨 2. '후기 도착 알림' 항목을 클릭했는지 확인합니다.
+	    const reviewReceivedItem = clickedElement.closest('.notification-item.type-review-received');
+	    
+	    const reviewModal = document.querySelector('.review-modal-overlay');
 
+	    if (notificationItem || reviewReceivedItem) {
+	        // 상위 알림 항목에서 reviewNo와 상품 정보를 가져옵니다.
+	        const targetItem = notificationItem || reviewReceivedItem;
+	        const reviewNo = targetItem.dataset.reviewNo;
+	        
+	        // 🚨 3. 모달에 데이터를 채우는 함수 호출
+	        if (reviewNo) {
+	            fetchReviewDetails(reviewNo, targetItem);
+	            reviewModal.style.display = 'flex'; // 모달 표시
+	        }
+	    }
+	    
+	    // 🚨 후기 모달 닫기 로직 추가
+	    const closeReviewBtn = e.target.closest('#closeReviewModalBtn');
+	    if (closeReviewBtn && reviewModal) {
+	        reviewModal.style.display = 'none';
+	    }
+	    
+	    // 🚨 후기 모달 외부 클릭 시 닫기 (추가)
+	    const isClickedOutsideReview = reviewModal && reviewModal.style.display === 'flex' && 
+	                                   !e.target.closest('.review-modal') && !e.target.closest('#notificationModal');
+	    if (isClickedOutsideReview) {
+	        reviewModal.style.display = 'none';
+	    }
+
+
+	// 🚨 4. 리뷰 상세 정보를 서버에서 가져와 모달을 채우는 비동기 함수
+	async function fetchReviewDetails(reviewNo, targetItem) {
+	    // 이 URL은 실제 서버의 API 엔드포인트에 맞게 조정해야 합니다.
+	    // 여기서는 상품 정보와 리뷰 데이터를 한 번에 가져오는 엔드포인트를 가정합니다.
+	    try {
+	        const response = await fetch(`/user/reviewDetails/${reviewNo}`); 
+	        
+	        if (!response.ok) {
+	            throw new Error('리뷰 상세 정보를 가져오는 데 실패했습니다.');
+	        }
+	        
+	        const data = await response.json();
+	        
+	        const modalNickname = document.getElementById('reviewModalNickname');
+	        const modalSubText = document.getElementById('reviewModalSubText');
+	        const modalReviewText = document.getElementById('reviewModalReviewText');
+	        
+	        if (modalNickname && modalSubText && modalReviewText) {
+	            // 🚨 데이터 채우기
+	            
+	            // 후기 작성자 닉네임 (판매자/구매자에 따라 다름)
+	            const nickname = data.sellerNickname  || '사용자'; 
+	            
+	            // 거래 상품 이름
+	            const productName = data.name || '거래 상품';
+
+	            modalNickname.textContent = nickname;
+	            
+	            // 서브 텍스트 (예: "OOO님과 [상품명]을 거래했어요.")
+	            if (targetItem.classList.contains('type-transaction-complete')) {
+	                // 구매자 (후기 요청 모달)
+	                modalSubText.textContent = `${nickname}님과 ${productName}을 거래했어요.`;
+	                modalReviewText.value = "솔직한 후기를 남겨주세요."; // textarea 기본값
+	                modalReviewText.readOnly = false; // 구매자는 입력 가능
+	                document.querySelector('.review-modal .submit-btn').style.display = 'block'; // 완료 버튼 표시
+	                
+	            } else if (targetItem.classList.contains('type-review-received')) {
+	                // 판매자 (받은 후기 보기 모달)
+	                modalSubText.textContent = `${data.reviewerNickname}님이 ${productName}에 대해 남긴 후기입니다.`;
+	                modalReviewText.value = data.reviewText || '후기 내용이 없습니다.';
+	                modalReviewText.readOnly = true; // 판매자는 수정 불가
+	                document.querySelector('.review-modal .submit-btn').style.display = 'none'; // 완료 버튼 숨김
+	            }
+	        }
+	        
+	    } catch (error) {
+	        console.error("후기 상세 정보 로드 중 오류 발생:", error);
+	        alert('후기 정보를 불러오는데 실패했습니다.');
+	    }
+	}
 });
 

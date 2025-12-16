@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>판매내역</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" th:href="@{/css/App.css}">
+	<link rel="stylesheet" th:href="@{/css/common.css}">
+	<link rel="stylesheet" th:href="@{/css/Home.css}">
+	<link rel="stylesheet" th:href="@{/css/font.css}">
+	<link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
+	<link rel="stylesheet" th:href="@{/css/myProduct.css}">
+</head>
+<body>
+<div class="app-container">
+	<input type="hidden" id ="userNo" th:value="${session.loginUser.userNo}">
+	<div th:replace="~{common/header :: header}"></div>
+	<div th:replace="~{common/searchBar :: searchBar}"></div>
+
+	<div class="my-page-container">
+		<div th:replace="~{user/sideBar :: sidebar}"></div>
+
+
+		<main class="my-main-content">
+			<div class="text-32px fw-regular" style="text-align: left;">판매내역</div>
+			<div class="product-list my-product-list-area">
+				<a th:each="product : ${productList}"
+				   th:href="@{/product/detail/{id}(id=${product.productNo})}"
+				   style="text-decoration: none; color: inherit;"
+				   class="product-link"
+				   th:data-state="${product.productState}"
+				   th:data-product-no="${product.productNo}">
+
+					<div class="product-item">
+						<div class="product-image-placeholder" th:style="'background-image:url(' + ${product.thumbnailUrl} + '); background-size:cover;'">
+						</div>
+						<div class="product-details">
+							<div class="product-title text-20px fw-medium" th:text="${product.name}">상품명</div>
+							<div class="product-price text-22px fw-bold">
+								<span th:text="${#numbers.formatInteger(product.currentPriceUnified, 3, 'COMMA')}"></span>
+								<span class="text-16px"> 원</span>
+							</div>
+
+							<div class="product-meta text-14px fw-medium">
+								<div>
+									<span class="location" th:attr="data-location=${product.location}">위치</span>
+									<span> | </span>
+									<span class="time-ago" th:attr="data-date=${product.createDate}">등록일</span>
+								</div>
+								<span class="meta-likes">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 30 30" width="22" height="22" style="vertical-align: -6px; fill: #888888;">
+                              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                            <span th:text="${product.wishlistCount}">0</span>
+                          	</span>
+							</div>
+							<button th:if="${product.reviewText != null}" type="button" class="view-reviews-btn stop-link-click">받은 후기 보기</button>
+							<div th:if="${product.reviewText == null}" class="view-reviews-btn stop-link-click">후기 기다리는중...</div>
+						</div>
+					</div>
+				</a>
+
+				<p th:if="${#lists.isEmpty(productList)}" style="width:100%; text-align:center; margin-top: 50px; color:#888;">등록된 상품이 없습니다.</p>
+
+				<p id="no-filter-result" style="display:none; width:100%; text-align:center; margin-top: 50px; color:#888;">해당하는 상품이 없습니다.</p>
+			</div>
+		</main>
+	</div>
+</div>
+<script th:src="@{/js/user/header.js}"></script>
+<script th:src="@{/js/common/searchBar.js}"></script>
+<script th:src="@{/js/common/recentViews.js}"></script>
+<script th:src="@{/js/user/myInfo.js}"></script>
+<script th:src="@{/js/user/myProduct.js}"></script>
+</body>
+</html>

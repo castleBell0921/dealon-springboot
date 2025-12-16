@@ -107,5 +107,27 @@
 	WHERE R.SELLER_NO = #{userNo} AND R.REVIEW_TEXT IS NOT NULL
 	ORDER BY R.CREATE_DATE DESC
 </select>
+<select id="reviewDetail">
+	 SELECT 
+	        r.product_no, 
+	        r.seller_no, 
+	        r.buyer_no, 
+	        r.create_date, 
+	        r.review_text,
+            r.review_no,
+	        r.status, 
+	        r.rate_score,
+	        u_seller.nickname AS seller_nickname, 
+	        u_buyer.nickname AS buyer_nickname,
+            p.name
+
+	    FROM 
+	        review r
+	        JOIN users u_seller ON r.seller_no = u_seller.user_no 
+	        JOIN users u_buyer ON r.buyer_no = u_buyer.user_no 
+            JOIN product p on r.product_no = p.no
+	    WHERE 
+            r.review_no = #{reviewNo}
+</select>
 
 </mapper>

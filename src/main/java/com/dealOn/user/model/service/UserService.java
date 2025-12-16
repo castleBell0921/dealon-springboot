@@ -8,6 +8,7 @@ import com.dealOn.user.model.vo.Seller;
 import org.springframework.stereotype.Service;
 
 import com.dealOn.common.S3Service;
+import com.dealOn.common.model.vo.ReviewVO;
 import com.dealOn.user.model.mapper.UserMapper;
 import com.dealOn.user.model.vo.User;
 
@@ -122,5 +123,9 @@ public class UserService {
 
 	public List<Seller> findReviewsBySellerNo(String userNo) {
 		return mapper.findReviewsBySellerNo(userNo);
+	}
+
+	public ReviewVO reviewDetail(String reviewNo) {
+		return mapper.reviewDetail(reviewNo);
 	}
 }

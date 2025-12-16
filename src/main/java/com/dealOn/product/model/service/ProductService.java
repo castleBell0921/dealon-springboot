@@ -175,4 +175,8 @@ public class ProductService {
 	public int deleteReview(int productNo) {
 		return productMapper.deleteReview(productNo);
 	}
+
+	public List<ProductVO> getMySellList(String userNo) {
+		return productMapper.getMySellList(userNo);
+	}
 }

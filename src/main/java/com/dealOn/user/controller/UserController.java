@@ -4,11 +4,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import com.dealOn.user.model.vo.Seller;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -16,9 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.dealOn.Auth.service.EmailService;
 import com.dealOn.Auth.service.KakaoAuthService;
 import com.dealOn.common.S3Service;
+import com.dealOn.common.model.vo.ReviewVO;
 import com.dealOn.product.model.service.ProductService;
 import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.user.model.service.UserService;
+import com.dealOn.user.model.vo.Seller;
 import com.dealOn.user.model.vo.User;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -275,8 +283,20 @@ public class UserController {
 
 		return "user/sellerPage";
 	}
+	@GetMapping("/mySellList")
+	public String mySesllList(HttpSession session, Model model, HttpServletRequest request) {
+		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+		
+		List<ProductVO> list = pService.getMySellList(userNo);
+		model.addAttribute("productList", list);
+		model.addAttribute("requestURI",request.getRequestURI());
+		return "/mySellList";
+	}
 	
-
-	
-
+	@GetMapping("/reviewDetails/{reviewNo}")
+	@ResponseBody
+	public ReviewVO reviewDetail(@PathVariable("reviewNo") String reviewNo) {
+		ReviewVO detail = uService.reviewDetail(reviewNo);
+		return detail;
+	}
 }

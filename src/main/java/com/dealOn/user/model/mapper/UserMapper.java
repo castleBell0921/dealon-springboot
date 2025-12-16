@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dealOn.common.model.vo.ReviewVO;
 import com.dealOn.user.model.vo.Seller;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -43,4 +44,6 @@ public interface UserMapper {
 
 	// 후기 조회
 	List<Seller> findReviewsBySellerNo(String userNo);
+
+	ReviewVO reviewDetail(String reviewNo);
 }

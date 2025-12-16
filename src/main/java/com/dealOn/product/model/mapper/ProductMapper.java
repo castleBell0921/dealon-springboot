@@ -45,4 +45,5 @@ public interface ProductMapper {
 	int createReview(HashMap<Object, Object> map);
 	List<ReviewVO> getReview(String userNo);
 	int deleteReview(int productNo);
+	List<ProductVO> getMySellList(String userNo);
 }

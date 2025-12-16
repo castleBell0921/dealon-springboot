@@ -47,5 +47,7 @@ public class ProductVO {
     private BigDecimal startPrice;
     private BigDecimal currentPrice;
     private Date endDate;
+    private String reviewText;
+    private int reviewNo;
 
 }

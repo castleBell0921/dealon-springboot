@@ -129,5 +129,10 @@
 	    WHERE 
             r.review_no = #{reviewNo}
 </select>
-
+<update id="writeReview">
+	update review
+	set review_text = #{reviewText},
+		rate_score = #{rateScore}
+	where review_no = #{reviewNo}
+</update>
 </mapper>

@@ -5,8 +5,10 @@
 <link rel="stylesheet" th:href="@{/css/myProduct.css}">
 <link rel="stylesheet" th:href="@{/css/font.css}">
 
+
 </head>
 <body>
+	<div id="messageBox" class="message-box"></div>
 	<header class="topbar-container text-20px" th:fragment="header">
 		<div class="left-header-section">
 			<a th:href="@{/}" class="logoButton"></a>
@@ -80,7 +82,7 @@
 				<button class="gsi-material-button google_button">
 					<div class="gsi-material-button-state"></div>
 					<div class="gsi-material-button-content-wrapper">
-						<div class="gsi-material-button-icon">
+						<div>
 							<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
 								viewBox="0 0 48 48" xmlnsXlink="http://www.w3.org/1999/xlink"
 								style="display: block">
@@ -108,15 +110,40 @@
 	    <h2>
 	    <span class="highlight" id="reviewModalNickname"></span>님께<br>솔직한 후기로 신뢰를 만들어주세요..</h2>
 	    <p class="sub-text" id="reviewModalSubText"></p>
-	
-	    <div class="review-box" id="reviewModalReviewText">
-    	  <textarea>
-	      </textarea>
-	    </div>
-	
-	    <button type="button" class="submit-btn">완료</button>
+		<form id="reviewForm" action="/user/submitReview" method="post">
+	    	<div class="review-box" id="reviewModalReviewText">
+	    	  <input type="hidden" name="reviewNo" id="reviewNo">
+	    	  <input type="hidden" name="rateScore" id="ratingValue">
+	    	   <div class="star-rating">
+		          <div class="star-container">
+		            <input type="radio" id="star5" name="star" value=3><label for="star5" title="5점"></label>
+		            <input type="radio" id="star4" name="star" value=2><label for="star4" title="4점"></label>
+		            <input type="radio" id="star3" name="star" value=1><label for="star3" title="3점"></label>
+		            <input type="radio" id="star2" name="star" value=-3><label for="star2" title="2점"></label>
+		            <input type="radio" id="star1" name="star" value=-5><label for="star1" title="1점"></label>
+		            
+		          </div>
+		        </div>
+	    	  <textarea id="reviewText" name="reviewText" placeholder="후기를 입력해주세요"></textarea>
+		    </div>
+	    	<button type="button" class="submit-btn">완료</button>
+	    </form>
 	  </div>
 	</div>
 	</header>
+	<script th:inline="javascript">
+	    document.addEventListener('DOMContentLoaded', () => {
+	        // Thymeleaf에서 넘겨준 플래시 속성 값을 자바스크립트 변수에 할당
+	        // /*[[...]]*/ 문법은 값이 없을 때 에러를 방지합니다.
+	        const serverMessage = /*[[${message}]]*/ null;
+	
+	        if (serverMessage && serverMessage !== "null") {
+	            // 이전에 정의한 showMessage 함수 호출
+	            if (typeof showMessage === 'function') {
+	                showMessage(serverMessage);
+	            }
+	        }
+	    });
+	</script>
 </body>
 </html>

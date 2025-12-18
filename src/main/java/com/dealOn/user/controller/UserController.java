@@ -299,4 +299,19 @@ public class UserController {
 		ReviewVO detail = uService.reviewDetail(reviewNo);
 		return detail;
 	}
-}
+	@PostMapping("/submitReview")
+	public String submitReview(@ModelAttribute ReviewVO reviewVO, RedirectAttributes rttr){
+//		System.out.println("______________________________________________");
+//		System.out.println("reviewNo: " + reviewNo);
+//		System.out.println("reviewText: " + reviewText);
+//		System.out.println("star: " + star);
+//		System.out.println("______________________________________________");
+		int result = uService.writeReview(reviewVO);
+		if(result > 0) {
+			rttr.addFlashAttribute("message", "후기가 정상적으로 등록되었습니다.");
+	        return "redirect:/";
+		} else {
+			return "redirect:/";
+		}
+	}
+ }

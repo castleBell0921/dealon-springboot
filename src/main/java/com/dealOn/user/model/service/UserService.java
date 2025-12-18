@@ -128,4 +128,8 @@ public class UserService {
 	public ReviewVO reviewDetail(String reviewNo) {
 		return mapper.reviewDetail(reviewNo);
 	}
+
+	public int writeReview(ReviewVO reviewVO) {
+		return mapper.writeReview(reviewVO);
+	}
 }

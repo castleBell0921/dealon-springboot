@@ -1140,3 +1140,28 @@
 	display: flex;	
 }
 
+/* 메시지 박스 기본 스타일 */
+.message-box {
+    position: fixed;
+    bottom: 20px;            /* bottom-4 */
+    left: 50%;               /* left-1/2 */
+    transform: translateX(-50%); /* -translate-x-1/2 */
+    background-color: #000;  /* bg-black */
+    color: #fff;             /* text-white */
+    padding: 16px 32px;      /* py-4 px-8 */
+    border-radius: 8px;      /* rounded-lg */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+                0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    z-index: 1000;           /* z-50 보다 안전하게 높임 */
+    
+    /* 애니메이션 설정 */
+    opacity: 0;              /* opacity-0 */
+    transition: opacity 0.3s ease; /* transition-opacity duration-300 */
+    pointer-events: none;    /* 평소에는 클릭 방해 안 하게 설정 */
+}
+
+/* 활성화 상태 */
+.message-box.show {
+    opacity: 1;              /* opacity-100 */
+    pointer-events: auto;
+}

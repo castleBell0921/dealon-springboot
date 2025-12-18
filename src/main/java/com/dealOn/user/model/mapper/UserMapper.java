@@ -46,4 +46,6 @@ public interface UserMapper {
 	List<Seller> findReviewsBySellerNo(String userNo);
 
 	ReviewVO reviewDetail(String reviewNo);
+
+	int writeReview(ReviewVO reviewVO);
 }

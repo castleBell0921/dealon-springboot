@@ -3,7 +3,6 @@ let chatListContainer;
 let closeModalBtn;
 let confirmSelectionBtn;
 let selectedProductLink = null;
-let notificationModal = null;
 let notificationList = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	chatListContainer = document.getElementById('chatListContainer');
 	closeModalBtn = document.getElementById('closeModalBtn');
 	confirmSelectionBtn = document.getElementById('confirmSelectionBtn'); 
-	notificationModal = document.getElementById('notificationModal');
 	notificationList = document.getElementById('notificationList');
 	// 💡 초기 상태를 확실히 hidden으로 설정
 	if (chatListModal) {

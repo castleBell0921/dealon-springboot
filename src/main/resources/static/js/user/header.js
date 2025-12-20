@@ -206,6 +206,7 @@ document.addEventListener('click', (e) => {
 
 					for (const reviewItem of reviewList) {
 						let listItemHtml = '';
+						
 
 						// 1. 현재 사용자(currentUserNo)가 판매자일 때 (후기 도착 알림)
 						if (String(reviewItem.sellerNo) === currentUserNo) {
@@ -215,7 +216,6 @@ document.addEventListener('click', (e) => {
 
 								listItemHtml = `
 				                        <li class="notification-item type-review-received" data-review-no="${reviewItem.reviewNo}">
-											<input type='hidden' value=${reviewItem.reviewNo} id='reviewNo'>
 				                            <div class="notification-content">
 				                                <div class="notification-left">
 				                                    <p class="main-text fw-regular">
@@ -292,9 +292,6 @@ document.addEventListener('click', (e) => {
 	}
 
 	const clickedElement = e.target;
-
-	// 🚨 1. 알림 항목(LI)을 찾기 위해 closest() 사용
-	// '거래 완료 알림' 항목을 클릭했는지 확인합니다.
 	const notificationItem = clickedElement.closest('.notification-item.type-transaction-complete');
 
 	// 🚨 2. '후기 도착 알림' 항목을 클릭했는지 확인합니다.
@@ -306,10 +303,10 @@ document.addEventListener('click', (e) => {
 		// 상위 알림 항목에서 reviewNo와 상품 정보를 가져옵니다.
 		const targetItem = notificationItem || reviewReceivedItem;
 		reviewNo = targetItem.dataset.reviewNo;
+		document.querySelector('#reviewNo').value = reviewNo; // 폼에 세팅
 
 		// 🚨 3. 모달에 데이터를 채우는 함수 호출
 		if (reviewNo) {
-			document.querySelector('#reviewNo').value = reviewNo;
 			fetchReviewDetails(reviewNo, targetItem);
 			reviewModal.style.display = 'flex'; // 모달 표시
 		}

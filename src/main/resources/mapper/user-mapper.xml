@@ -120,7 +120,7 @@
 	        u_seller.nickname AS seller_nickname, 
 	        u_buyer.nickname AS buyer_nickname,
             p.name
-
+	
 	    FROM 
 	        review r
 	        JOIN users u_seller ON r.seller_no = u_seller.user_no 

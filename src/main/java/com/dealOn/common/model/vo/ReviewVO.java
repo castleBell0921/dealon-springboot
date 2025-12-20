@@ -21,4 +21,5 @@ public class ReviewVO {
 	private Date createDate;
 	private String sellerNickname;
 	private String buyerNickname;
+	private String name;
 }

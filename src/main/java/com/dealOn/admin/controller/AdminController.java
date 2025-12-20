@@ -15,4 +15,14 @@ public class AdminController {
 	public String admAcc() {
 		return "admin/main";
 	}
+	
+	@GetMapping("usrMng")
+	public String joinUsrMng() {
+		return "admin/usrMng";
+	}
+	
+	@GetMapping("productMng")
+	public String joinProductMng() {
+		return "admin/productMng";
+	}
 }

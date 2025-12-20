@@ -16,6 +16,7 @@ window.addEventListener('click', (e) => {
 	if (e.target == modal) {
 		modal.style.display = 'none';
 	}
+	
 });
 if (logoutBtn) {
 	logoutBtn.addEventListener('click', () => {
@@ -169,8 +170,23 @@ document.getElementById('closeNotificationBtn').addEventListener('click', () => 
 document.addEventListener('click', (e) => {
 	const link = e.target.closest('#notificationLink');
 	const userNo = document.querySelector('#userNo').value;
-
-
+	const notificationModal = document.getElementById('notificationModal');
+    const modalContent = document.querySelector('.notification-modal');
+	const reviewCloseBtn = document.querySelector('.close-btn');
+	const reviewModal = document.querySelector('.review-modal-overlay');
+	const reviewModals = document.querySelector('.review-modal');
+	
+	console.log(e.target);
+	if(e.target == reviewCloseBtn) {
+		e.stopPropagation();
+		reviewModal.style.display='none';
+	}
+	if (!notificationModal.classList.contains('hidden')) {
+	    // e.target이 모달 영역이면서, 실제 내용 영역(.notification-modal)이 아닌 경우에만 닫기
+	    if (e.target === notificationModal) {
+	      notificationModal.classList.add('hidden');
+	    }
+	  }
 
 	if (link) {
 		e.preventDefault();
@@ -297,7 +313,7 @@ document.addEventListener('click', (e) => {
 	// 🚨 2. '후기 도착 알림' 항목을 클릭했는지 확인합니다.
 	const reviewReceivedItem = clickedElement.closest('.notification-item.type-review-received');
 
-	const reviewModal = document.querySelector('.review-modal-overlay');
+	
 
 	if (notificationItem || reviewReceivedItem) {
 		// 상위 알림 항목에서 reviewNo와 상품 정보를 가져옵니다.

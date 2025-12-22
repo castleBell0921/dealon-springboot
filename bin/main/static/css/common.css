@@ -875,7 +875,7 @@
 
 /* hidden 클래스 (공통적으로 display:none 처리) */
 .hidden {
-    display: none !important;
+    display: none;
 }
 
 .chat-item {
@@ -947,6 +947,7 @@
 
 /* 🔔 알림 모달 본체 */
 .notification-modal {
+	z-index: 9999;
   background-color: #fff;
   width: 46rem;
   min-height: 46rem;

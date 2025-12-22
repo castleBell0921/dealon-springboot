@@ -48,4 +48,8 @@ public interface UserMapper {
 	ReviewVO reviewDetail(String reviewNo);
 
 	int writeReview(ReviewVO reviewVO);
+
+	int reviewStatusUpdate(String reviewNo);
+
+	ReviewVO getReviewByProductNo(int productNo);
 }

@@ -132,4 +132,12 @@ public class UserService {
 	public int writeReview(ReviewVO reviewVO) {
 		return mapper.writeReview(reviewVO);
 	}
+
+	public int reviewStatusUpdate(String reviewNo) {
+		return mapper.reviewStatusUpdate(reviewNo);
+	}
+
+	public ReviewVO getReviewByProductNo(int productNo) {
+		return mapper.getReviewByProductNo(productNo);
+	}
 }

@@ -54,7 +54,7 @@
                             <span th:text="${product.wishlistCount}">0</span>
                           	</span>
 							</div>
-							<button th:if="${product.reviewText != null}" type="button" class="view-reviews-btn stop-link-click">받은 후기 보기</button>
+							<button th:if="${product.reviewText != null}" type="button" class="view-reviews-btn stop-link-click receive-review">받은 후기 보기</button>
 							<div th:if="${product.reviewText == null}" class="view-reviews-btn stop-link-click">후기 기다리는중...</div>
 						</div>
 					</div>

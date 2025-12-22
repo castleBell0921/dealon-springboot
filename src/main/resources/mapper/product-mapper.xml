@@ -413,7 +413,9 @@
 	        JOIN users u_seller ON r.seller_no = u_seller.user_no 
 	        JOIN users u_buyer ON r.buyer_no = u_buyer.user_no 
 	    WHERE 
-	        r.seller_no = #{userNo} OR r.buyer_no = #{userNo}
+	        (r.seller_no = #{userNo} OR 
+	        r.buyer_no = #{userNo}) and
+	        r.read_status = 'N'
 	</select>
 	<delete id="deleteReview">
 		delete from review

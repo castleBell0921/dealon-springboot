@@ -99,6 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
     myReviewState();
     updateNotificationBadge();
   }
+  
+  const params = new URLSearchParams(window.location.search);
+    if (params.get('openNotificationModal') === 'true') {
+	  notificationModal.classList.remove('hidden');
+      notificationModal.style.display = 'flex';
+	  notificationModal.style.opacity = '1';
+	  notificationModal.style.visibility = 'visible';
+    } else {
+      notificationModal.style.display = 'none';
+    }
 });
 
 // 후기 상태 조회
@@ -139,15 +149,15 @@ async function updateNotificationBadge() {
 const closeNotificationBtn = document.getElementById('closeNotificationBtn');
 if (closeNotificationBtn) {
   closeNotificationBtn.addEventListener('click', () => {
-    notificationModal.classList.add('hidden');
+    notificationModal.style.display='none';
   });
 }
 
-// 후기 모달 닫기 버튼
 if (reviewCloseBtn) {
   reviewCloseBtn.addEventListener('click', e => {
     e.stopPropagation();
-    reviewModal.style.display = 'none';
+    // 모달 닫고 홈으로 이동하면서 openNotificationModal 파라미터 전달
+    window.location.href = '/?openNotificationModal=true';
   });
 }
 
@@ -158,12 +168,56 @@ document.addEventListener('click', async e => {
   const clickedElement = e.target;
   const notificationItem = clickedElement.closest('.notification-item.type-transaction-complete');
   const reviewReceivedItem = clickedElement.closest('.notification-item.type-review-received');
+  const receiveReview = e.target.closest('.receive-review');
+  
+  
+  if (receiveReview) {
+    e.preventDefault();
+    console.log('click!');
+    // 상품 요소에서 reviewNo 추출
+    const productElement = receiveReview.closest('[data-product-no]');
+    const productNo = productElement?.dataset.productNo;
 
+    if (!productNo) return alert('리뷰 정보를 찾을 수 없습니다.');
+
+    try {
+      // reviewNo 대신 productNo 기반으로 서버에서 리뷰 상세 정보 요청
+      const res = await fetch(`/user/reviewDetailsByProduct/${productNo}`);
+      if (!res.ok) throw new Error('리뷰 정보를 불러올 수 없습니다.');
+      const data = await res.json();
+	  console.log(data);
+
+      // 후기 모달 채우기
+      const modalNickname = document.getElementById('reviewModalNickname');
+      const modalSubText = document.getElementById('reviewModalSubText');
+      const modalReviewText = document.getElementById('reviewText');
+      const stars = document.querySelectorAll('.star-container input[name="star"]');
+      const submitBtn = document.querySelector('.submit-btn');
+
+      // 판매자 후기 보기이므로 읽기 전용 모드
+      stars.forEach(star => { star.checked = false; star.disabled = true; });
+      const target = document.querySelector(`.star-container input[value="${data.rateScore}"]`);
+      if (target) target.checked = true;
+
+      modalNickname.textContent = data.buyerNickname || '구매자';
+      modalSubText.textContent = `${data.buyerNickname}님이 ${data.name}에 대해 남긴 후기입니다.`;
+      modalReviewText.value = data.reviewText || '후기 내용이 없습니다.';
+      modalReviewText.readOnly = true;
+      submitBtn.style.display = 'none';
+
+      // 후기 모달 표시
+      reviewModal.style.display = 'flex';
+    } catch (err) {
+      console.error('받은 후기 로드 오류:', err);
+      alert('후기 정보를 불러올 수 없습니다.');
+    }
+  }
+	
   // 알림 모달 외부 클릭 시 닫기
   if (notificationModal && e.target === notificationModal) {
-    notificationModal.classList.add('hidden');
+    notificationModal.style.display='none';
   }
-
+	
   // 알림 링크 클릭 시 모달 열기
   if (link) {
     e.preventDefault();
@@ -236,8 +290,10 @@ document.addEventListener('click', async e => {
       reviewModal.style.display = 'flex';
     }
   }
+  
+ 
 
-  // 후기 모달 외부 클릭 시 닫기
+  // `후기` 모달 외부 클릭 시 닫기
   if (reviewModal && reviewModal.style.display === 'flex' &&
       !e.target.closest('.review-modal') && !e.target.closest('#notificationModal')) {
     reviewModal.style.display = 'none';
@@ -288,3 +344,5 @@ if (submitBtn) {
     document.querySelector('#reviewForm').submit();
   });
 }
+
+

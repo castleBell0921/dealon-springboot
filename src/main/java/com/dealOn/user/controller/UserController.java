@@ -297,6 +297,7 @@ public class UserController {
 	@ResponseBody
 	public ReviewVO reviewDetail(@PathVariable("reviewNo") String reviewNo) {
 		ReviewVO detail = uService.reviewDetail(reviewNo);
+		int updateResult = uService.reviewStatusUpdate(reviewNo);
 		return detail;
 	}
 	@PostMapping("/submitReview")
@@ -313,5 +314,11 @@ public class UserController {
 		} else {
 			return "redirect:/";
 		}
+	}
+	
+	@GetMapping("/reviewDetailsByProduct/{productNo}")
+	@ResponseBody
+	public ReviewVO getReviewByProduct(@PathVariable("productNo") int productNo) {
+	    return uService.getReviewByProductNo(productNo);
 	}
  }

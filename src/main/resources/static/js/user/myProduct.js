@@ -36,14 +36,14 @@ if (closeModalBtn) {
 
 	document.addEventListener('click', async (e) => {
 		const stopElement = e.target.closest('.stop-link-click');
-		if (stopElement) {
+		/*if (stopElement) {
 			e.stopPropagation();	
 			if (stopElement.tagName === 'BUTTON' && stopElement.classList.contains('view-reviews-btn')) {
 	            const productNo = stopElement.closest('.product-link').dataset.productNo;
 	            console.log(`상품 번호 ${productNo}의 후기 보기 모달을 엽니다.`);
 	            // showReviewModal(productNo); // 실제로 후기 모달을 여는 함수 호출
 	        }
-	    }
+	    }*/
 		if (e.target && e.target.id === 'confirmSelectionBtn') {
 			console.log("confirmSelectionBtn click!");
 	

@@ -117,6 +117,7 @@
             r.review_no,
 	        r.status, 
 	        r.rate_score,
+	        r.read_status,
 	        u_seller.nickname AS seller_nickname, 
 	        u_buyer.nickname AS buyer_nickname,
             p.name
@@ -127,7 +128,8 @@
 	        JOIN users u_buyer ON r.buyer_no = u_buyer.user_no 
             JOIN product p on r.product_no = p.no
 	    WHERE 
-            r.review_no = #{reviewNo}
+            r.review_no = #{reviewNo} and 
+            r.read_status = 'N'
 </select>
 <update id="writeReview">
 	update review
@@ -135,4 +137,32 @@
 		rate_score = #{rateScore}
 	where review_no = #{reviewNo}
 </update>
+<update id="reviewStatusUpdate">
+	update review
+	set read_status = 'Y'
+	where review_no = #{reviewNo}
+</update>
+<select id="getReviewByProductNo">
+	SELECT 
+	        r.product_no, 
+	        r.seller_no, 
+	        r.buyer_no, 
+	        r.create_date, 
+	        r.review_text,
+            r.review_no,
+	        r.status, 
+	        r.rate_score,
+	        r.read_status,
+	        u_seller.nickname AS seller_nickname, 
+	        u_buyer.nickname AS buyer_nickname,
+            p.name
+	
+	    FROM 
+	        review r
+	        JOIN users u_seller ON r.seller_no = u_seller.user_no 
+	        JOIN users u_buyer ON r.buyer_no = u_buyer.user_no 
+            JOIN product p on r.product_no = p.no
+	    WHERE 
+            r.product_no=#{productNo}
+</select>
 </mapper>

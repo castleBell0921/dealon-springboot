@@ -16,8 +16,8 @@
             <ul class="sidebar-menu text-22px fw-regular">
             	<li id="myProduct"><a th:href="@{/user/myProduct}" th:classappend="${requestURI == '/user/myProduct'} ? 'active'">내 등록 상품</a></li>
                 <li><a th:href="@{/user/mySellList}" th:classappend="${requestURI == '/user/mySellList'} ? 'active'">판매내역</a></li>
-                <li><a href="#">구매내역</a></li>
-                <li><a href="#">찜한상품</a></li>
+                <li><a th:href="@{/user/myBuyList}" th:classappend="${requestURI == '/user/myBuyList'} ? 'active'">구매내역</a></li>
+                <li><a th:href="@{/user/myWishList}" th:classappend="${requestURI == '/user/myWishList'} ? 'active'">찜한상품</a></li>
             </ul>
         </nav>
         

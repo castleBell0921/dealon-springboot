@@ -46,4 +46,6 @@ public interface ProductMapper {
 	List<ReviewVO> getReview(String userNo);
 	int deleteReview(int productNo);
 	List<ProductVO> getMySellList(String userNo);
+	List<ProductVO> getBuyerNo(String userNo);
+	List<ProductVO> getMyWishList(String userNo);
 }

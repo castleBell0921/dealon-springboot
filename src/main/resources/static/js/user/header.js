@@ -99,16 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
     myReviewState();
     updateNotificationBadge();
   }
-  
-  const params = new URLSearchParams(window.location.search);
-    if (params.get('openNotificationModal') === 'true') {
-	  notificationModal.classList.remove('hidden');
-      notificationModal.style.display = 'flex';
-	  notificationModal.style.opacity = '1';
-	  notificationModal.style.visibility = 'visible';
-    } else {
-      notificationModal.style.display = 'none';
-    }
 });
 
 // 후기 상태 조회
@@ -153,13 +143,71 @@ if (closeNotificationBtn) {
   });
 }
 
+
+let isReceivedReview = false; // 받은 후기 보기로 열린 모달인지 표시
+
+// 후기 모달 닫기 버튼 (X)
 if (reviewCloseBtn) {
   reviewCloseBtn.addEventListener('click', e => {
     e.stopPropagation();
-    // 모달 닫고 홈으로 이동하면서 openNotificationModal 파라미터 전달
-    window.location.href = '/?openNotificationModal=true';
+    handleReviewModalClose(); // 공통 함수 호출
   });
 }
+
+// 후기 모달 외부 클릭 시 닫기 (여기 추가)
+window.addEventListener('click', e => {
+  // 모달이 열려 있고, 클릭한 위치가 모달 배경(overlay)일 때만
+  if (reviewModal && reviewModal.style.display === 'flex' && e.target === reviewModal) {
+    handleReviewModalClose(); // X버튼과 동일한 동작 실행
+  }
+});
+
+// 받은 후기 보기 클릭 시
+document.addEventListener('click', e => {
+  const receiveReview = e.target.closest('.receive-review');
+  if (receiveReview) {
+    e.preventDefault();
+    isReceivedReview = true; // 받은 후기 보기에서 열림 표시
+    console.log('받은 후기 보기 클릭됨!');
+    // 후기 모달 열기
+    reviewModal.style.setProperty('display', 'flex', 'important');
+    reviewModal.style.setProperty('visibility', 'visible', 'important');
+    reviewModal.style.setProperty('opacity', '1', 'important');
+  }
+});
+
+// 공통 닫기 함수
+function handleReviewModalClose() {
+  // 받은 후기 보기에서 열린 경우 → 새로고침 없이 닫기
+  if (isReceivedReview) {
+    reviewModal.style.display = 'none';
+    isReceivedReview = false;
+  } 
+  // 알림 클릭 등으로 열린 경우 → 새로고침 후 알림 모달 다시 열기
+  else {
+    localStorage.setItem('openNotificationModal', 'true');
+    location.reload();
+  }
+}
+
+// 페이지 로드 시 알림 모달 자동 열기
+window.addEventListener('DOMContentLoaded', () => {
+  const shouldOpen = localStorage.getItem('openNotificationModal');
+
+  if (shouldOpen === 'true') {
+    notificationModal.classList.remove('hidden');
+    notificationModal.style.display = 'flex';
+    notificationModal.style.opacity = '1';
+    notificationModal.style.visibility = 'visible';
+
+    localStorage.removeItem('openNotificationModal'); // 한 번만 열리게
+  } else {
+    notificationModal.style.display = 'none';
+  }
+});
+
+
+
 
 // ====================== 클릭 이벤트 통합 ======================
 document.addEventListener('click', async e => {
@@ -198,7 +246,7 @@ document.addEventListener('click', async e => {
       stars.forEach(star => { star.checked = false; star.disabled = true; });
       const target = document.querySelector(`.star-container input[value="${data.rateScore}"]`);
       if (target) target.checked = true;
-
+		
       modalNickname.textContent = data.buyerNickname || '구매자';
       modalSubText.textContent = `${data.buyerNickname}님이 ${data.name}에 대해 남긴 후기입니다.`;
       modalReviewText.value = data.reviewText || '후기 내용이 없습니다.';
@@ -206,7 +254,10 @@ document.addEventListener('click', async e => {
       submitBtn.style.display = 'none';
 
       // 후기 모달 표시
-      reviewModal.style.display = 'flex';
+	 reviewModal.removeAttribute('style'); // 기존 style 속성(display:none 등) 완전히 제거
+	 reviewModal.style.setProperty('display', 'flex', 'important');
+	 reviewModal.style.setProperty('visibility', 'visible', 'important');
+	 reviewModal.style.setProperty('opacity', '1', 'important');
     } catch (err) {
       console.error('받은 후기 로드 오류:', err);
       alert('후기 정보를 불러올 수 없습니다.');
@@ -295,8 +346,9 @@ document.addEventListener('click', async e => {
 
   // `후기` 모달 외부 클릭 시 닫기
   if (reviewModal && reviewModal.style.display === 'flex' &&
-      !e.target.closest('.review-modal') && !e.target.closest('#notificationModal')) {
-    reviewModal.style.display = 'none';
+      !e.target.closest('.review-modal') && !e.target.closest('#notificationModal') &&
+	  !e.target.closest('.receive-review')) {
+		handleReviewModalClose(); 
   }
 });
 

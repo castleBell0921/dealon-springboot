@@ -179,4 +179,13 @@ public class ProductService {
 	public List<ProductVO> getMySellList(String userNo) {
 		return productMapper.getMySellList(userNo);
 	}
+
+
+	public List<ProductVO> getBuyerNo(String userNo) {
+		return productMapper.getBuyerNo(userNo);
+	}
+
+	public List<ProductVO> getMyWishList(String userNo) {
+		return productMapper.getMyWishList(userNo);
+	}
 }

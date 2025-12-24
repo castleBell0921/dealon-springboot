@@ -321,4 +321,19 @@ public class UserController {
 	public ReviewVO getReviewByProduct(@PathVariable("productNo") int productNo) {
 	    return uService.getReviewByProductNo(productNo);
 	}
+	@GetMapping("/myBuyList")
+	public String myBuyList(HttpSession session, Model model, HttpServletRequest request) {
+		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+		List<ProductVO> list = pService.getBuyerNo(userNo);
+		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
+		return "/myBuyList";
+	}
+	
+	@GetMapping("/myWishList")
+	public String myWishList(HttpSession session, Model model, HttpServletRequest request) {
+		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+		List<ProductVO> list = pService.getMyWishList(userNo);
+		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
+		return "/myWishList";
+	}
  }

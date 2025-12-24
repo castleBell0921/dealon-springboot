@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
-	<title>판매내역</title>
+	<title>구매내역</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<link rel="stylesheet" th:href="@{/css/App.css}">
 	<link rel="stylesheet" th:href="@{/css/common.css}">
@@ -23,7 +23,7 @@
 
 
 		<main class="my-main-content">
-			<div class="text-32px fw-regular" style="text-align: left;">판매내역</div>
+			<div class="text-32px fw-regular" style="text-align: left;">구매내역</div>
 			<div class="product-list my-product-list-area">
 				<a th:each="product : ${productList}"
 				   th:href="@{/product/detail/{id}(id=${product.productNo})}"
@@ -55,8 +55,8 @@
                             <span th:text="${product.wishlistCount}">0</span>
                           	</span>
 							</div>
-							<button th:if="${product.reviewText != null}" type="button" class="view-reviews-btn stop-link-click receive-review">받은 후기 보기</button>
-							<div th:if="${product.reviewText == null}" class="view-reviews-btn stop-link-click">후기 기다리는중...</div>
+							<button th:if="${product.reviewText != null}" type="button" class="view-reviews-btn stop-link-click receive-review">작성한 후기 보기</button>
+							<div th:if="${product.reviewText == null}" class="view-reviews-btn stop-link-click" style="background-color: #9966CC; color: white;">후기를 남겨주세요!</div>
 						</div>
 					</div>
 				</a>

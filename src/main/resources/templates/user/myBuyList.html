@@ -30,7 +30,8 @@
 				   style="text-decoration: none; color: inherit;"
 				   class="product-link"
 				   th:data-state="${product.productState}"
-				   th:data-product-no="${product.productNo}">
+				   th:data-product-no="${product.productNo}"
+				   th:data-review-no="${product.reviewNo}">
 
 					<div class="product-item">
 						<div class="product-image-placeholder" th:style="'background-image:url(' + ${product.thumbnailUrl} + '); background-size:cover;'">
@@ -56,7 +57,7 @@
                           	</span>
 							</div>
 							<button th:if="${product.reviewText != null}" type="button" class="view-reviews-btn stop-link-click receive-review">작성한 후기 보기</button>
-							<div th:if="${product.reviewText == null}" class="view-reviews-btn stop-link-click" style="background-color: #9966CC; color: white;">후기를 남겨주세요!</div>
+							<div th:if="${product.reviewText == null}" class="view-reviews-btn review-write stop-link-click" style="background-color: #9966CC; color: white;">후기를 남겨주세요!</div>
 						</div>
 					</div>
 				</a>
@@ -70,6 +71,7 @@
 </div>
 <script th:src="@{/js/user/myProduct.js}"></script>
 <script th:src="@{/js/user/header.js}"></script>
+<script th:src="@{/js/user/myBuyList.js}"></script>
 <script th:src="@{/js/common/searchBar.js}"></script>
 <script th:src="@{/js/common/recentViews.js}"></script>
 <script th:src="@{/js/user/myInfo.js}"></script>

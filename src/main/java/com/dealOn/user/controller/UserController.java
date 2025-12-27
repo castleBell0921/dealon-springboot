@@ -273,10 +273,12 @@ public class UserController {
 
 		// 판매상품
 		List<ProductVO> productList = pService.findByUserNoProducts(seller.getUserNo());
-
 		// 후기
 		List<Seller> reviewList = uService.findReviewsBySellerNo(seller.getUserNo());
+		double trustScore = calculateTrustScore(reviewList);
+	    seller.setTrustScore(trustScore);
 
+		
 		model.addAttribute("seller", seller);
 		model.addAttribute("products", productList);
 		model.addAttribute("reviews", reviewList);
@@ -335,5 +337,33 @@ public class UserController {
 		List<ProductVO> list = pService.getMyWishList(userNo);
 		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
 		return "/myWishList";
+	}
+	
+	public double calculateTrustScore(List<Seller> reviewList) {
+	    if (reviewList == null || reviewList.isEmpty()) {
+	        return 36.5; // 후기 없을 때 기본 신뢰도
+	    }
+
+	    double totalScore = 0;
+	    for (Seller review : reviewList) {
+	        int rate = (int)review.getRateScore();
+
+	        // 별점 1~5 → 신뢰도 값 -5, -3, 1, 2, 3으로 변환
+	        int trustValue = switch (rate) {
+	            case 1 -> -5;
+	            case 2 -> -3;
+	            case 3 -> 1;
+	            case 4 -> 2;
+	            case 5 -> 3;
+	            default -> 0;
+	        };
+	        totalScore += trustValue;
+	    }
+
+	    // 평균 신뢰 값
+	    double avgTrustValue = totalScore / reviewList.size();
+
+	    // 0~100%로 변환 (-5 → 0%, 0 → 50%, +3 → 100%)
+	    return Math.min(100, Math.max(0, (avgTrustValue + 5) * (100.0 / 8)));
 	}
  }

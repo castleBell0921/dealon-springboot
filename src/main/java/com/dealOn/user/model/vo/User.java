@@ -20,4 +20,5 @@ public class User {
 	private String imageUrl;
 	private String uuid;
 	private double trustScore;
+	private double rateScore;
 }

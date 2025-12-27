@@ -17,7 +17,7 @@ public class ReviewVO {
 	private int buyerNo;
 	private String reviewText;
 	private String status;
-	private float rateScore;
+	private int rateScore;
 	private Date createDate;
 	private String sellerNickname;
 	private String buyerNickname;

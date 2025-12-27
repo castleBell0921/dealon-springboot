@@ -27,6 +27,9 @@ import com.dealOn.common.model.vo.ReviewVO;
 import com.dealOn.product.model.service.ProductService;
 import com.dealOn.product.model.vo.AddProductVO;
 import com.dealOn.product.model.vo.ProductVO;
+import com.dealOn.user.controller.UserController;
+import com.dealOn.user.model.service.UserService;
+import com.dealOn.user.model.vo.Seller;
 import com.dealOn.user.model.vo.User;
 
 import jakarta.servlet.http.HttpSession;
@@ -38,6 +41,8 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 
     private final ProductService productService;
+    private final UserController userController;
+    private final UserService uService;
     private final ChatService chatService;
 
 
@@ -80,6 +85,9 @@ public class ProductController {
         if (loginUser != null) {
             isWishlisted = productService.isWishlisted(Integer.parseInt(loginUser.getUserNo()), productNo);
         }
+        
+        
+        
         model.addAttribute("isWishlisted", isWishlisted); // 뷰로 전달
         model.addAttribute("product", product);
         model.addAttribute("loginUser",loginUser);
@@ -335,4 +343,6 @@ public class ProductController {
     	}
     	return null;
     }
+    
+    
 }

@@ -78,6 +78,7 @@ if (closeModalBtn) {
 					const response = await fetch(`/product/reviewCreate?chatNo=${chatNo}&buyerNo=${buyerNo}&productNo=${productNo}`);
 					if (response.ok) {
 						alert('선택된 구매자에게 알림 전송이 완료되었습니다.');
+						location.reload();
 					} else {
 						throw new Error('알림 전송 서버 응답 실패');
 					}

@@ -270,13 +270,26 @@ public class UserController {
 		if (seller == null) {
 			return "redirect:/"; // 존재하지 않는 판매자
 		}
+		
+		
 
 		// 판매상품
 		List<ProductVO> productList = pService.findByUserNoProducts(seller.getUserNo());
 		// 후기
 		List<Seller> reviewList = uService.findReviewsBySellerNo(seller.getUserNo());
-		double trustScore = calculateTrustScore(reviewList);
-	    seller.setTrustScore(trustScore);
+		
+		for (Seller review : reviewList) {
+			System.out.println(review);
+		    int mappedScore = switch (review.getRateScore()) {
+		        case -5 -> 1;
+		        case -3 -> 2;
+		        case 1 -> 3;
+		        case 2 -> 4;
+		        case 3 -> 5;
+		        default -> 0;
+		    };
+		    review.setDisplayScore(mappedScore);
+		}
 
 		
 		model.addAttribute("seller", seller);
@@ -303,14 +316,19 @@ public class UserController {
 		return detail;
 	}
 	@PostMapping("/submitReview")
-	public String submitReview(@ModelAttribute ReviewVO reviewVO, RedirectAttributes rttr){
-//		System.out.println("______________________________________________");
-//		System.out.println("reviewNo: " + reviewNo);
-//		System.out.println("reviewText: " + reviewText);
-//		System.out.println("star: " + star);
-//		System.out.println("______________________________________________");
+	public String submitReview(@ModelAttribute ReviewVO reviewVO, RedirectAttributes rttr, HttpSession session){
+		User loginUser = (User)session.getAttribute("loginUser");
+		User user = new User();
+		ProductVO product = new ProductVO();
 		int result = uService.writeReview(reviewVO);
-		if(result > 0) {
+		ReviewVO sellerInfo = uService.reviewDetail(String.valueOf(reviewVO.getReviewNo()));
+		user.setUserNo(String.valueOf(sellerInfo.getSellerNo()));
+		product.setUserNo(String.valueOf(sellerInfo.getSellerNo()));
+		int currentTrust = uService.getProductUser(product).getTrust() + reviewVO.getRateScore();
+		user.setTrust(currentTrust);
+		int insertTrust = uService.modifyTrust(user);
+		
+		if(result > 0 && insertTrust > 0) {
 			rttr.addFlashAttribute("message", "후기가 정상적으로 등록되었습니다.");
 	        return "redirect:/";
 		} else {
@@ -337,33 +355,5 @@ public class UserController {
 		List<ProductVO> list = pService.getMyWishList(userNo);
 		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
 		return "/myWishList";
-	}
-	
-	public double calculateTrustScore(List<Seller> reviewList) {
-	    if (reviewList == null || reviewList.isEmpty()) {
-	        return 36.5; // 후기 없을 때 기본 신뢰도
-	    }
-
-	    double totalScore = 0;
-	    for (Seller review : reviewList) {
-	        int rate = (int)review.getRateScore();
-
-	        // 별점 1~5 → 신뢰도 값 -5, -3, 1, 2, 3으로 변환
-	        int trustValue = switch (rate) {
-	            case 1 -> -5;
-	            case 2 -> -3;
-	            case 3 -> 1;
-	            case 4 -> 2;
-	            case 5 -> 3;
-	            default -> 0;
-	        };
-	        totalScore += trustValue;
-	    }
-
-	    // 평균 신뢰 값
-	    double avgTrustValue = totalScore / reviewList.size();
-
-	    // 0~100%로 변환 (-5 → 0%, 0 → 50%, +3 → 100%)
-	    return Math.min(100, Math.max(0, (avgTrustValue + 5) * (100.0 / 8)));
 	}
  }

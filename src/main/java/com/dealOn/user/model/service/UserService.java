@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.dealOn.common.S3Service;
 import com.dealOn.common.model.vo.ReviewVO;
+import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.user.model.mapper.UserMapper;
 import com.dealOn.user.model.vo.User;
 
@@ -141,20 +142,13 @@ public class UserService {
 		return mapper.getReviewByProductNo(productNo);
 	}
 	
-	// SellerService.java
-	public double calculateTrustGauge(List<ReviewVO> reviews) {
-	    if (reviews == null || reviews.isEmpty()) return 36.5; // 기본값
 
-	    double avg = reviews.stream()
-	                        .mapToDouble(ReviewVO::getRateScore)
-	                        .average()
-	                        .orElse(0.0);
+	public int modifyTrust(User loginUser) {
+		return mapper.modifyTrust(loginUser);
+	}
 
-	    // -5~3 범위를 0~100으로 변환
-	    double trustGauge = ((avg + 5) / 8) * 100;
-
-	    // 소수점 한 자리까지
-	    return Math.round(trustGauge * 10) / 10.0;
+	public User getProductUser(ProductVO product) {
+		return mapper.getProductUser(product);
 	}
 
 }

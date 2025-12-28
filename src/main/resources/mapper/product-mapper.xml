@@ -79,6 +79,7 @@
     <select id="findProductDetailById" parameterType="int" resultMap="productResultMap">
         SELECT
             P.NO AS PRODUCT_NO,
+            P.USER_NO,
             P.NAME,
             P.DETAIL,
             TO_CHAR(P.CREATE_DATE, 'YYYY-MM-DD HH24:MI') AS CREATE_DATE,

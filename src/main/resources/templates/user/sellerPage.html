@@ -28,11 +28,11 @@
             <div class="trust-gauge-large">
                 <div class="trust-label-large text-16px fw-medium">
                     <span>Trust Gauge</span>
-                    <span class="trust-percent" th:text="${seller.trustScore != 0.0 ? seller.trustScore : 36.5} + '%'">36.5%</span>
+                    <span class="trust-percent" th:text="${seller.trust != 0.0 ? seller.trust : 36.5} + '%'">30%</span>
                 </div>
                 <div class="trust-bar-large">
                     <div class="trust-fill-large"
-                         th:style="'width:' + ${seller.trustScore != 0.0 ? seller.trustScore : 36.5} + '%;'"></div>
+                         th:style="'width:' + ${seller.trust != 0.0 ? seller.trust : 30} + '%;'"></div>
                 </div>
             </div>
         </section>
@@ -108,7 +108,7 @@
                             <span class="review-divider">|</span>
                             <div class="review-rating text-14px fw-bold">
                                 <span style="color:#FFD700;">★</span>
-                                <span th:text="${review.rateScore}">5.0</span>
+                                <span th:text="${review.displayScore}">5.0</span>
                             </div>
                             <span class="review-divider">|</span>
                             <span class="time-ago text-13px" th:attr="data-date=${review.createDate}">날짜</span>

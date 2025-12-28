@@ -13,16 +13,26 @@ public class AdminController {
 	
 	@GetMapping("main")
 	public String admAcc() {
-		return "admin/main";
+		return "admin/dashboard";
 	}
 	
-	@GetMapping("usrMng")
+	@GetMapping("userMng")
 	public String joinUsrMng() {
-		return "admin/usrMng";
+		return "admin/userMng";
 	}
 	
 	@GetMapping("productMng")
 	public String joinProductMng() {
 		return "admin/productMng";
+	}
+
+	@GetMapping("decUser")
+	public String decUser() {
+		return "admin/decUser";
+	}
+
+	@GetMapping("decProduct")
+	public String decProduct() {
+		return "admin/decProduct";
 	}
 }

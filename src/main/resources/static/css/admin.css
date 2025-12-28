@@ -1,0 +1,170 @@
+* { box-sizing: border-box; }
+
+body {
+    background-color: #ffffff;
+    overflow: hidden;
+    margin: 0;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/*  스케일링  */
+#app-scaler {
+    width: 100vw;
+    height: 100vh;
+    transform-origin: top left;
+    overflow: hidden;
+}
+
+.app-container {
+    width: 1945px;
+    height: 100%;
+    display: flex;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+/* --- 좌측 사이드바 --- */
+.sidebar {
+    width: 300px;
+    height: 100%;
+    background-color: #fff;
+    padding: 30px;
+    border-right: 1px solid #eee;
+    flex-shrink: 0;
+    overflow-y: auto;
+}
+
+.sidebar .logo {
+    color: #5B4DFF !important;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+}
+
+/* 스크롤바 디자인 */
+.sidebar::-webkit-scrollbar,
+.page-body::-webkit-scrollbar,
+.report-sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb,
+.page-body::-webkit-scrollbar-thumb,
+.report-sidebar::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 3px; }
+.sidebar::-webkit-scrollbar-track,
+.page-body::-webkit-scrollbar-track,
+.report-sidebar::-webkit-scrollbar-track { background-color: transparent; }
+
+/* 메뉴 스타일 */
+.menu-list { list-style: none; padding: 0; }
+.menu-item { margin-bottom: 15px; position: relative; display: flex; align-items: center; height: 40px; }
+.menu-item a { color: #555; display: flex; align-items: center; width: 100%; position: relative; z-index: 2; padding-left: 10px;}
+.menu-item a i { width: 30px; }
+.menu-item.active .active-bg { position: absolute; left: 0; width: 230px; height: 40px; background-color: #000;border-radius: 13px; z-index: 1; }
+.menu-item.active a { color: #fff; line-height: 40px; }
+.sub-menu { margin-top: 40px; padding-left: 10px; color: #333; }
+
+
+/*  우측 전체 영역  */
+.main-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* 헤더 */
+.top-header {
+    height: 70px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0 25px;
+    margin: 35px 25px 35px 25px;
+    background: #fff;
+}
+.header-profile { display: flex; align-items: center; gap: 10px; }
+.profile-icon { color: #aaa; }
+
+
+/*  콘텐츠 영역 가로정렬 (분문, 신고 사이드바) */
+.content-area {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0 25px 25px 25px;
+}
+
+/* 본문 */
+.page-body {
+    width: 1150px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 10px;
+    padding-bottom: 20px;
+}
+
+.stats-section {
+    flex-shrink: 0;
+    margin-bottom: 20px; /* 차트 간격 */
+    width: 100%;
+}
+.stats-row { display: flex; gap: 20px; }
+
+/* 통계 카드 공통 */
+.stat-card {
+    flex: 1;
+    height: 120px;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.blue-bg { background-color: #EBF3FE; }
+.purple-bg { background-color: #F3EAFD; }
+.beige-bg { background-color: #FFF5E6; }
+.stat-title { color: #555; margin-bottom: 10px; }
+.stat-value-row { display: flex; justify-content: space-between; align-items: flex-end; }
+.stat-number { color: #000; }
+.stat-trend { color: #555; display: flex; align-items: center; gap: 5px; }
+.stat-trend.down { color: #333; }
+
+
+/* 우측 신고 사이드바 */
+.report-sidebar {
+    width: 415px;
+    margin-left: 30px; /* 본문과 30px 간격 */
+    flex-shrink: 0;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 5px;
+    padding-bottom: 20px;
+}
+
+.report-header { text-align: right; margin-bottom: 20px; color: #333; }
+.report-list { display: flex; flex-direction: column; gap: 24px; }
+.report-item {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    flex-shrink: 0;
+}
+.report-avatar { font-size: 40px; color: #333; }
+.report-content { flex-grow: 1; }
+.report-top { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.report-top .date { color: #888; }
+.report-text { color: #555; line-height: 1.4; word-break: keep-all; }

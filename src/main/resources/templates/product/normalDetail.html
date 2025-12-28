@@ -53,10 +53,10 @@
                             <div class="trust-gauge-container">
                                 <div class="trust-label">
                                     <span>Trust Gauge</span>
-                                    <span class="trust-percent" th:text="${session.loginUser.trustScore} + '%'"></span>
+                                    <span class="trust-percent" th:text="${trust} + '%'"></span>
                                 </div>
                                 <div class="trust-bar">
-                                    <div class="trust-fill" th:style="'width:' + ${session.loginUser.trustScore} + '%;'"></div>
+                                    <div class="trust-fill" th:style="'width:' + ${trust} + '%;'"></div>
                                 </div>
                             </div>
                         </div>

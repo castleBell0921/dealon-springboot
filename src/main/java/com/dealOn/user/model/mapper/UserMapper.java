@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dealOn.common.model.vo.ReviewVO;
+import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.user.model.vo.Seller;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -52,4 +53,8 @@ public interface UserMapper {
 	int reviewStatusUpdate(String reviewNo);
 
 	ReviewVO getReviewByProductNo(int productNo);
+
+	int modifyTrust(User loginUser);
+
+	User getProductUser(ProductVO product);
 }

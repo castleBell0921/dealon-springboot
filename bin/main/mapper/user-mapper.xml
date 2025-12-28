@@ -164,4 +164,14 @@
 	    WHERE 
             r.product_no=#{productNo}
 </select>
+<update id="modifyTrust">
+	update users
+	set trust = #{trust}
+	where user_no = #{userNo}
+</update>
+<select id="getProductUser">
+	select trust
+	from users
+	where user_no=#{userNo}
+</select>
 </mapper>

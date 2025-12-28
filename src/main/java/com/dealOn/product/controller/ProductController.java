@@ -78,6 +78,8 @@ public class ProductController {
     public String getProductDetail(@PathVariable("productNo") int productNo, Model model, HttpSession session) {
         ProductVO product = productService.getProductDetail(productNo);
         User loginUser = (User)session.getAttribute("loginUser");
+        System.out.println("product: " + product);        
+        User productUser = uService.getProductUser(product);
         if (product == null) {
             return "redirect:/product/list";
         }
@@ -89,6 +91,7 @@ public class ProductController {
         
         
         model.addAttribute("isWishlisted", isWishlisted); // 뷰로 전달
+        model.addAttribute("trust", productUser.getTrust());
         model.addAttribute("product", product);
         model.addAttribute("loginUser",loginUser);
         System.out.println("loginUser: " + loginUser);

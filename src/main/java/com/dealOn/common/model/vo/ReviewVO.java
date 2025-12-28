@@ -22,4 +22,5 @@ public class ReviewVO {
 	private String sellerNickname;
 	private String buyerNickname;
 	private String name;
+	private int displayScore;
 }

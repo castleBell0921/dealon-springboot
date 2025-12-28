@@ -13,8 +13,9 @@ public class Seller {
     private int reviewNo;
     private String reviewText;
     private Date createDate;
-    private float rateScore;
-    private float trustScore;
+    private int rateScore;
+    private int trust;
+    private int displayScore;
 
     // 구매자(작성자) 정보
     private int buyerNo;

@@ -19,6 +19,6 @@ public class User {
 	private String accessToken;
 	private String imageUrl;
 	private String uuid;
-	private double trustScore;
 	private double rateScore;
+	private int trust;
 }

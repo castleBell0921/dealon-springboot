@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout (topContent, mainContent)">
+<head>
+  <meta charset="UTF-8">
+  <title>딜온 관리자</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/css/font.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+
+  <th:block th:replace="${cssContent} ?: ~{}"></th:block>
+</head>
+<body>
+<div id="app-scaler">
+  <div class="app-container">
+
+    <th:block th:replace="~{admin/sidebar :: sidebar}"></th:block>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-title text-20px fw-medium">Dashboards</div>
+        <div class="header-profile text-20px">
+          <div class="profile-icon"><i class="fa-solid fa-user"></i></div>
+          <span class="profile-name">dealon_admin</span>
+        </div>
+      </header>
+
+      <div class="content-area">
+
+        <main class="page-body">
+
+          <th:block th:if="${topContent != null}">
+            <th:block th:replace="${topContent}"></th:block>
+          </th:block>
+
+          <th:block th:replace="${mainContent}"></th:block>
+
+        </main>
+
+        <th:block th:replace="~{admin/reportSidebar :: reportSidebar}"></th:block>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script th:src="@{/js/admin/admin.js}"></script>
+<th:block th:replace="${jsContent} ?: ~{}"></th:block>
+</body>
+</html>

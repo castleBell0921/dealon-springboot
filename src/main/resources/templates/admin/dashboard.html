@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{admin/base :: layout(~{:: #stats-block}, ~{:: #main-block})}">
+
+  <div id="stats-block">
+    <th:block th:replace="~{admin/stats :: statsRow}"></th:block>
+  </div>
+
+  <div id="main-block">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
+    <div class="chart-container big-chart">
+      <div class="chart-header">
+        <span class="chart-tab active text-14px fw-bold">Total Users</span>
+        <span class="chart-tab text-14px">Total Projects</span>
+      </div>
+      <div class="chart-placeholder text-16px">
+        Main Chart Area
+      </div>
+    </div>
+
+    <div class="bottom-charts">
+      <div class="chart-container half-chart blue-bg">
+        <div class="chart-title-sm text-16px fw-bold">Traffic by Device</div>
+        <div class="chart-placeholder text-14px">Bar Chart</div>
+      </div>
+      <div class="chart-container half-chart beige-bg">
+        <div class="chart-title-sm text-16px fw-bold">Doughnut chart</div>
+        <div class="chart-placeholder text-14px">Doughnut Chart</div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/admin/dashboard.js}"></script>
+  </div>
+
+</th:block>
+</html>

@@ -10,6 +10,7 @@
 	<link rel="stylesheet" th:href="@{/css/font.css}">
 	<link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
 	<link rel="stylesheet" th:href="@{/css/myProduct.css}">
+	<link rel="stylesheet" th:href="@{/css/footer.css}">
 </head>
 <body>
 <div class="app-container">
@@ -109,6 +110,7 @@
         </div>
     </div>
 </div>
+<div th:replace="~{common/footer :: footer}"></div> 
 
 <script th:src="@{/js/user/header.js}"></script>
 <script th:src="@{/js/common/searchBar.js}"></script>

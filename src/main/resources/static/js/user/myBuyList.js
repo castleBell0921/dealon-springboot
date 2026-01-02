@@ -27,5 +27,6 @@ document.addEventListener('click', async e => {
 
     // 모달 표시
     reviewModal.style.display = 'flex';
+	
   }
 });

@@ -1,0 +1,92 @@
+body {
+    font-family: 'Pretendard', sans-serif;
+    background-color: #fafafa;
+    margin: 0;
+    padding: 0;
+}
+
+.terms-container {
+    width: 640px;
+    margin: 80px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 40px 50px;
+}
+
+.terms-title {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.terms-box {
+    margin-bottom: 35px;
+}
+
+.terms-box h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.scroll-box {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    height: 160px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    background: #fafafa;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 15px;
+    color: #333;
+}
+
+.checkbox input {
+    margin-right: 8px;
+}
+
+.terms-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.agree-btn {
+    background-color: #6a1b9a;
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.cancel-btn {
+    color: #555;
+    text-decoration: none;
+    padding: 12px 40px;
+    border-radius: 6px;
+    background: #e0e0e0;
+    font-size: 16px;
+}
+
+.agree-btn:hover {
+    background-color: #5b1785;
+}
+
+.cancel-btn:hover {
+    background-color: #d5d5d5;
+}

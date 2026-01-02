@@ -4,6 +4,7 @@
 	margin: 40px auto;
 	gap: 50px;
 	align-items: flex-start;
+    min-height: 80rem;
 }
 
 .my-main-content {

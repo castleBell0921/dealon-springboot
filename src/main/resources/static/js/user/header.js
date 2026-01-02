@@ -149,8 +149,8 @@ let isReceivedReview = false; // 받은 후기 보기로 열린 모달인지 표
 // 후기 모달 닫기 버튼 (X)
 if (reviewCloseBtn) {
   reviewCloseBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    handleReviewModalClose(); // 공통 함수 호출
+	    e.stopPropagation();
+	    handleReviewModalClose(); // 공통 함수 호출
   });
 }
 
@@ -178,11 +178,16 @@ document.addEventListener('click', e => {
 
 // 공통 닫기 함수
 function handleReviewModalClose() {
-  // 받은 후기 보기에서 열린 경우 → 새로고침 없이 닫기
+  
+  
+  
   if (isReceivedReview) {
     reviewModal.style.display = 'none';
     isReceivedReview = false;
-  } 
+  }else if(document.querySelector('.review-write')) {
+		console.log('!!!');
+		reviewModal.style.display = 'none';
+	  } 
   // 알림 클릭 등으로 열린 경우 → 새로고침 후 알림 모달 다시 열기
   else {
     localStorage.setItem('openNotificationModal', 'true');

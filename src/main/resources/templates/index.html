@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/Home.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/reviewModal.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
 </head>
 <body>
 <div class="app-container">
@@ -145,6 +146,7 @@
             <div th:replace="~{common/RecentViewed :: RecentViewed}"></div>
         </div>
     </div>
+    <div th:replace="~{common/footer :: footer}"></div> 
 </div>
 <!-- 메인페이지, redirect:/ 가 렌더링될 곳 -->
 <div th:if="${loginSuccessMessage}">

@@ -368,4 +368,8 @@ public class UserController {
 		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
 		return "/myWishList";
 	}
+	@GetMapping("terms")
+	public String terms() {
+		return "/terms";
+	}
  }

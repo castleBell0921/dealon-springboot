@@ -12,12 +12,25 @@
 </head>
 <body>
 <div class="terms-container">
-    <h1 class="terms-title">이용약관 및 개인정보 수집 동의</h1>
+    <h1 class="terms-title">반가워요! 👋</h1>
+    <p class="terms-subtitle">Deal-On 서비스 이용을 위해 약관에 동의해주세요.</p>
 
-    <form th:action="@{/user/signIn}" method="get" class="terms-form">
+	    <form th:action="@{/user/signIn}" method="get" class="terms-form" id="termsForm">
+		    <input type="hidden" name="nickname" th:value="${param.nickname}">
+		    <input type="hidden" name="profileImage" th:value="${param.profileImage}">
+		    <input type="hidden" name="socialId" th:value="${param.socialId}">
+        
+        <div class="all-agree-box" id="allAgreeWrapper">
+            <label class="checkbox-label" style="font-weight: 700; font-size: 16px;">
+                <input type="checkbox" id="checkAll">
+                이용약관 전체 동의
+            </label>
+        </div>
 
         <div class="terms-box">
-            <h3>이용약관</h3>
+            <div class="terms-header">
+                <h3>이용약관 동의 (필수)</h3>
+            </div>
             <div class="scroll-box">
                 <p>
                     본 약관은 Deal-On(이하 ‘회사’)이 제공하는 중고거래 플랫폼 서비스(이하 ‘서비스’)의 이용조건 및 절차, 
@@ -30,17 +43,20 @@
                     4. 서비스 내 게시물, 거래 행위 등에서 발생하는 모든 책임은 해당 회원에게 있습니다.<br>
                     5. 회사는 이용자의 서비스 부정 사용 시 사전 통보 없이 이용을 제한할 수 있습니다.
                 </p>
+
             </div>
-            <label class="checkbox">
-                <input type="checkbox" name="termsAgree" required>
+            <label class="checkbox-label" style="margin-top: 10px;">
+                <input type="checkbox" name="termsAgree" class="single-check" required>
                 이용약관에 동의합니다.
             </label>
         </div>
 
         <div class="terms-box">
-            <h3>개인정보 수집 및 이용 안내</h3>
+            <div class="terms-header">
+                <h3>개인정보 수집 및 이용 동의 (필수)</h3>
+            </div>
             <div class="scroll-box">
-                <p>
+                  <p>
                     회사는 회원가입, 서비스 제공, 고객 문의 응대 등을 위해 아래와 같은 개인정보를 수집·이용합니다.
                 </p>
                 <p>
@@ -53,17 +69,46 @@
                     동의하지 않을 경우 회원가입이 제한될 수 있습니다.
                 </p>
             </div>
-            <label class="checkbox">
-                <input type="checkbox" name="privacyAgree" required>
+            <label class="checkbox-label" style="margin-top: 10px;">
+                <input type="checkbox" name="privacyAgree" class="single-check" required>
                 개인정보 수집 및 이용에 동의합니다.
             </label>
         </div>
 
         <div class="terms-actions">
-            <button type="submit" class="agree-btn">동의하고 가입하기</button>
-            <a href="/" class="cancel-btn">취소</a>
+            <button type="submit" class="agree-btn" id="submitBtn" disabled>동의하고 가입하기</button>
+            <a href="/" class="cancel-btn">다음에 할게요</a>
         </div>
     </form>
 </div>
+
+<script>
+    const checkAll = document.getElementById('checkAll');
+    const singleChecks = document.querySelectorAll('.single-check');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // 전체 동의 로직
+    checkAll.addEventListener('change', (e) => {
+        singleChecks.forEach(check => {
+            check.checked = e.target.checked;
+        });
+        toggleSubmitBtn();
+    });
+
+    // 개별 체크박스 변경 시
+    singleChecks.forEach(check => {
+        check.addEventListener('change', () => {
+            const allChecked = Array.from(singleChecks).every(c => c.checked);
+            checkAll.checked = allChecked;
+            toggleSubmitBtn();
+        });
+    });
+
+    // 버튼 활성화 함수
+    function toggleSubmitBtn() {
+        const allChecked = Array.from(singleChecks).every(c => c.checked);
+        submitBtn.disabled = !allChecked;
+    }
+</script>
 </body>
 </html>

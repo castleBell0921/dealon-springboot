@@ -52,7 +52,7 @@ public class KakaoAuthController {
 						URLEncoder.encode(socialId, StandardCharsets.UTF_8)
 
 				);
-				return "redirect:http://localhost:9090/user/signIn?" + signUpParams + "&msg=yes";
+				return "redirect:http://localhost:9090/user/terms?" + signUpParams + "&msg=yes";
 			} else {
 				// DB에 있으면 자동 로그인
 				session.setAttribute("loginUser", user);

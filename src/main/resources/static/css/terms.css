@@ -1,92 +1,153 @@
+/* 📁 src/main/resources/static/css/terms.css */
+
+:root {
+    --primary-color: #6C63FF;
+    --bg-color: #f8f9fa;
+    --text-main: #222;
+    --text-sub: #666;
+    --border-color: #eee;
+    --white: #ffffff;
+}
+
 body {
-    font-family: 'Pretendard', sans-serif;
-    background-color: #fafafa;
-    margin: 0;
-    padding: 0;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .terms-container {
-    width: 640px;
-    margin: 80px auto;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    padding: 40px 50px;
+    width: 63rem; /* 좀 더 슬림하게 변경 */
+    background: var(--white);
+    border-radius: 24px; /* 더 둥글게 */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05); /* 부드러운 그림자 */
+    padding: 50px 40px;
 }
 
 .terms-title {
-    font-size: 28px;
-    font-weight: 700;
-    text-align: center;
+    font-size: 24px;
+    font-weight: 800;
+    text-align: left; /* 왼쪽 정렬이 더 트렌디함 */
+    margin-bottom: 8px;
+    color: var(--text-main);
+}
+
+.terms-subtitle {
+    font-size: 14px;
+    color: var(--text-sub);
     margin-bottom: 40px;
-    color: #333;
+}
+
+/* 전체 동의 섹션 */
+.all-agree-box {
+    background: #f1f3ff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.all-agree-box:hover {
+    background: #e8ebff;
+}
+
+/* 체크박스 커스텀 느낌 주기 */
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
 }
 
 .terms-box {
-    margin-bottom: 35px;
+    margin-bottom: 25px;
 }
 
-.terms-box h3 {
-    font-size: 18px;
+.terms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.terms-header h3 {
+    font-size: 15px;
     font-weight: 600;
-    color: #444;
-    margin-bottom: 10px;
+    color: var(--text-main);
+    margin: 0;
 }
 
 .scroll-box {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
     padding: 15px;
-    height: 160px;
+    height: 120px;
     overflow-y: auto;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.6;
-    color: #555;
-    background: #fafafa;
+    color: #777;
+    background: #fff;
 }
 
-.checkbox {
+/* 스크롤바 커스텀 */
+.scroll-box::-webkit-scrollbar {
+    width: 4px;
+}
+.scroll-box::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
+}
+
+.checkbox-label {
     display: flex;
     align-items: center;
-    margin-top: 10px;
-    font-size: 15px;
-    color: #333;
-}
-
-.checkbox input {
-    margin-right: 8px;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-main);
+    cursor: pointer;
 }
 
 .terms-actions {
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 30px;
+    flex-direction: column; /* 버튼을 세로로 배치하거나 넓게 */
+    gap: 12px;
+    margin-top: 40px;
 }
 
 .agree-btn {
-    background-color: #6a1b9a;
+    background: var(--primary-color);
     color: white;
     border: none;
-    padding: 12px 40px;
-    border-radius: 6px;
+    padding: 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
     cursor: pointer;
-    font-size: 16px;
-}
-
-.cancel-btn {
-    color: #555;
-    text-decoration: none;
-    padding: 12px 40px;
-    border-radius: 6px;
-    background: #e0e0e0;
-    font-size: 16px;
+    transition: transform 0.2s, background 0.2s;
 }
 
 .agree-btn:hover {
-    background-color: #5b1785;
+    background: #5b54e0;
+    transform: translateY(-2px);
+}
+
+.agree-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.cancel-btn {
+    text-align: center;
+    color: #999;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 10px;
 }
 
 .cancel-btn:hover {
-    background-color: #d5d5d5;
+    text-decoration: underline;
 }

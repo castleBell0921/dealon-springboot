@@ -46,7 +46,7 @@ public class GoogleAuthController {
                         URLEncoder.encode(String.valueOf(userInfo.get("profileImage")), StandardCharsets.UTF_8),
                         URLEncoder.encode(socialId, StandardCharsets.UTF_8)
                 );
-                return "redirect:/user/signIn?" + signUpParams + "&msg=yes";
+                return "redirect:/user/terms?" + signUpParams + "&msg=yes";
             } else {
                 // DB에 있으면 자동 로그인
                 session.setAttribute("loginUser", user);

@@ -96,3 +96,55 @@ function toggleWishlist(productNo) {
             alert('찜 목록 추가에 실패하였습니다.');
         });
 }
+
+// 모달 열기
+function reportProduct() {
+    const modal = document.getElementById('reportModal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+}
+
+// 모달 닫기
+function closeReportModal() {
+    const modal = document.getElementById('reportModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // 배경 스크롤 허용
+    document.getElementById('reportForm').reset(); // 폼 초기화
+}
+
+// 신고 제출 처리
+function submitReport(event) {
+    event.preventDefault();
+    
+    const reason = document.querySelector('input[name="reportReason"]:checked').value;
+    const detail = document.getElementById('reportDetail').value;
+
+    // AJAX 요청 예시 (백엔드 엔드포인트에 맞춰 수정 필요)
+    /*
+    fetch('/api/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            productNo: productNo,
+            reason: reason,
+            detail: detail
+        })
+    }).then(res => {
+        if(res.ok) {
+            alert('신고가 성공적으로 접수되었습니다.');
+            closeReportModal();
+        }
+    });
+    */
+
+    alert(`신고가 접수되었습니다.\n사유: ${reason}\n내용: ${detail}`);
+    closeReportModal();
+}
+
+// 모달 바깥 영역 클릭 시 닫기
+window.onclick = function(event) {
+    const modal = document.getElementById('reportModal');
+    if (event.target == modal) {
+        closeReportModal();
+    }
+}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>채팅방</title>
- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
 
 <!-- Font Awesome 아이콘 -->
 <link rel="stylesheet"
@@ -17,11 +17,7 @@
 
 </head>
 <body>
-	<div id="messageBox"
-	     class="fixed bottom-4 left-1/2 transform -translate-x-1/2 
-	            bg-black text-white px-8 py-4 rounded-lg shadow-lg 
-	            opacity-0 transition-opacity duration-300 z-50">
-	</div>
+	<div id="messageBox" class="toast-message"></div>
 	<div class="app-container">
 		<div th:replace="~{common/header :: header}"></div>
 		<div th:replace="~{common/searchBar :: searchBar}"></div>
@@ -73,34 +69,12 @@
 					<span th:text="${chatInfo.nickname}"></span>
 
 					<button class="icon-button" id="toggleButton">☰</button>
-					<div id="dropdownMenu"
-						class="
-						        dropdown-menu
-						        absolute right-0 mt-2 w-48 
-						        bg-white rounded-xl shadow-2xl 
-						        ring-1 ring-black ring-opacity-5 
-						        divide-y divide-gray-100
-						        origin-top-right
-						    "
-						role="menu" aria-orientation="vertical"
-						aria-labelledby="toggleButton">
 
-						<div class="py-1">
-							<!-- 신고하기 메뉴 항목 -->
-							<a href="#" data-action="report"
-								class="
-						                menu-item block px-4 py-3 text-sm text-gray-700 
-						                hover:bg-red-50 hover:text-red-600 
-						                transition duration-100 ease-in-out
-						                rounded-t-xl
-						            "
-								role="menuitem"> 신고하기 </a>
-
-							<!-- 채팅방 나가기 메뉴 항목 -->
-							<a href="#" data-action="leave"
-								class="menu-item block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition duration-100 ease-in-out rounded-b-xl"
-								role="menuitem"> 채팅방 나가기 </a>
-						</div>
+					<div id="dropdownMenu" class="dropdown-menu" role="menu">
+					    <div class="menu-wrapper">
+					        <a data-action="report" class="menu-item item-top" role="menuitem">신고하기</a>
+					        <a data-action="leave" class="menu-item item-bottom" role="menuitem">채팅방 나가기</a>
+					    </div>
 					</div>
 				</div>
 				
@@ -162,6 +136,43 @@
 				</div>
 			</section>
 		</div>
+	</div>
+	<div id="reportModal" class="report-modal-overlay">
+	    <div class="report-modal-content">
+	        <div class="report-modal-header">
+	            <h3>신고하기</h3>
+	            <button type="button" class="report-close-modal" onclick="closeReportModal()">&times;</button>
+	        </div>
+	        <form id="reportForm" onsubmit="submitReport(event)">
+	            <p class="report-guide">신고 사유를 선택해주세요. 허위 신고 시 이용 제한을 받을 수 있습니다.</p>
+	            
+	            <div class="report-reasons">
+	                <label class="reason-item">
+	                    <input type="radio" name="reportReason" value="PROHIBITED" required>
+	                    <span>욕설 / 과도한 표현 신고</span>
+	                </label>
+	                <label class="reason-item">
+	                    <input type="radio" name="reportReason" value="SCAM">
+	                    <span>사기 의심 게시글이에요</span>
+	                </label>
+	                <label class="reason-item">
+	                    <input type="radio" name="reportReason" value="AD">
+	                    <span>광고/홍보성 글이에요</span>
+	                </label>
+	                <label class="reason-item">
+	                    <input type="radio" name="reportReason" value="OTHER">
+	                    <span>기타 사유</span>
+	                </label>
+	            </div>
+	
+	            <textarea id="reportDetail" placeholder="상세 사유를 입력해주세요 (선택사항)" maxlength="200"></textarea>
+	
+	            <div class="modal-footer">
+	                <button type="button" class="btn-cancel" onclick="closeReportModal()">취소</button>
+	                <button type="submit" class="btn-submit">신고하기</button>
+	            </div>
+	        </form>
+	    </div>
 	</div>
 	<div th:replace="~{common/footer :: footer}"></div> 
 	<script th:src="@{/js/user/header.js}"></script>

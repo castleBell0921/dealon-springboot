@@ -7,40 +7,31 @@
 
 
   <ul class="menu-list">
-    <li class="menu-item" th:classappend="${requestURI == '/admin/main'} ? 'active'">
+    <li class="menu-item active">
       <div class="active-bg"></div>
       <a href="/admin/main" class="text-16px"> <i class="fa-solid fa-house"></i>
         <span>Dashboards</span>
       </a>
     </li>
-    <li class="menu-item" th:classappend="${requestURI == '/admin/userMng'} ? 'active'">
+    <li class="menu-item">
+      <div class="active-bg"></div>
       <a href="/admin/userMng" class="text-16px">
         <i class="fa-regular fa-user"></i>
         <span>User Profile</span>
       </a>
     </li>
-    <li class="menu-item" th:classappend="${requestURI == '/admin/productMng'} ? 'active'">
+    <li class="menu-item">
+      <div class="active-bg"></div>
       <a href="/admin/productMng" class="text-16px">
         <i class="fa-solid fa-file-invoice"></i>
         <span>Products</span>
       </a>
     </li>
-    <li class="menu-item" style="margin-bottom: 0">
-      <a class="text-16px">
+    <li class="menu-item">
+      <div class="active-bg"></div>
+      <a href="/admin/decMng" class="text-16px">
         <i class="fa-regular fa-lightbulb"></i>
         <span>Declaration</span>
-      </a>
-    </li>
-    <li class="menu-item" style="margin-bottom: 0" th:classappend="${requestURI == '/admin/decProduct'} ? 'active'">
-      <a href="/admin/decProduct" class="text-16px">
-        <i class="fa-regular"></i>
-        <span>Post</span>
-      </a>
-    </li>
-    <li class="menu-item" th:classappend="${requestURI == '/admin/decUser'} ? 'active'">
-      <a href="/admin/decUser" class="text-16px">
-        <i class="fa-regular"></i>
-        <span>User</span>
       </a>
     </li>
   </ul>

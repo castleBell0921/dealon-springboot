@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout (topContent, mainContent)">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout (topContent, mainContent, showReportSidebar)">
 <head>
   <meta charset="UTF-8">
   <title>딜온 관리자</title>
@@ -36,7 +36,9 @@
 
         </main>
 
-        <th:block th:replace="~{admin/reportSidebar :: reportSidebar}"></th:block>
+        <th:block th:if="${showReportSidebar != false}">
+          <th:block th:replace="~{admin/reportSidebar :: reportSidebar}"></th:block>
+        </th:block>
 
       </div>
     </div>

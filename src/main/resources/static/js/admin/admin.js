@@ -45,4 +45,19 @@ document.addEventListener("DOMContentLoaded", function () {
             requestAnimationFrame(updateCount);
         });
     }
+	
+	// 메뉴바 active
+	    const currentPath = window.location.pathname;
+	    const menuItems = document.querySelectorAll('.menu-item');
+
+	    menuItems.forEach(item => {
+	        const link = item.querySelector('a').getAttribute('href');
+
+	        // 현재 경로가 링크 주소와 일치하면 active 클래스 추가
+	        if (currentPath === link) {
+	            item.classList.add('active');
+	        } else {
+	            item.classList.remove('active');
+	        }
+	    });
 });

@@ -31,15 +31,9 @@ public class AdminController {
 		return "admin/productMng";
 	}
 
-	@GetMapping("decUser")
-	public String decUser(HttpServletRequest request, Model model) {
+	@GetMapping("decMng")
+	   public String decMng(HttpServletRequest request, Model model) {
 		model.addAttribute("requestURI",request.getRequestURI());
-		return "admin/decUser";
-	}
-
-	@GetMapping("decProduct")
-	public String decProduct(HttpServletRequest request, Model model) {
-		model.addAttribute("requestURI",request.getRequestURI());
-		return "admin/decProduct";
+	    return "admin/decMng";
 	}
 }

@@ -26,13 +26,9 @@ public class AdminController {
 		return "admin/productMng";
 	}
 
-	@GetMapping("decUser")
+	@GetMapping("decMng")
 	public String decUser() {
-		return "admin/decUser";
+		return "admin/decMng";
 	}
 
-	@GetMapping("decProduct")
-	public String decProduct() {
-		return "admin/decProduct";
-	}
 }

@@ -19,13 +19,26 @@ public class SecurityConfig { // 설정 파일의 역할을 할 클래스
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/auth/google", "/auth/kakao").permitAll() // 소셜 로그인 엔드포인트는 인증 없이 접근 가능
-                )
-                .csrf(csrf -> csrf.disable()); // 개발 시 CSRF 보호를 비활성화
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/mySellList/**",
+                    "/myBuyerList/**",
+                    "/myWishList/**",
+                    "/editProfile/**"
+                ).authenticated() // 로그인 필요한 경로
+                .anyRequest().permitAll() // 나머지는 허용
+            )
+            // 로그인 안 되어 있으면 index로 이동
+            .formLogin(form -> form
+                .loginPage("/") // 세션 없거나 인증 안 되어 있으면 index로 보냄
+                .permitAll()
+            )
+            .csrf(csrf -> csrf.disable()); // 개발 중엔 끄기
+
         return http.build();
     }
+
+
     
     
 }

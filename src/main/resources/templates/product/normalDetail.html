@@ -1,126 +1,209 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${product.name}">경매 상품 상세</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/App.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/productDetail.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/font.css}">
+<meta charset="UTF-8">
+<title th:text="${product.name}">경매 상품 상세</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/App.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/productDetail.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/font.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}">
 </head>
 <body>
-<div class="app-container">
-    <div th:replace="~{common/header :: header}"></div>
-    <div th:replace="~{common/searchBar :: searchBar}"></div>
-    <div class="product-detail-page-container">
-        <div class="product-detail-layout">
-            <main class="product-main-content">
-                <div class="breadcrumb text-13px" th:text="'홈 > ' + ${product.categoryName}"></div>
-                <div class="product-info-container">
-                    <input type="hidden" th:value="${product.productNo}" id="productNo" name="productNo">
-                    <input type="hidden" th:value="${product.userNo}" id="productUserNo">
+	<div class="app-container">
+		<div th:replace="~{common/header :: header}"></div>
+		<div th:replace="~{common/searchBar :: searchBar}"></div>
+		<div class="product-detail-page-container">
+			<div class="product-detail-layout">
+				<main class="product-main-content">
+					<div class="breadcrumb text-13px"
+						th:text="'홈 > ' + ${product.categoryName}"></div>
+					<div class="product-info-container">
+						<input type="hidden" th:value="${product.productNo}"
+							id="productNo" name="productNo"> <input type="hidden"
+							th:value="${product.userNo}" id="productUserNo"> <input
+							type="hidden"
+							th:value="${loginUser != null ? loginUser.userNo : 'guest'}"
+							id="userNo"> <input type="hidden"
+							th:value="${loginUser != null ? loginUser.userNo : 0}"
+							id="loginUserNo">
 
-                    <input type="hidden" th:value="${loginUser != null ? loginUser.userNo : 'guest'}" id="userNo">
+						<section class="product-image-section">
+							<div class="image-slider-container">
+								<div class="slider-images">
+									<div class="slider-image"
+										th:each="imgUrl : ${product.imageUrls}">
+										<img th:src="${imgUrl}" th:alt="${product.name}"
+											id="productImage" />
+									</div>
+								</div>
+								<button class="slider-btn prev-btn"
+									th:if="${#lists.size(product.imageUrls) > 1}">&lt;</button>
+								<button class="slider-btn next-btn"
+									th:if="${#lists.size(product.imageUrls) > 1}">&gt;</button>
+								<div class="image-counter"
+									th:if="${!#lists.isEmpty(product.imageUrls)}">
+									<span class="current-image-index">1</span> / <span
+										th:text="${#lists.size(product.imageUrls)}"></span>
+								</div>
+							</div>
 
-                    <input type="hidden" th:value="${loginUser != null ? loginUser.userNo : 0}" id="loginUserNo">
+							<div class="product-seller-info" style="cursor: pointer;"
+								th:data-url="@{/user/seller/{id}(id=${product.sellerNickname} + '-' + ${product.sellerUuid})}"
+								onclick="location.href=this.getAttribute('data-url')">
 
-                    <section class="product-image-section">
-                        <div class="image-slider-container">
-                            <div class="slider-images">
-                                <div class="slider-image" th:each="imgUrl : ${product.imageUrls}">
-                                    <img th:src="${imgUrl}" th:alt="${product.name}" id="productImage" />
-                                </div>
-                            </div>
-                            <button class="slider-btn prev-btn" th:if="${#lists.size(product.imageUrls) > 1}">&lt;</button>
-                            <button class="slider-btn next-btn" th:if="${#lists.size(product.imageUrls) > 1}">&gt;</button>
-                            <div class="image-counter" th:if="${!#lists.isEmpty(product.imageUrls)}">
-                                <span class="current-image-index">1</span> / <span th:text="${#lists.size(product.imageUrls)}"></span>
-                            </div>
-                        </div>
+								<div class="seller-profile">
+									<div class="seller-avatar-placeholder">
+										<img th:if="${product.sellerProfileImage != null}"
+											th:src="${product.sellerProfileImage}" alt="판매자 프로필" /> <img
+											th:unless="${product.sellerProfileImage != null}"
+											th:src="@{/image/default-avatar.png}" alt="기본 프로필" />
+									</div>
+									<div class="seller-name text-20px fw-medium"
+										th:text="${product.sellerNickname}"></div>
+								</div>
+								<div class="trust-gauge-container">
+									<div class="trust-label">
+										<span>Trust Gauge</span> <span class="trust-percent"
+											th:text="${trust} + '%'"></span>
+									</div>
+									<div class="trust-bar">
+										<div class="trust-fill" th:style="'width:' + ${trust} + '%;'"></div>
+									</div>
+								</div>
+							</div>
 
-                        <div class="product-seller-info"
-                             style="cursor: pointer;"
-                             th:data-url="@{/user/seller/{id}(id=${product.sellerNickname} + '-' + ${product.sellerUuid})}"
-                             onclick="location.href=this.getAttribute('data-url')">
+						</section>
+						<section class="product-details-section">
+							<div style="display: flex; justify-content: space-between; align-items: center;">
+							  <div class="product-location text-18px fw-medium"
+							       th:text="${product.location}"></div>
+							
+							  <div class="report-container" th:if="${session.loginUser != null}">
+							    <button class="report-btn" onclick="reportProduct()">
+							      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+							        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
+							                 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+							      </svg>
+							    </button>
+							  </div>
+							</div>
+								<h1 class="product-title text-24px" th:text="${product.name}"
+									id="productName"></h1>
+								<div class="product-meta-info">
+									<span class="time-ago" th:data-date="${product.createDate}"
+										th:text="${product.createDate}">날짜 </span> <span
+										th:text="' · 조회 '+ ${product.views}+' · 찜 '+ ${product.wishlistCount}">
+										· 조회 0 · 찜 0 </span>
+								</div>
+								<div class="product-price text-32px"
+									th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + ' 원'"></div>
+								<div class="product-description text-16px fw-medium"
+									th:text="${product.detail}"></div>
 
-                            <div class="seller-profile">
-                                <div class="seller-avatar-placeholder">
-                                    <img th:if="${product.sellerProfileImage != null}" th:src="${product.sellerProfileImage}" alt="판매자 프로필"/>
-                                    <img th:unless="${product.sellerProfileImage != null}" th:src="@{/image/default-avatar.png}" alt="기본 프로필"/>
-                                </div>
-                                <div class="seller-name text-20px fw-medium" th:text="${product.sellerNickname}"></div>
-                            </div>
-                            <div class="trust-gauge-container">
-                                <div class="trust-label">
-                                    <span>Trust Gauge</span>
-                                    <span class="trust-percent" th:text="${trust} + '%'"></span>
-                                </div>
-                                <div class="trust-bar">
-                                    <div class="trust-fill" th:style="'width:' + ${trust} + '%;'"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </section>
-                    <section class="product-details-section">
-                        <div class="product-location text-18px fw-medium" th:text="${product.location}"></div>
-                        <h1 class="product-title text-24px" th:text="${product.name}" id="productName"></h1>
-                        <div class="product-meta-info">
-                            <span class="time-ago" th:data-date="${product.createDate}" th:text="${product.createDate}">날짜 </span>
-                            <span th:text="' · 조회 '+ ${product.views}+' · 찜 '+ ${product.wishlistCount}"> · 조회 0 · 찜 0 </span>
-                        </div>
-                        <div class="product-price text-32px" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + ' 원'"></div>
-                        <div class="product-description text-16px fw-medium" th:text="${product.detail}"></div>
-						
-                        <div class="action-buttons-container" th:if="${product.productState != 'S'}">
-                            <div class="chat-wish-wrapper">
-                                <button class="chat-button text-16px sellerChatBtn">판매자에게 채팅하기</button>
-                                <button type="button" class="wishlist-btn" id="wishlist-btn"
-                                        th:classappend="${isWishlisted} ? 'active' : ''"
-                                        th:onclick="|toggleWishlist(${product.productNo})|">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+								<div class="action-buttons-container"
+									th:if="${product.productState != 'S'}">
+									<div class="chat-wish-wrapper">
+										<button class="chat-button text-16px sellerChatBtn">판매자에게
+											채팅하기</button>
+										<button type="button" class="wishlist-btn" id="wishlist-btn"
+											th:classappend="${isWishlisted} ? 'active' : ''"
+											th:onclick="|toggleWishlist(${product.productNo})|">
+											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path
+													d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                     </svg>
-                                </button>
-                            </div>
-                            <div class="product-actions" th:if="${loginUser != null && loginUser.userNo == product.userNo}">
-                                <a th:href="@{/product/updateForm/{no}(no=${product.productNo})}" class="action-btn btn-update text-16px">수정</a>
-                                <button type="button" id="delete-btn"class="action-btn btn-delete text-16px">삭제</button>
-                            </div>
-                        </div>
-                        <div class="action-buttons-container" th:if="${product.productState=='S'}">
-                        	<div class="chat-wish-wrapper">
-                                <button class="chat-button text-16px sellProduct">판매된 상품입니다.</button>
-                            </div>
-                            <div class="product-actions" th:if="${loginUser != null && loginUser.userNo == product.userNo}" style='display:none;'>
-                                <a th:href="@{/product/updateForm/{no}(no=${product.productNo})}" class="action-btn btn-update text-16px">수정</a>
-                                <button type="button" id="delete-btn"class="action-btn btn-delete text-16px">삭제</button>
-                            </div>
-                        </div>
-                    </section>
+										</button>
+									</div>
+									<div class="product-actions"
+										th:if="${loginUser != null && loginUser.userNo == product.userNo}">
+										<a
+											th:href="@{/product/updateForm/{no}(no=${product.productNo})}"
+											class="action-btn btn-update text-16px">수정</a>
+										<button type="button" id="delete-btn"
+											class="action-btn btn-delete text-16px">삭제</button>
+									</div>
+								</div>
+								<div class="action-buttons-container"
+									th:if="${product.productState=='S'}">
+									<div class="chat-wish-wrapper">
+										<button class="chat-button text-16px sellProduct">판매된
+											상품입니다.</button>
+									</div>
+									<div class="product-actions"
+										th:if="${loginUser != null && loginUser.userNo == product.userNo}"
+										style='display: none;'>
+										<a
+											th:href="@{/product/updateForm/{no}(no=${product.productNo})}"
+											class="action-btn btn-update text-16px">수정</a>
+										<button type="button" id="delete-btn"
+											class="action-btn btn-delete text-16px">삭제</button>
+									</div>
+								</div>
+						</section>
 
-                </div>
+					</div>
 
-                <div class="trade-location-title text-20px">거래 희망 장소</div>
-                <div class="product-map-container">
-                    <iframe
-                            width="100%" height="100%" style="border:0; border-radius: 8px;"
-                            th:src="@{'https://map.naver.com/p/search/' + ${product.location}}">
-                    </iframe>
-                </div>
-            </main>
-        </div>
-    </div>
-</div>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    const productNo = /*[[${product.productNo}]]*/ 0;
-    /*]]>*/
-</script>
-<script th:src="@{/js/user/header.js}"></script>
-<script th:src="@{/js/product/productDetail.js}"></script>
-<script th:src="@{/js/chat/chat.js}"></script>
-<script th:src="@{/js/common/recentViews.js}"></script>
-<script th:src="@{/js/common/searchBar.js}"></script>
+					<div class="trade-location-title text-20px">거래 희망 장소</div>
+					<div class="product-map-container">
+						<iframe width="100%" height="100%"
+							style="border: 0; border-radius: 8px;"
+							th:src="@{'https://map.naver.com/p/search/' + ${product.location}}">
+						</iframe>
+					</div>
+				</main>
+				<div th:replace="~{common/RecentViewed :: RecentViewed}"></div>
+			</div>
+		</div>
+	</div>
+	<div id="reportModal" class="report-modal-overlay">
+	    <div class="report-modal-content">
+	        <div class="report-modal-header">
+	            <h3>신고하기</h3>
+	            <button type="button" class="report-close-modal" onclick="closeReportModal()">&times;</button>
+	        </div>
+	        <form id="reportForm" onsubmit="submitReport(event)">
+	        	<input type="hidden" th:value="${product.userNo}">
+	            <p class="report-guide">신고 사유를 선택해주세요. 허위 신고 시 이용 제한을 받을 수 있습니다.</p>
+	            
+	            <div class="report-reasons">
+	                <label class="reason-item">
+	                    <input type="radio" name="reportReason" value="PROHIBITED" required>
+	                    <span>욕설 / 과도한 표현 신고</span>
+	                </label>
+	                <label class="reason-item">
+	                    <input type="radio" name="reportReason" value="SCAM">
+	                    <span>사기 의심 게시글이에요</span>
+	                </label>
+	                <label class="reason-item">
+	                    <input type="radio" name="reportReason" value="AD">
+	                    <span>광고/홍보성 글이에요</span>
+	                </label>
+	                <label class="reason-item">
+	                    <input type="radio" name="reportReason" value="OTHER">
+	                    <span>기타 사유</span>
+	                </label>
+	            </div>
+	
+	            <textarea id="reportDetail" placeholder="상세 사유를 입력해주세요 (선택사항)" maxlength="200"></textarea>
+	
+	            <div class="modal-footer">
+	                <button type="button" class="btn-cancel" onclick="closeReportModal()">취소</button>
+	                <button type="submit" class="btn-submit">신고하기</button>
+	            </div>
+	        </form>
+	    </div>
+	</div>
+	<div th:replace="~{common/footer :: footer}"></div>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		const productNo = /*[[${product.productNo}]]*/0;
+		/*]]>*/
+	</script>
+	<script th:src="@{/js/user/header.js}"></script>
+	<script th:src="@{/js/product/productDetail.js}"></script>
+	<script th:src="@{/js/chat/chat.js}"></script>
+	<script th:src="@{/js/common/recentViews.js}"></script>
+	<script th:src="@{/js/common/searchBar.js}"></script>
 </body>
 </html>

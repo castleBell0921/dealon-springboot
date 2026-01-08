@@ -332,3 +332,163 @@
 	visibility: visible;
 	transform: translateY(0);
 }
+
+/* 모달 전체 배경 */
+.report-modal-overlay {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px); /* 배경 블러 처리 */
+}
+
+/* 모달 컨텐츠 박스 */
+.report-modal-content {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    padding: 70px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    animation: modalSlideUp 0.3s ease-out;
+}
+
+@keyframes modalSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.report-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.report-modal-header h3 { font-size: 20px; font-weight: 700; margin: 0; }
+
+.report-close-modal {
+    background: none; border: none; font-size: 28px; color: #999; cursor: pointer;
+}
+
+.report-guide { font-size: 13px; color: #777; margin-bottom: 20px; }
+
+/* 라디오 버튼 스타일링 */
+.report-reasons { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+
+.reason-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 15px;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.reason-item:hover { background-color: #f9f9f9; }
+
+.reason-item input[type="radio"] {
+    accent-color: #FF4D4F; /* 라디오 버튼 포인트 컬러 */
+    width: 18px; height: 18px;
+}
+
+/* 텍스트 영역 */
+#reportDetail {
+    width: 100%; height: 100px;
+    padding: 12px;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    resize: none;
+    font-family: inherit;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+#reportDetail:focus { outline: none; border-color: #FF4D4F; }
+
+/* 하단 버튼 */
+.modal-footer { display: flex; gap: 10px; }
+
+.btn-cancel, .btn-submit {
+    flex: 1; padding: 14px; border: none; border-radius: 12px;
+    font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s;
+}
+
+.btn-cancel { background: #f0f0f0; color: #666; }
+.btn-submit { background: #FF4D4F; color: #fff; }
+
+.btn-cancel:hover { background: #e5e5e5; }
+.btn-submit:hover { background: #E03E3E; transform: translateY(-1px); }
+
+/* --- 공통 알림 메시지 (Toast) 스타일 --- */
+.toast-message {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000000;
+    color: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+    pointer-events: none; /* 클릭 방해 금지 */
+}
+
+.toast-message.opacity-100 {
+    opacity: 1;
+}
+
+/* --- 채팅 헤더 드롭다운 메뉴 스타일 --- */
+.dropdown-menu {
+    display: none; /* JS에서 active 클래스로 제어 */
+    position: absolute;
+    right: 24px;
+    top: 76px;
+    width: 12rem; /* 192px */
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    z-index: 50;
+    transform-origin: top right;
+}
+
+.dropdown-menu.active {
+    display: block;
+    animation: fadeIn 0.1s ease-out;
+}
+
+.menu-wrapper {
+    padding: 0.25rem 0;
+}
+
+.menu-item {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: #374151;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+}
+
+.menu-item:hover {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+/* 상단/하단 라운드 처리 */
+.item-top { border-radius: 0.75rem 0.75rem 0 0; }
+.item-bottom { border-radius: 0 0 0.75rem 0.75rem; border-top: 1px solid #f3f4f6; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}

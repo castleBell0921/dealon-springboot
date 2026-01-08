@@ -30,10 +30,10 @@ label {
 }
 
 /* Input fields */
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="tel"] {
+.signup-container input[type="text"],
+.signup-container input[type="password"],
+.signup-container input[type="email"],
+.signup-container input[type="tel"] {
     width: 100%;
     padding: 14px 16px;
     border: 1px solid #ccc;

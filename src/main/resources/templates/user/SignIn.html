@@ -9,6 +9,8 @@
 <link rel="stylesheet" th:href="@{/css/Home.css}">
 <link rel="stylesheet" th:href="@{/css/font.css}">
 <link rel="stylesheet" th:href="@{/css/SignIn.css}">
+<link rel="stylesheet" th:href="@{/css/footer.css}">
+
 </head>
 <body>
 	<div class="app-container">
@@ -70,6 +72,7 @@
 			<button type="button" class="signup-btn">가입하기</button>
 		</form>
 	</div>
+	<div th:replace="~{common/footer :: footer}"></div> 
 	<!-- 회원가입 실패 메시지 -->
 	<div th:if="${errorMessage}">
 		<script th:inline="javascript">
@@ -81,6 +84,7 @@
 			alert('소셜 로그인 최초 이용 시 간단한 회원가입이 필요합니다.');
 		</script>
 	</div>
+	<script th:src="@{/js/user/signIn.js}"></script>
 	<script th:src="@{/js/user/signIn.js}"></script>
 </body>
 </html>

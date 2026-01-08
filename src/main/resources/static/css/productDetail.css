@@ -516,3 +516,129 @@
   background-color: white !important;
   color: #673AB7 !important;
 }
+
+.report-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #666;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.report-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+/* 호버 시 강조 효과 */
+.report-btn:hover {
+  color: #ff4b4b;
+  border-color: #ff4b4b;
+  background-color: #fff0f0;
+  transform: translateY(-1px);
+}
+
+.report-btn:hover svg {
+  transform: scale(1.1);
+}
+
+/* 모달 전체 배경 */
+.report-modal-overlay {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px); /* 배경 블러 처리 */
+}
+
+/* 모달 컨텐츠 박스 */
+.report-modal-content {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    padding: 70px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    animation: modalSlideUp 0.3s ease-out;
+}
+
+@keyframes modalSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.report-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.report-modal-header h3 { font-size: 20px; font-weight: 700; margin: 0; }
+
+.report-close-modal {
+    background: none; border: none; font-size: 28px; color: #999; cursor: pointer;
+}
+
+.report-guide { font-size: 13px; color: #777; margin-bottom: 20px; }
+
+/* 라디오 버튼 스타일링 */
+.report-reasons { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+
+.reason-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 15px;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.reason-item:hover { background-color: #f9f9f9; }
+
+.reason-item input[type="radio"] {
+    accent-color: #FF4D4F; /* 라디오 버튼 포인트 컬러 */
+    width: 18px; height: 18px;
+}
+
+/* 텍스트 영역 */
+#reportDetail {
+    width: 100%; height: 100px;
+    padding: 12px;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    resize: none;
+    font-family: inherit;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+#reportDetail:focus { outline: none; border-color: #FF4D4F; }
+
+/* 하단 버튼 */
+.modal-footer { display: flex; gap: 10px; }
+
+.btn-cancel, .btn-submit {
+    flex: 1; padding: 14px; border: none; border-radius: 12px;
+    font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s;
+}
+
+.btn-cancel { background: #f0f0f0; color: #666; }
+.btn-submit { background: #FF4D4F; color: #fff; }
+
+.btn-cancel:hover { background: #e5e5e5; }
+.btn-submit:hover { background: #E03E3E; transform: translateY(-1px); }

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Deal-On 이용약관 동의</title>
+    <link rel="stylesheet" th:href="@{/css/terms.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/App.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/Home.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+</head>
+<body>
+<div class="terms-container">
+    <h1 class="terms-title">반가워요! 👋</h1>
+    <p class="terms-subtitle">Deal-On 서비스 이용을 위해 약관에 동의해주세요.</p>
+
+	    <form th:action="@{/user/signIn}" method="get" class="terms-form" id="termsForm">
+		    <input type="hidden" name="nickname" th:value="${param.nickname}">
+		    <input type="hidden" name="profileImage" th:value="${param.profileImage}">
+		    <input type="hidden" name="socialId" th:value="${param.socialId}">
+        
+        <div class="all-agree-box" id="allAgreeWrapper">
+            <label class="checkbox-label" style="font-weight: 700; font-size: 16px;">
+                <input type="checkbox" id="checkAll">
+                이용약관 전체 동의
+            </label>
+        </div>
+
+        <div class="terms-box">
+            <div class="terms-header">
+                <h3>이용약관 동의 (필수)</h3>
+            </div>
+            <div class="scroll-box">
+                <p>
+                    본 약관은 Deal-On(이하 ‘회사’)이 제공하는 중고거래 플랫폼 서비스(이하 ‘서비스’)의 이용조건 및 절차, 
+                    이용자와 회사의 권리·의무 및 책임사항 등을 규정함을 목적으로 합니다.
+                </p>
+                <p>
+                    1. 회원은 본 약관에 따라 서비스를 이용할 수 있습니다.<br>
+                    2. 회원가입 시 제공하는 정보는 사실이어야 하며, 허위 정보로 인한 불이익은 본인에게 있습니다.<br>
+                    3. 회사는 원활한 서비스 제공을 위해 필요한 범위 내에서 회원 정보를 활용할 수 있습니다.<br>
+                    4. 서비스 내 게시물, 거래 행위 등에서 발생하는 모든 책임은 해당 회원에게 있습니다.<br>
+                    5. 회사는 이용자의 서비스 부정 사용 시 사전 통보 없이 이용을 제한할 수 있습니다.
+                </p>
+
+            </div>
+            <label class="checkbox-label" style="margin-top: 10px;">
+                <input type="checkbox" name="termsAgree" class="single-check" required>
+                이용약관에 동의합니다.
+            </label>
+        </div>
+
+        <div class="terms-box">
+            <div class="terms-header">
+                <h3>개인정보 수집 및 이용 동의 (필수)</h3>
+            </div>
+            <div class="scroll-box">
+                  <p>
+                    회사는 회원가입, 서비스 제공, 고객 문의 응대 등을 위해 아래와 같은 개인정보를 수집·이용합니다.
+                </p>
+                <p>
+                    - 수집 항목: 아이디, 비밀번호, 이메일, 이름, 닉네임, 휴대전화번호<br>
+                    - 이용 목적: 회원 식별, 거래 서비스 제공, 고객 상담 및 공지사항 전달<br>
+                    - 보유 기간: 회원 탈퇴 시까지, 단 관계법령에 따라 일정기간 보관할 수 있습니다.
+                </p>
+                <p>
+                    회원은 개인정보 수집 및 이용에 대한 동의를 거부할 권리가 있으나, 
+                    동의하지 않을 경우 회원가입이 제한될 수 있습니다.
+                </p>
+            </div>
+            <label class="checkbox-label" style="margin-top: 10px;">
+                <input type="checkbox" name="privacyAgree" class="single-check" required>
+                개인정보 수집 및 이용에 동의합니다.
+            </label>
+        </div>
+
+        <div class="terms-actions">
+            <button type="submit" class="agree-btn" id="submitBtn" disabled>동의하고 가입하기</button>
+            <a href="/" class="cancel-btn">다음에 할게요</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    const checkAll = document.getElementById('checkAll');
+    const singleChecks = document.querySelectorAll('.single-check');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // 전체 동의 로직
+    checkAll.addEventListener('change', (e) => {
+        singleChecks.forEach(check => {
+            check.checked = e.target.checked;
+        });
+        toggleSubmitBtn();
+    });
+
+    // 개별 체크박스 변경 시
+    singleChecks.forEach(check => {
+        check.addEventListener('change', () => {
+            const allChecked = Array.from(singleChecks).every(c => c.checked);
+            checkAll.checked = allChecked;
+            toggleSubmitBtn();
+        });
+    });
+
+    // 버튼 활성화 함수
+    function toggleSubmitBtn() {
+        const allChecked = Array.from(singleChecks).every(c => c.checked);
+        submitBtn.disabled = !allChecked;
+    }
+</script>
+</body>
+</html>

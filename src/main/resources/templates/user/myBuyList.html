@@ -11,6 +11,7 @@
 	<link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
 	<link rel="stylesheet" th:href="@{/css/myProduct.css}">
 	<link rel="stylesheet" th:href="@{/css/reviewModal.css}">
+	<link rel="stylesheet" th:href="@{/css/footer.css}">
 </head>
 <body>
 <div class="app-container">
@@ -69,6 +70,7 @@
 		</main>
 	</div>
 </div>
+<div th:replace="~{common/footer :: footer}"></div> 
 <script th:src="@{/js/user/myProduct.js}"></script>
 <script th:src="@{/js/user/header.js}"></script>
 <script th:src="@{/js/user/myBuyList.js}"></script>

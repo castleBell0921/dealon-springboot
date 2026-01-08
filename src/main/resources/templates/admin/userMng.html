@@ -1,21 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:replace="~{admin/base :: layout(~{:: #stats-block}, ~{:: #main-block})}">
+<th:block
+	th:replace="~{admin/base :: layout(~{:: #stats-block}, ~{:: #main-block})}">
 
-    <div id="stats-block">
-        <th:block th:replace="~{admin/stats :: statsRow}"></th:block>
-    </div>
+	<div id="stats-block">
+		<th:block th:replace="~{admin/stats :: statsRow}"></th:block>
+	</div>
 
-    <div id="main-block">
-        <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+	<div id="main-block">
+		<link rel="stylesheet" th:href="@{/css/userMng.css}">
 
-        <div>
-            본문
-        </div>
+		<div class="user-profile-header">
+			<h2 class="text-24px fw-bold">User Profile</h2>
+			<div class="search-container">
+				<input type="text" placeholder="회원 이름, 닉네임으로 검색"
+					class="search-input"> <i
+					class="fa-solid fa-magnifying-glass search-icon"></i>
+			</div>
+		</div>
 
-        <script th:src="@{/js/admin/dashboard.js}"></script>
-    </div>
+		<div class="user-grid">
+			<div class="user-card detailed"
+				th:each="i : ${#numbers.sequence(1, 12)}">
+				<div class="detailed-left">
+					<img th:src="@{/image/default-avatar.png}" alt="profile"
+						class="user-avatar">
+					<div class="user-info-mini">
+						<span class="user-nickname fw-bold" th:text="'User_' + ${i}">forqls</span>
+						<div class="trust-label-mini">
+							Trust Gauge <span class="trust-percent">92%</span>
+						</div>
+						<div class="trust-bar">
+							<div class="trust-fill" style="width: 92%;"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="detailed-right">
+					<div class="stat-item">
+						<span class="stat-label">등록한 상품</span> <span
+							class="stat-value purple-text">6</span>
+					</div>
+					<div class="stat-item">
+						<span class="stat-label">구매한 상품</span> <span
+							class="stat-value purple-text">6</span>
+					</div>
+					<div class="stat-item">
+						<span class="stat-label">후기</span> <span
+							class="stat-value purple-text">6</span>
+					</div>
+					<div class="stat-item">
+						<span class="stat-label">신고</span> <span
+							class="stat-value red-text">0</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="pagination">
+			<span>&lt;&lt;</span> <span>&lt;</span> <span>1</span> <span>2</span>
+			<span class="active">3</span> <span>4</span> <span>5</span> <span>&gt;</span>
+			<span>&gt;&gt;</span>
+		</div>
+
+		<script th:src="@{/js/admin/userMng.js}"></script>
+	</div>
 
 </th:block>
 </html>

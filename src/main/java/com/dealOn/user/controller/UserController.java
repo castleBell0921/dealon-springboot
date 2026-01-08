@@ -135,6 +135,9 @@ public class UserController {
 	@GetMapping("/myProduct")
 	public String myProduct(HttpServletRequest  request, HttpSession session,Model model) {
 		User loginUser = (User)session.getAttribute("loginUser");
+		if(loginUser == null) {
+			return "redirect:/";
+		}
 		List<ProductVO> productList = pService.findByUserNoProducts(loginUser.getUserNo());
 		model.addAttribute("productList", productList);
         model.addAttribute("requestURI", request.getRequestURI());
@@ -145,6 +148,9 @@ public class UserController {
 	@GetMapping("editProfile")
 	public String editProfile(HttpServletRequest  request, HttpSession session, Model model) {
 		User loginUser = (User)session.getAttribute("loginUser");
+		if(loginUser == null) {
+			return "redirect:/";
+		}
 		model.addAttribute("loginUser", loginUser);
 		model.addAttribute("requestURI", request.getRequestURI());
 		return "user/myInfo";
@@ -344,6 +350,9 @@ public class UserController {
 	@GetMapping("/myBuyList")
 	public String myBuyList(HttpSession session, Model model, HttpServletRequest request) {
 		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+		if(userNo == null) {
+			return "redirect:/";
+		}
 		List<ProductVO> list = pService.getBuyerNo(userNo);
 		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
 		return "/myBuyList";
@@ -352,8 +361,15 @@ public class UserController {
 	@GetMapping("/myWishList")
 	public String myWishList(HttpSession session, Model model, HttpServletRequest request) {
 		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+		if(userNo == null) {
+			return "redirect:/";
+		}
 		List<ProductVO> list = pService.getMyWishList(userNo);
 		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
 		return "/myWishList";
+	}
+	@GetMapping("terms")
+	public String terms() {
+		return "/terms";
 	}
  }

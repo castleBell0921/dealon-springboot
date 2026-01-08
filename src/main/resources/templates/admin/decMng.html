@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
+<link style="">
 <th:block th:replace="~{admin/base :: layout(~{:: #stats-block}, ~{:: #main-block}, false)}">
 
   <div id="stats-block">
     <th:block th:replace="~{admin/stats :: statsRow}"></th:block>
   </div>
 
-  <div id="main-block">
+  <div id="main-block" class="decMng">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
 
     <div>

@@ -8,14 +8,59 @@
     </div>
 
     <div id="main-block" class="nDecMng">
-        <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-
-        <div>
-            본문
-        </div>
-
-        <script th:src="@{/js/admin/dashboard.js}"></script>
-    </div>
-
+	    <link rel="stylesheet" th:href="@{/css/productMng.css}">
+	
+	    <div class="all-post">
+	        <div class="post-header">
+	            <h2 class="section-title">All Post</h2>
+	            <div class="search-container">
+	                <input type="text" placeholder="회원 이름, 닉네임으로 검색">
+	                <button type="button" class="search-btn">
+	                    <i class="fas fa-search"></i> </button>
+	            </div>
+	        </div>
+	
+	        <div class="post-grid">
+	            <div class="post-card" th:each="list : ${productList}" th:data-product-no="${list.productNo}">
+	                <div class="post-image">
+	                    <img th:src="${list.thumbnailUrl}">
+	                </div>
+	                <div class="post-content">
+	                    <div class="post-location" th:text="${list.location}"></div>
+	                    <div class="post-title" th:text="${list.name}"></div>
+	                    <div class="post-price" th:text="|${list.price}원||"></div>
+	                    <div class="post-seller" th:text="|판매자: ${list.sellerNickname}|"></div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    
+	    <div id="productModal" class="product-modal-overlay">
+		    <div class="product-modal-content">
+		        <div class="modal-breadcrumb"></div>
+		
+		        <div class="modal-body-top">
+		            <div class="modal-image">
+		                <img src="" class="img">
+		            </div>
+		            <div class="product-modal-info">
+		                <div class="modal-location"></div>
+		                <div class="modal-title"></div>
+		                <div class="modal-price"></div>
+		                <div class="modal-seller"></div>
+		            </div>
+		        </div>
+		
+		        <div class="modal-description">
+		        </div>
+		
+		        <div class="product-modal-footer">
+		            <button type="button" class="deactivate-btn">비활성화</button>
+		        </div>
+		    </div>
+		</div>
+	
+	    <script th:src="@{/js/admin/productMng.js}"></script>
+	</div>
 </th:block>
 </html>

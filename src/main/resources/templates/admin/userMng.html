@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block
-	th:replace="~{admin/base :: layout(~{:: #stats-block}, ~{:: #main-block}, true)}">
+<th:block th:replace="~{admin/base :: layout(~{:: #stats-block}, ~{:: #main-block}, true)}">
 
 	<div id="stats-block">
 		<th:block th:replace="~{admin/stats :: statsRow}"></th:block>

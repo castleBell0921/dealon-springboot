@@ -14,16 +14,22 @@
 	        <div class="post-header">
 	            <h2 class="section-title">All Post</h2>
 	            <div class="search-container">
-	                <input type="text" placeholder="회원 이름, 닉네임으로 검색">
-	                <button type="button" class="search-btn">
-	                    <i class="fas fa-search"></i> </button>
-	            </div>
+				    <form id="searchForm">
+				        <input type="text" name="keyword" placeholder="회원 이름, 닉네임, 상품명, 내용으로 검색">
+				        <button type="submit" class="search-btn">
+				            <i class="fas fa-search"></i>
+				        </button>
+				    </form>
+				</div>
+
 	        </div>
 	
 	        <div class="post-grid">
 	            <div class="post-card" th:each="list : ${productList}" th:data-product-no="${list.productNo}">
 	                <div class="post-image">
 	                    <img th:src="${list.thumbnailUrl}">
+                         <div class="disabled-overlay" th:if="${list.status == 'N'}">비활성화됨</div>
+	                    
 	                </div>
 	                <div class="post-content">
 	                    <div class="post-location" th:text="${list.location}"></div>

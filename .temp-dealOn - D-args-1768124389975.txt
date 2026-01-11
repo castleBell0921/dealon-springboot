@@ -1,5 +1,5 @@
 -Dcom.sun.management.jmxremote
--Dcom.sun.management.jmxremote.port=63162
+-Dcom.sun.management.jmxremote.port=59900
 -Dcom.sun.management.jmxremote.authenticate=false
 -Dcom.sun.management.jmxremote.ssl=false
 -Djava.rmi.server.hostname=localhost

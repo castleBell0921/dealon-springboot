@@ -49,5 +49,5 @@ public class ProductVO {
     private Date endDate;
     private String reviewText;
     private int reviewNo;
-
+    private String newStatus;
 }

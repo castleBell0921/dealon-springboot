@@ -2,9 +2,13 @@ package com.dealOn.admin.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,7 +41,7 @@ public class AdminController {
 	
 	@GetMapping("productMng")
 	public String joinProductMng(HttpServletRequest request, Model model) {
-		List<ProductVO> productList = productService.getAllProduct(null);
+		List<ProductVO> productList = adminService.getAllProduct();
 		System.out.println("productList: " + productList);
 		model.addAttribute("requestURI",request.getRequestURI());
 		model.addAttribute("productList", productList);
@@ -55,7 +59,26 @@ public class AdminController {
 	public ProductVO getProductDetail(@RequestParam("productNo") int productNo) {
 	    return adminService.getProductDetail(productNo);
 	}
+	
+	@PostMapping("/toggleProductStatus")
+	@ResponseBody
+	public ResponseEntity<String> toggleProductStatus(@RequestBody ProductVO req) {
+		
+//		System.out.println("productNo: " + req.getProductNo());
+//		System.out.println("newStatus: " + req.getNewStatus());
+		int result = adminService.updateProductStatus(req);
+		
+		if(result > 0) {
+			return ResponseEntity.ok("success");	
+		} else {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+		}
+	}
+	
+	@GetMapping("/product/search")
+	@ResponseBody
+	public List<ProductVO> searchProducts(@RequestParam("keyword") String keyword) {
+	    return adminService.searchProducts(keyword);
+	}
 
-	
-	
 }

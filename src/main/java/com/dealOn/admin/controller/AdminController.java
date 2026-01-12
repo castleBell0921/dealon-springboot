@@ -1,6 +1,8 @@
 package com.dealOn.admin.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dealOn.admin.model.service.AdminService;
+import com.dealOn.common.Pagination;
+import com.dealOn.common.model.vo.PageInfo;
 import com.dealOn.product.model.service.ProductService;
 import com.dealOn.product.model.vo.ProductVO;
 
@@ -39,14 +43,25 @@ public class AdminController {
 		return "admin/userMng";
 	}
 	
-	@GetMapping("productMng")
-	public String joinProductMng(HttpServletRequest request, Model model) {
-		List<ProductVO> productList = adminService.getAllProduct();
-		System.out.println("productList: " + productList);
-		model.addAttribute("requestURI",request.getRequestURI());
-		model.addAttribute("productList", productList);
-		return "admin/productMng";
+	@GetMapping("/productMng")
+	public String joinProductMng(
+	        @RequestParam(value = "page", defaultValue = "1") int currentPage,
+	        HttpServletRequest request,
+	        Model model) {
+
+	    int listCount = adminService.getProductCount(); // 전체 상품 수
+	    int boardLimit = 9; // 한 페이지당 9개 (3x3)
+
+	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, boardLimit);
+	    List<ProductVO> productList = adminService.getProductList(pi); // 페이징된 리스트만 가져오기
+
+	    model.addAttribute("productList", productList);
+	    model.addAttribute("pi", pi);
+	    model.addAttribute("requestURI", request.getRequestURI());
+
+	    return "admin/productMng";
 	}
+
 
 	@GetMapping("decMng")
 	   public String decMng(HttpServletRequest request, Model model) {
@@ -75,10 +90,42 @@ public class AdminController {
 		}
 	}
 	
+	/*
+	 * @GetMapping("/product/search")
+	 * 
+	 * @ResponseBody public List<ProductVO> searchProducts(@RequestParam("keyword")
+	 * String keyword) { return adminService.searchProducts(keyword); }
+	 */
+	
 	@GetMapping("/product/search")
 	@ResponseBody
-	public List<ProductVO> searchProducts(@RequestParam("keyword") String keyword) {
-	    return adminService.searchProducts(keyword);
+	public Map<String, Object> searchProducts(
+	        @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+	        @RequestParam(value = "page", defaultValue = "1") int currentPage) {
+
+	    // ✅ 검색어가 비어있거나 공백이면 전체 조회로 전환
+	    if (keyword == null || keyword.trim().isEmpty()) {
+	        int listCount = adminService.getProductCount(); // 전체 상품 수
+	        int boardLimit = 9;
+	        PageInfo pi = Pagination.getPageInfo(currentPage, listCount, boardLimit);
+	        List<ProductVO> productList = adminService.getProductList(pi); // 전체 상품 목록
+	        Map<String, Object> result = new HashMap<>();
+	        result.put("productList", productList);
+	        result.put("pi", pi);
+	        return result;
+	    }
+
+	    // ✅ 검색어가 있을 경우 검색 로직 실행
+	    int listCount = adminService.getSearchCount(keyword);
+	    int boardLimit = 9;
+	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, boardLimit);
+	    List<ProductVO> productList = adminService.searchProducts(keyword, pi);
+
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("productList", productList);
+	    result.put("pi", pi);
+	    return result;
 	}
+
 
 }

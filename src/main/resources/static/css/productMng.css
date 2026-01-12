@@ -37,61 +37,80 @@
     margin-top: 6px;
 }
 
-/* 그리드 레이아웃: 3열 */
 .post-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    grid-template-columns: repeat(3, minmax(0, 1fr)); 
+    gap: 20px;
     padding: 10px 0;
+    width: 100%;
+    
+    /* ✅ 이 부분 추가: 3줄 정도의 높이를 최소로 유지 (수치는 환경에 맞게 조절 가능) */
+    min-height: 500px; 
+    align-content: start; /* 아이템이 적어도 위쪽부터 배치되도록 고정 */
 }
-
-/* 카드 스타일: 가로형 배치 (Flex) */
 .post-card {
     display: flex;
     align-items: center;
     border: 1px solid #e5e7eb;
-    border-radius: 16px; /* 더 둥글게 처리하여 세련되게 */
-    padding: 16px; /* 내부 여백 확대 */
+    border-radius: 16px;
+    padding: 12px; /* 패딩을 살짝 줄여 내부 공간 확보 */
     background: #fff;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
+    /* 핵심: 카드가 내부 콘텐츠 때문에 늘어나는 것을 방지 */
+    min-width: 0; 
+    overflow: hidden;
 }
 
 .post-card:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
 }
 
-/* 이미지 크기 고정 및 둥근 모서리 */
 .post-image {
-    flex-shrink: 0; /* 이미지 크기 유지 */
+    flex-shrink: 0;
+    position: relative;
+    width: 110px; /* 이미지 크기를 살짝 조절 (130px -> 110px) */
+    height: 110px;
 }
 
 .post-image img {
-    width: 130px;
-    height: 130px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 10px;
 }
-
-/* 텍스트 영역 공간 확보 */
+/* 4. 텍스트 영역 및 말줄임 처리 */
 .post-content {
-    margin-left: 15px;
+    margin-left: 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* 핵심: 부모 너비를 따라가도록 설정 */
+    min-width: 0; 
+    flex: 1;
 }
 
+/* 위치 정보 말줄임 */
 .post-location {
     font-size: 11px;
     color: #9ca3af;
     margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+/* 상품 제목 말줄임 (중요) */
 .post-title {
     font-size: 14px;
     font-weight: 600;
     color: #1f2937;
     margin-bottom: 4px;
+    /* 제목이 길어지면 ...으로 표시 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .post-price {
@@ -279,4 +298,83 @@
 .post-image {
     flex-shrink: 0;
     position: relative; /* ✅ 오버레이 위치 기준 추가 */
+}
+
+/* 페이징 컨테이너 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px 0;
+    gap: 8px;
+    margin-top: 40px; /* 콘텐츠와 페이징 사이의 간격 유지 */
+    font-family: 'Pretendard', -apple-system, sans-serif;
+}
+
+/* 공통 버튼 스타일 (숫자 및 이전/다음) */
+.pagination a, 
+.pagination span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 8px;
+    border-radius: 12px; /* 좀 더 둥글게 */
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+    color: #4b5563;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    user-select: none;
+}
+
+/* 호버 시 효과: 살짝 들리고 테두리 색상 변경 */
+.pagination a:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+    color: #111827;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* 현재 활성화된 페이지 */
+.pagination .active {
+    background-color: #6366f1; /* 세련된 인디고 블루 */
+    color: #ffffff;
+    border-color: #6366f1;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35); /* 강조를 위한 글로우 효과 */
+}
+
+/* 클릭했을 때의 피드백 (Active 애니메이션) */
+.pagination a:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* 이전/다음 화살표 버튼 전용 스타일 (선택 사항) */
+.pagination .prev, 
+.pagination .next {
+    font-weight: bold;
+    color: #374151;
+    background-color: #f3f4f6;
+    border: none;
+}
+
+.pagination .prev:hover, 
+.pagination .next:hover {
+    background-color: #e5e7eb;
+}
+
+/* 비활성 상태 (예: 첫 페이지에서 '이전' 버튼) */
+.pagination .disabled {
+    color: #d1d5db;
+    cursor: not-allowed;
+    background-color: #f9fafb;
+    border-color: #f3f4f6;
+    pointer-events: none;
 }

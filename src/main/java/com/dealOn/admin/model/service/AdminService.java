@@ -2,9 +2,11 @@ package com.dealOn.admin.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import com.dealOn.admin.model.mapper.AdminMapper;
+import com.dealOn.common.model.vo.PageInfo;
 import com.dealOn.product.model.vo.ProductVO;
 
 import lombok.RequiredArgsConstructor;
@@ -26,9 +28,27 @@ public class AdminService {
 		return adminMapper.getAllProduct();
 	}
 
-	public List<ProductVO> searchProducts(String keyword) {
-		return adminMapper.searchProducts(keyword);
+	public List<ProductVO> searchProducts(String keyword, PageInfo pi) {
+	    int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+	    RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
+	    return adminMapper.searchProducts(keyword, rowBounds);
 	}
+	
+	public int getSearchCount(String keyword) {
+	    return adminMapper.getSearchCount(keyword);
+	}
+	
+	public int getProductCount() {
+	    return adminMapper.getProductCount();
+	}
+	
+	public List<ProductVO> getProductList(PageInfo pi) {
+        int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+        int limit = pi.getBoardLimit();
+        RowBounds rowBounds = new RowBounds(offset, limit);
+
+        return adminMapper.getProductList(rowBounds);
+    }
 	
 
 }

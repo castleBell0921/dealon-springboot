@@ -734,16 +734,31 @@ function closeReportModal() {
 function submitReport(event) {
     event.preventDefault();
     
-    const reason = document.querySelector('input[name="reportReason"]:checked').value;
-    const detail = document.getElementById('reportDetail').value;
 
-    // AJAX 요청 예시 (백엔드 엔드포인트에 맞춰 수정 필요)
-    /*
-    fetch('/api/report', {
+		
+	//상품 번호
+	const productNo = document.getElementById('productNo');
+	
+	//채팅 번호(없을 수도 있음)
+	// 1. 현재 브라우저 주소(URL)에서 chatNo를 직접 꺼내옵니다.
+	// 예: 주소가 /chat/chatRoom/15 라면 "15"를 가져옴
+	const pathMatch = location.pathname.match(/\/chat\/chatRoom\/(\d+)/);
+	const chatNo = pathMatch ? pathMatch[1] : null;		
+	
+	//신고 카테고리
+	const reason = document.querySelector('input[name="reportReason"]:checked').value;
+	
+	//신고 내용
+	const detail = document.getElementById('reportDetail').value;
+	
+	//위배자는 채팅 번호를 넘겨 AdminController에서 처리
+
+    fetch('/admin/report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             productNo: productNo,
+			chatNo : chatNo,
             reason: reason,
             detail: detail
         })
@@ -753,7 +768,6 @@ function submitReport(event) {
             closeReportModal();
         }
     });
-    */
 
     alert(`신고가 접수되었습니다.\n사유: ${reason}\n내용: ${detail}`);
     closeReportModal();

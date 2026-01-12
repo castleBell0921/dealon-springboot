@@ -42,7 +42,7 @@
 		where no = #{productNo}
 	</update>
 	
-	<select id="getAllProduct">
+	<!-- <select id="getAllProduct">
         SELECT DISTINCT
         P.NO AS PRODUCT_NO, P.NAME, NP.PRICE, NP.REGION, P.CREATE_DATE, P.sales_location as location, NP.VIEWS,
         (SELECT IM.IMAGE_URL
@@ -64,7 +64,7 @@
         JOIN IMAGES IMG ON ENTITY_ID = P.NO
         LEFT JOIN CATEGORY C ON P.CATEGORY = C.NO
         LEFT JOIN USERS U ON P.USER_NO = U.USER_NO
-    </select>
+    </select> -->
     <select id="searchProducts">
     	SELECT DISTINCT
 		    P.NO AS PRODUCT_NO,
@@ -94,7 +94,7 @@
 		    C.NAME AS CATEGORY_NAME,
 		    NP.STATE AS PRODUCT_STATE,
 		    P.STATUS,
-		    U.NICKNAME AS SELLER_NICKNAME
+		    U.NICKNAME AS seller_nickname
 		FROM PRODUCT P
 		JOIN NORMAL NP ON P.NO = NP.NO2
 		JOIN IMAGES IMG ON IMG.ENTITY_ID = P.NO
@@ -109,4 +109,50 @@
 		    )
 		    	
     </select>
+    
+    <select id="getSearchCount" resultType="int">
+	    SELECT COUNT(DISTINCT P.NO)
+	    FROM PRODUCT P
+	    JOIN NORMAL NP ON P.NO = NP.NO2
+	    JOIN IMAGES IMG ON IMG.ENTITY_ID = P.NO
+	    LEFT JOIN CATEGORY C ON P.CATEGORY = C.NO
+	    LEFT JOIN USERS U ON P.USER_NO = U.USER_NO
+	    WHERE 
+	        (
+	            LOWER(P.NAME) LIKE LOWER('%' || #{keyword} || '%')
+	            OR LOWER(P.DETAIL) LIKE LOWER('%' || #{keyword} || '%')
+	            OR LOWER(U.NICKNAME) LIKE LOWER('%' || #{keyword} || '%')
+	            OR LOWER(U.NAME) LIKE LOWER('%' || #{keyword} || '%')
+	        )
+	</select>
+
+    
+    <select id="getProductCount">
+	    SELECT COUNT(*) FROM PRODUCT
+	</select>
+	
+	
+	<select id="getProductList">
+		 SELECT DISTINCT
+        P.NO AS PRODUCT_NO, P.NAME, NP.PRICE, NP.REGION, P.CREATE_DATE, P.sales_location as location, NP.VIEWS,
+        (SELECT IM.IMAGE_URL
+        FROM IMAGES IM
+        WHERE IM.ENTITY_TYPE = 'PRODUCT' AND IM.ENTITY_ID = P.NO
+        ORDER BY IM.IMAGE_ID ASC
+        FETCH FIRST 1 ROW ONLY) AS THUMBNAIL_URL,
+        (SELECT COUNT(*) FROM WISHLIST WHERE PRODUCT_NO = P.NO) AS WISHLIST_COUNT,
+        CASE
+        WHEN NP.NO IS NOT NULL THEN 'USED'
+        ELSE 'AUCTION'
+        END AS PRODUCT_TYPE,
+        C.NAME AS CATEGORY_NAME,
+        NP.STATE AS PRODUCT_STATE,
+        P.STATUS,
+        U.NICKNAME AS seller_nickname
+        FROM PRODUCT P
+        JOIN NORMAL NP ON P.NO = NP.NO2
+        JOIN IMAGES IMG ON ENTITY_ID = P.NO
+        LEFT JOIN CATEGORY C ON P.CATEGORY = C.NO
+        LEFT JOIN USERS U ON P.USER_NO = U.USER_NO
+	</select>
 </mapper>

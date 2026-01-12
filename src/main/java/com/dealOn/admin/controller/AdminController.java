@@ -16,18 +16,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dealOn.admin.model.service.AdminService;
+import com.dealOn.chat.model.service.ChatService;
+import com.dealOn.chat.model.vo.ChatRoom;
 import com.dealOn.common.Pagination;
 import com.dealOn.common.model.vo.PageInfo;
 import com.dealOn.product.model.service.ProductService;
 import com.dealOn.product.model.vo.ProductVO;
+import com.dealOn.user.model.vo.User;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
+	
+	private final ChatService chatService;
 	private final ProductService productService;
 	private final AdminService adminService;
 	
@@ -126,6 +132,25 @@ public class AdminController {
 	    result.put("pi", pi);
 	    return result;
 	}
+	
+	@PostMapping("/report")
+	@ResponseBody
+	public String reportUser(@RequestBody Map<String, Object> request, HttpSession session) {
+		
+		User loginUser = (User) session.getAttribute("loginUser");
+		String chatNo = "" + request.get("chatNo");
+		
+		System.out.println("여기 들어옴 응애");
+		System.out.println(chatNo);
+		
+		ChatRoom chatInfo = chatService.findByChatInfo(chatNo, loginUser.getUserNo());
+		
+		
+
+		
+		return null;
+	}
+
 
 
 }

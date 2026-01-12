@@ -155,4 +155,22 @@
         LEFT JOIN CATEGORY C ON P.CATEGORY = C.NO
         LEFT JOIN USERS U ON P.USER_NO = U.USER_NO
 	</select>
+	
+	<insert id="reportUser">
+		INSERT INTO REPORT (
+			PRODUCT_NO,
+			CHAT_NO,
+			CATEGORY,
+			DETAIL,
+			REPORTER,
+			VIOLATOR
+		) VALUES (
+			#{data.productNo},
+			#{chatInfo.chatNo},		
+			#{data.reason},
+			#{data.detail},
+			#{data.loginUser.userNo},
+			#{chatInfo.sellerNo}
+		)
+	</insert>
 </mapper>

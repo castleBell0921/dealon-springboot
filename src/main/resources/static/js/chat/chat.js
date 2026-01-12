@@ -737,7 +737,7 @@ function submitReport(event) {
 
 		
 	//상품 번호
-	const productNo = document.getElementById('productNo');
+	const productNo = document.getElementById('productNo').value;
 	
 	//채팅 번호(없을 수도 있음)
 	// 1. 현재 브라우저 주소(URL)에서 chatNo를 직접 꺼내옵니다.
@@ -752,6 +752,12 @@ function submitReport(event) {
 	const detail = document.getElementById('reportDetail').value;
 	
 	//위배자는 채팅 번호를 넘겨 AdminController에서 처리
+	
+	console.log(productNo);
+	console.log(chatNo);
+	console.log(reason);
+	console.log(detail);
+	
 
     fetch('/admin/report', {
         method: 'POST',
@@ -763,14 +769,26 @@ function submitReport(event) {
             detail: detail
         })
     }).then(res => {
-        if(res.ok) {
-            alert('신고가 성공적으로 접수되었습니다.');
+	    // 1. 서버 통신 상태 확인 (200 OK 인가?)
+	    if (!res.ok) {
+	        throw new Error('Network response was not ok');
+	    }
+	    // 2. 통신이 성공했다면, 리턴 값("1")을 텍스트로 꺼냄
+	    return res.text();
+    }).then(data => {
+        // 3. 꺼낸 값(data)이 0보다 큰지(1 이상인지) 확인
+        if (parseInt(data) > 0) {
+            alert(`신고가 접수되었습니다.\n사유: ${reason}\n내용: ${detail}`);
             closeReportModal();
+        } else {
+            // 리턴값이 0이거나 음수인 경우
+            alert("신고 처리에 실패했습니다. (오류 코드: " + data + ")");
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("서버와 통신 중 오류가 발생했습니다.");
     });
-
-    alert(`신고가 접수되었습니다.\n사유: ${reason}\n내용: ${detail}`);
-    closeReportModal();
 }
 
 // 모달 바깥 영역 클릭 시 닫기

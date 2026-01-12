@@ -1,11 +1,13 @@
 package com.dealOn.admin.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import com.dealOn.admin.model.mapper.AdminMapper;
+import com.dealOn.chat.model.vo.ChatRoom;
 import com.dealOn.common.model.vo.PageInfo;
 import com.dealOn.product.model.vo.ProductVO;
 
@@ -49,6 +51,11 @@ public class AdminService {
 
         return adminMapper.getProductList(rowBounds);
     }
+
+	public int reportUser(ChatRoom chatInfo, Map<String, Object> data) {
+		
+		return adminMapper.reportUser(chatInfo, data);
+	}
 	
 
 }

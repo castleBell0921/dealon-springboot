@@ -428,7 +428,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			const serverPort = 9090;
 			console.log(`🌐 WebSocket 연결 시도: ws://${serverIp}:${serverPort}/ws/chat?chatNo=${chatNo}`);
 
-			socket = new WebSocket(`ws://${serverIp}:${serverPort}/ws/chat?chatNo=${chatNo}&userNo=${loginUserNo}`);
+			const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+			socket = new WebSocket(`${protocol}//${serverIp}:${serverPort}/ws/chat?chatNo=${chatNo}&userNo=${loginUserNo}`);
+
 
 
 			lastDateMap[chatNo] = null;

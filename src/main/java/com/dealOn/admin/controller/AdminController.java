@@ -20,6 +20,7 @@ import com.dealOn.chat.model.service.ChatService;
 import com.dealOn.chat.model.vo.ChatRoom;
 import com.dealOn.common.Pagination;
 import com.dealOn.common.model.vo.PageInfo;
+import com.dealOn.product.model.mapper.ProductMapper;
 import com.dealOn.product.model.service.ProductService;
 import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.user.model.vo.User;
@@ -135,20 +136,39 @@ public class AdminController {
 	
 	@PostMapping("/report")
 	@ResponseBody
-	public String reportUser(@RequestBody Map<String, Object> request, HttpSession session) {
+	public int reportUser(@RequestBody Map<String, Object> request, HttpSession session) {
+		
+		System.out.println("컨트롤러 옴0");
 		
 		User loginUser = (User) session.getAttribute("loginUser");
-		String chatNo = "" + request.get("chatNo");
+		String chatNo = (String)request.get("chatNo");
 		
-		System.out.println("여기 들어옴 응애");
-		System.out.println(chatNo);
+		//신고 카테고리
+		String reason = (String)request.get("reason");
+		
+		//신고 내용
+		String detail = (String)request.get("detail");
+		
+		//상품 이름
+		int productNo = Integer.parseInt((String) request.get("productNo"));
 		
 		ChatRoom chatInfo = chatService.findByChatInfo(chatNo, loginUser.getUserNo());
 		
+		System.out.println("컨트롤러 옴1");
 		
-
+		Map<String, Object> data = new HashMap<>();
+	    data.put("loginUser", loginUser); // 신고자 객체 통째로 넣기
+	    data.put("reason", reason);
+	    data.put("detail", detail);
+	    data.put("productNo", productNo);
 		
-		return null;
+	    System.out.println("컨트롤러 옴2");
+	    
+		int result = adminService.reportUser(chatInfo, data);
+		
+		
+			
+		return result;
 	}
 
 

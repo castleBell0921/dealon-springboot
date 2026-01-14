@@ -173,4 +173,10 @@
 			#{chatInfo.sellerNo}
 		)
 	</insert>
+	
+	<select id="checkReportUser">
+		SELECT COUNT(*)
+		FROM REPORT
+		WHERE REPORTER = #{userNo} AND VIOLATOR = #{sellerNo}
+	</select>
 </mapper>

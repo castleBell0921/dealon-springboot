@@ -735,9 +735,7 @@ function closeReportModal() {
 // 신고 제출 처리
 function submitReport(event) {
     event.preventDefault();
-    
 
-		
 	//상품 번호
 	const productNo = document.getElementById('productNo').value;
 	
@@ -784,7 +782,7 @@ function submitReport(event) {
             closeReportModal();
         } else {
             // 리턴값이 0이거나 음수인 경우
-            alert("신고 처리에 실패했습니다. (오류 코드: " + data + ")");
+            alert("이미 신고하셨습니다");
         }
     })
     .catch(error => {

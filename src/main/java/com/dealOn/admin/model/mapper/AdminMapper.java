@@ -30,4 +30,6 @@ public interface AdminMapper {
 	int reportUser(
 			@Param("chatInfo") ChatRoom chatInfo, 
 			@Param("data") Map<String, Object> data);
+
+	int checkReportUser(@Param("userNo") String userNo,@Param("sellerNo") String sellerNo);
 }

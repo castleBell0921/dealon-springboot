@@ -56,6 +56,10 @@ public class AdminService {
 		
 		return adminMapper.reportUser(chatInfo, data);
 	}
+
+	public int checkReportUser(String userNo, String sellerNo) {
+		return adminMapper.checkReportUser(userNo, sellerNo);
+	}
 	
 
 }

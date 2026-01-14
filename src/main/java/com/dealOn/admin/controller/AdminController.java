@@ -73,6 +73,9 @@ public class AdminController {
 	@GetMapping("decMng")
 	   public String decMng(HttpServletRequest request, Model model) {
 		model.addAttribute("requestURI",request.getRequestURI());
+		
+		
+		
 	    return "admin/decMng";
 	}
 	
@@ -164,7 +167,16 @@ public class AdminController {
 		
 	    System.out.println("컨트롤러 옴2");
 	    
-		int result = adminService.reportUser(chatInfo, data);
+	    int checkReportUser = adminService.checkReportUser(loginUser.getUserNo(), chatInfo.getSellerNo());
+	    System.out.println(checkReportUser);
+	    int result = 0;
+	    
+	    if(!(checkReportUser > 0)) {
+	    	//신고 하는 중
+			result = adminService.reportUser(chatInfo, data);
+	    }
+	    
+	    
 		
 		
 			

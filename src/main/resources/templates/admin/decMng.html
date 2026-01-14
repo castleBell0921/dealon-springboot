@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link style="">
+<style>
+    /* 테이블 컨테이너가 부모 요소 너비에 딱 맞도록 설정 */
+    .table-container {
+        width: 100%;
+        overflow-x: auto; /* 내용이 넘칠 경우 스크롤 */
+    }
+    .user-table {
+        width: 100%; /* 테이블 너비 100% */
+        table-layout: fixed; /* 칸 크기 고정 (필요시) */
+    }
+</style>
+
 <th:block th:replace="~{admin/base :: layout(~{:: #stats-block}, ~{:: #main-block}, false)}">
 
   <div id="stats-block">
@@ -8,10 +19,78 @@
   </div>
 
   <div id="main-block" class="decMng">
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/decMng.css}">
 
-    <div>
-      본문
+    <div class="page-header-container">
+        <div class="page-title">User Profile</div>
+
+        <form action="/admin/decMng" method="get" class="search-container">
+            <input type="text" name="keyword" class="search-input" placeholder="회원 이름, 닉네임으로 검색">
+            <button type="submit" class="search-btn">검색</button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="user-table"> 
+            <thead>
+                <tr>
+                    <th>Reporter</th>
+                    <th>Target User</th>
+                    <th>Post</th>
+                    <th>Reason</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(reportList)}">
+                    <td colspan="6" style="text-align: center; padding: 20px;">접수된 신고 내역이 없습니다.</td>
+                </tr>
+
+                <tr th:unless="${#lists.isEmpty(reportList)}" th:each="report : ${reportList}">
+                    <td th:text="${report.reporterName}">신고자ID</td>
+                    <td th:text="${report.targetUserName}">대상자ID</td>
+                    <td>
+                        <a th:href="@{/product/detail/{no}(no=${report.productNo})}" 
+                           th:text="${report.postTitle}">게시글 제목</a>
+                    </td>
+                    <td th:text="${report.reason}">부적절한 언어 사용</td>
+                    <td th:text="${report.category}">욕설/비하</td>
+                    <td th:text="${#temporals.format(report.regDate, 'yyyy-MM-dd')}">2026-01-14</td>
+                </tr>
+                
+                <tr th:if="${reportList == null}">
+                    <td>user_01</td>
+                    <td>bad_user_99</td>
+                    <td>아이폰 15 팝니다</td>
+                    <td>욕설 및 비하 발언</td>
+                    <td>CHAT</td>
+                    <td>2026-01-14</td>
+                </tr>
+                 <tr th:if="${reportList == null}">
+                    <td>buyer_king</td>
+                    <td>scam_seller</td>
+                    <td>벽돌 팝니다</td>
+                    <td>사기 의심</td>
+                    <td>SCAM</td>
+                    <td>2026-01-13</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-container" style="text-align: center; margin-top: 20px;">
+        <div class="pagination">
+            <a href="#" class="page-link">&lt;</a>
+            
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link">4</a>
+            <a href="#" class="page-link">5</a>
+
+            <a href="#" class="page-link">&gt;</a>
+        </div>
     </div>
 
     <script th:src="@{/js/admin/dashboard.js}"></script>

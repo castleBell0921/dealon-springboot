@@ -20,6 +20,8 @@ public class AddProductVO {
 
     // 이미지 파일
     private List<MultipartFile> productImages;
+    
+    private String aiCategory;
 
     // --- Service에서 채워줄 필드 ---
     private int userNo;

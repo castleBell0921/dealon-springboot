@@ -43,3 +43,8 @@ out/
 
 keystore.p12
 
+# HuggingFace
+.cache/
+huggingface/
+
+

@@ -9,13 +9,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     imageUpload.addEventListener('change', (e) => {
         const files = Array.from(e.target.files);
-
+	
         if (imageFiles.items.length + files.length > 10) {
             alert('이미지는 최대 10개까지 업로드할 수 있습니다.');
             e.target.value = ""; // 현재 선택된 파일 초기화
             return;
         }
-
+		
         // 새로 선택된 파일들을 DataTransfer 객체에 순서대로 추가
         files.forEach(file => imageFiles.items.add(file));
 
@@ -23,6 +23,12 @@ document.addEventListener('DOMContentLoaded', function () {
         imageUpload.files = imageFiles.files;
 
         updateImagePreview();
+		
+		// 🔥 첫 번째 이미지로 AI 카테고리 분석 (한 번만)
+		if (imageFiles.files.length === files.length) { 
+		    // 처음 이미지가 추가된 순간
+		    analyzeImageAndSetCategory(imageFiles.files[0]);
+		}
     });
 
     function updateImagePreview() {
@@ -86,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 hiddenInput.value = selectedValue;
                 displayElement.textContent = selectedText;
                 displayElement.style.color = '#333';
+				displayElement.classList.remove('ai-recommended'); // 🔥 AI 추천 제거
                 modal.style.display = 'none';
             });
         });
@@ -115,3 +122,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+function applyAiCategory(categoryNo, categoryName) {
+    const categorySelect = document.getElementById("category-select");
+    const hiddenInput = document.getElementById("category-hidden-input");
+
+    categorySelect.textContent = `${categoryName} (AI 추천)`;
+    categorySelect.classList.add("ai-recommended");
+
+    hiddenInput.value = categoryNo;
+}
+
+async function analyzeImageAndSetCategory(file) {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await fetch("/product/ai/category", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.categoryNo && data.categoryName) {
+        applyAiCategory(data.categoryNo, data.categoryName);
+    }
+}

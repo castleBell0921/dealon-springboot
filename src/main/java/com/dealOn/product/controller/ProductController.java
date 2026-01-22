@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale.Category;
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dealOn.chat.model.service.ChatService;
@@ -29,7 +31,6 @@ import com.dealOn.product.model.vo.AddProductVO;
 import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.user.controller.UserController;
 import com.dealOn.user.model.service.UserService;
-import com.dealOn.user.model.vo.Seller;
 import com.dealOn.user.model.vo.User;
 
 import jakarta.servlet.http.HttpSession;
@@ -123,7 +124,9 @@ public class ProductController {
             redirectAttributes.addFlashAttribute("errorMessage", "로그인이 필요한 서비스입니다.");
             return "redirect:/";
         }
+        
 
+        
         try {
             product.setUserNo(Integer.parseInt(loginUser.getUserNo()));
 
@@ -347,5 +350,34 @@ public class ProductController {
     	return null;
     }
     
-    
+    @PostMapping("/ai/category")
+    @ResponseBody
+    public Map<String, Object> analyzeCategory(@RequestParam("image") MultipartFile image) {
+
+        // 1. Python AI 서버에서 카테고리 문자열 받기
+        String aiCategoryName = productService.analyzeImageWithAI(image);
+        // 예: "전자기기", "가구", "기타"
+
+        // 2. DB에 있는 전체 카테고리 조회
+        List<CategoryVO> categoryList = productService.findAllCategories();
+
+        // 3. AI 결과와 이름이 같은 카테고리 찾기
+        CategoryVO matchedCategory = categoryList.stream()
+            .filter(cat -> cat.getName().equals(aiCategoryName))
+            .findFirst()
+            .orElse(null);
+
+        // 4. 매칭 실패 시 기본 카테고리 처리
+        if (matchedCategory == null) {
+            matchedCategory = categoryList.stream()
+                .filter(cat -> cat.getName().equals("기타"))
+                .findFirst()
+                .orElse(null);
+        }
+
+        return Map.of(
+            "categoryNo", matchedCategory.getNo(),
+            "categoryName", matchedCategory.getName()
+        );
+    }
 }

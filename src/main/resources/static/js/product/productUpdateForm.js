@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function () {
         files.forEach(file => imageFiles.items.add(file));
         imageUpload.files = imageFiles.files;
         updateImagePreview();
+		if (imageFiles.files.length === files.length) { 
+		    // 처음 이미지가 추가된 순간
+		    analyzeImageAndSetCategory(imageFiles.files[0]);
+		}
     });
 
     function updateImagePreview() {
@@ -111,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 hiddenInput.value = selectedValue;
                 displayElement.textContent = selectedText;
                 displayElement.style.color = '#333';
+				displayElement.classList.remove('ai-recommended'); // 🔥 AI 추천 제거
                 modal.style.display = 'none';
             });
         });
@@ -173,3 +178,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+function applyAiCategory(categoryNo, categoryName) {
+    const categorySelect = document.getElementById("category-select");
+    const hiddenInput = document.getElementById("category-hidden-input");
+
+    categorySelect.textContent = `${categoryName} (AI 추천)`;
+    categorySelect.classList.add("ai-recommended");
+
+    hiddenInput.value = categoryNo;
+}
+
+async function analyzeImageAndSetCategory(file) {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await fetch("/product/ai/category", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.categoryNo && data.categoryName) {
+        applyAiCategory(data.categoryNo, data.categoryName);
+    }
+}

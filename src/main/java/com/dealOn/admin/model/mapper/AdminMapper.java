@@ -3,6 +3,8 @@ package com.dealOn.admin.model.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.dealOn.admin.model.vo.UserDetail;
+import com.dealOn.admin.model.vo.UserList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
@@ -32,4 +34,8 @@ public interface AdminMapper {
 			@Param("data") Map<String, Object> data);
 
 	int checkReportUser(@Param("userNo") String userNo,@Param("sellerNo") String sellerNo);
+
+	int selectUserListCount();
+	List<UserList> selectUserList(RowBounds rowBounds); // RowBounds 파라미터 추가
+	UserDetail selectUserDetail(int userNo);
 }

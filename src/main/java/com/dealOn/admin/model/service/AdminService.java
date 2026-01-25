@@ -3,6 +3,8 @@ package com.dealOn.admin.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.dealOn.admin.model.vo.UserDetail;
+import com.dealOn.admin.model.vo.UserList;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +62,24 @@ public class AdminService {
 	public int checkReportUser(String userNo, String sellerNo) {
 		return adminMapper.checkReportUser(userNo, sellerNo);
 	}
-	
+
+	// 전체 유저 수 조회
+	public int selectUserListCount() {
+		return adminMapper.selectUserListCount();
+	}
+
+	// 유저 전체 리스트 조회
+	public List<UserList> selectUserList(PageInfo pi) {
+		// RowBounds: offset(건너뛸 개수), limit(가져올 개수)
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
+
+		return adminMapper.selectUserList(rowBounds);
+	}
+
+	// 유저 상세 조회
+	public UserDetail selectUserDetail(int userNo) {
+		return adminMapper.selectUserDetail(userNo);
+	}
 
 }

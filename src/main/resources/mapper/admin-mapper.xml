@@ -179,4 +179,18 @@
 		FROM REPORT
 		WHERE REPORTER = #{userNo} AND VIOLATOR = #{sellerNo}
 	</select>
+
+	<select id="selectUserList" resultType="com.dealOn.admin.model.vo.UserList">
+		SELECT * FROM MNG_USER_LIST
+		ORDER BY PK DESC
+	</select>
+
+	<select id="selectUserDetail" parameterType="_int" resultType="com.dealOn.admin.model.vo.UserDetail">
+		SELECT * FROM MNG_USER_DETAIL
+		WHERE USER_NO = #{userNo}
+	</select>
+
+	<select id="selectUserListCount" resultType="_int">
+		SELECT COUNT(*) FROM MNG_USER_LIST
+	</select>
 </mapper>

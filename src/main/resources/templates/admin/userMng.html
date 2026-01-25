@@ -10,59 +10,231 @@
 	<div id="main-block" class="nDecMng">
 		<link rel="stylesheet" th:href="@{/css/userMng.css}">
 
+
 		<div class="user-profile-header">
 			<h2 class="text-24px fw-bold">User Profile</h2>
 			<div class="search-container">
-				<input type="text" placeholder="회원 이름, 닉네임으로 검색"
-					class="search-input"> <i
-					class="fa-solid fa-magnifying-glass search-icon"></i>
+				<input type="text" placeholder="회원 이름, 닉네임으로 검색" class="search-input">
+				<i class="fa-solid fa-magnifying-glass search-icon"></i>
 			</div>
 		</div>
 
 		<div class="user-grid">
 			<div class="user-card detailed"
-				th:each="i : ${#numbers.sequence(1, 12)}">
+				 th:each="user : ${userList}"
+				 th:onclick="openUserDetail([[${user.pk}]])"
+				 style="cursor: pointer;">
+
 				<div class="detailed-left">
-					<img th:src="@{/image/default-avatar.png}" alt="profile"
-						class="user-avatar">
+					<img th:src="${user.imageurl != null} ? ${user.imageurl} : @{/image/default-avatar.png}"
+						 alt="profile" class="user-avatar">
+
 					<div class="user-info-mini">
-						<span class="user-nickname fw-bold" th:text="'User_' + ${i}">forqls</span>
+						<span class="user-nickname fw-bold" th:text="${user.nickname}">NickName</span>
 						<div class="trust-label-mini">
-							Trust Gauge <span class="trust-percent">92%</span>
+							Trust Gauge <span class="trust-percent" th:text="${user.trustGauge} + '%'">0%</span>
 						</div>
 						<div class="trust-bar">
-							<div class="trust-fill" style="width: 92%;"></div>
+							<div class="trust-fill" th:style="'width:' + ${user.trustGauge} + '%;'"></div>
 						</div>
 					</div>
 				</div>
 
 				<div class="detailed-right">
 					<div class="stat-item">
-						<span class="stat-label">등록한 상품</span> <span
-							class="stat-value purple-text">6</span>
+						<span class="stat-label">등록한 상품</span>
+						<span class="stat-value purple-text" th:text="${user.regPCnt}">0</span>
 					</div>
 					<div class="stat-item">
-						<span class="stat-label">구매한 상품</span> <span
-							class="stat-value purple-text">6</span>
+						<span class="stat-label">구매한 상품</span>
+						<span class="stat-value purple-text" th:text="${user.buyPCnt}">0</span>
 					</div>
 					<div class="stat-item">
-						<span class="stat-label">후기</span> <span
-							class="stat-value purple-text">6</span>
+						<span class="stat-label">후기</span>
+						<span class="stat-value purple-text" th:text="${user.wrtRCnt}">0</span>
 					</div>
 					<div class="stat-item">
-						<span class="stat-label">신고</span> <span
-							class="stat-value red-text">0</span>
+						<span class="stat-label">신고</span>
+						<span class="stat-value red-text" th:text="${user.rptCnt}">0</span>
 					</div>
 				</div>
 			</div>
+
+			<div th:if="${#lists.isEmpty(userList)}" style="width:100%; text-align:center; padding: 20px;">
+				데이터가 없습니다.
+			</div>
 		</div>
 
-		<div class="pagination">
-			<span>&lt;&lt;</span> <span>&lt;</span> <span>1</span> <span>2</span>
-			<span class="active">3</span> <span>4</span> <span>5</span> <span>&gt;</span>
-			<span>&gt;&gt;</span>
+		<div class="pagination" th:if="${pi.listCount > 0}">
+			<span th:if="${pi.currentPage == 1}">&lt;&lt;</span>
+			<a th:unless="${pi.currentPage == 1}" th:href="@{/admin/userMng(page=1)}">&lt;&lt;</a>
+
+			<span th:if="${pi.currentPage == 1}">&lt;</span>
+			<a th:unless="${pi.currentPage == 1}" th:href="@{/admin/userMng(page=${pi.currentPage - 1})}">&lt;</a>
+
+			<th:block th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}">
+				<span th:if="${p == pi.currentPage}" class="active" th:text="${p}"></span>
+				<a th:unless="${p == pi.currentPage}" th:href="@{/admin/userMng(page=${p})}" th:text="${p}"></a>
+			</th:block>
+
+			<span th:if="${pi.currentPage == pi.maxPage}">&gt;</span>
+			<a th:unless="${pi.currentPage == pi.maxPage}" th:href="@{/admin/userMng(page=${pi.currentPage + 1})}">&gt;</a>
+
+			<span th:if="${pi.currentPage == pi.maxPage}">&gt;&gt;</span>
+			<a th:unless="${pi.currentPage == pi.maxPage}" th:href="@{/admin/userMng(page=${pi.maxPage})}">&gt;&gt;</a>
 		</div>
 
+		<div id="userModal" class="modal">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<div class="modal-profile-area">
+						<img id="modalImg" src="/image/default-avatar.png" class="modal-avatar">
+						<div>
+							<h3 id="headerNickname" class="fw-bold" style="margin:0; font-size:20px;">UserNick</h3>
+							<div class="trust-label-mini" style="margin-top:5px;">
+								Trust Gauge <span id="headerTrustScore" style="color:#8e44ad; font-weight:bold;">92%</span>
+							</div>
+							<div class="modal-trust-bar">
+								<div id="headerTrustFill" class="modal-trust-fill" style="width: 92%;"></div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-controls">
+						<i class="fa-regular fa-pen-to-square icon-btn" onclick="toggleEditMode()"></i>
+						<i class="fa-solid fa-xmark icon-btn" onclick="closeModal()"></i>
+					</div>
+				</div>
+
+				<div class="modal-body">
+					<div class="info-column">
+						<input type="hidden" id="modalUserNo">
+
+						<div class="info-row">
+							<span class="info-label">이름</span>
+							<div class="info-value-wrapper">
+								<span class="info-value view-mode-el" id="viewName">홍길동</span>
+								<input type="text" class="edit-input edit-mode-el" id="editName">
+							</div>
+						</div>
+						<div class="info-row">
+							<span class="info-label">닉네임</span>
+							<div class="info-value-wrapper">
+								<span class="info-value view-mode-el" id="viewNickname">testUser</span>
+								<input type="text" class="edit-input edit-mode-el" id="editNickname">
+							</div>
+						</div>
+						<div class="info-row">
+							<span class="info-label">Email</span>
+							<div class="info-value-wrapper">
+								<span class="info-value view-mode-el" id="viewEmail">test@email.com</span>
+								<input type="text" class="edit-input edit-mode-el" id="editEmail">
+							</div>
+						</div>
+						<div class="info-row">
+							<span class="info-label">휴대폰 번호</span>
+							<div class="info-value-wrapper">
+								<span class="info-value view-mode-el" id="viewPhone">010-1234-5678</span>
+								<input type="text" class="edit-input edit-mode-el" id="editPhone">
+							</div>
+						</div>
+<!--						<div class="info-row" style="display: none">-->
+<!--							<span class="info-label">생년월일</span>-->
+<!--							<div class="info-value-wrapper">-->
+<!--								<span class="info-value view-mode-el" id="viewBirth">19960308</span>-->
+<!--								<input type="text" class="edit-input edit-mode-el" id="editBirth">-->
+<!--							</div>-->
+<!--						</div>-->
+						<div class="info-row">
+							<span class="info-label">아이디</span>
+							<div class="info-value-wrapper">
+								<span class="info-value view-mode-el" id="viewId">user123</span>
+								<input type="text" class="edit-input edit-mode-el" id="editId" readonly style="color:#aaa;">
+							</div>
+						</div>
+						<div class="info-row">
+							<span class="info-label">비밀번호</span>
+							<div class="info-value-wrapper">
+								<span class="info-value view-mode-el" id="viewPwd">********</span>
+								<input type="text" class="edit-input edit-mode-el" id="editPwd" placeholder="변경 시 입력">
+							</div>
+						</div>
+					</div>
+
+					<div class="stats-column">
+
+						<div class="stat-grid-row">
+							<div class="stat-item-inner">
+								<span>등록한 상품 총</span>
+								<span class="stat-num" id="statReg">0</span>
+							</div>
+							<div></div>
+						</div>
+
+						<div class="stat-grid-row">
+							<div class="stat-item-inner">
+								<span>판매중</span>
+								<span class="stat-num" id="statSell">0</span>
+							</div>
+							<div class="stat-item-inner">
+								<span>판매완료</span>
+								<span class="stat-num" id="statSold">0</span>
+							</div>
+						</div>
+
+						<div class="stat-grid-row">
+							<div class="stat-item-inner">
+								<span>예약중</span>
+								<span class="stat-num" id="statRsv">0</span>
+							</div>
+							<div class="stat-item-inner">
+								<span>비활성</span>
+								<span class="stat-num" id="statDis">0</span>
+							</div>
+						</div>
+
+						<div style="height: 5px;"></div>
+
+						<div class="stat-grid-row">
+							<div class="stat-item-inner">
+								<span>작성한 후기</span>
+								<span class="stat-num" id="statWrt">0</span>
+							</div>
+							<div></div> </div>
+
+						<div class="stat-grid-row">
+							<div class="stat-item-inner">
+								<span>받은 후기</span>
+								<span class="stat-num" id="statRcv">0</span>
+							</div>
+							<div></div>
+						</div>
+
+						<div class="stat-grid-row">
+							<div class="stat-item-inner">
+								<span>구매한 상품</span>
+								<span class="stat-num" id="statBuy">0</span>
+							</div>
+							<div></div>
+						</div>
+
+						<div class="stat-grid-row">
+							<div class="stat-item-inner">
+								<span style="color:#e74c3c;">신고</span>
+								<span class="stat-num red" id="statRpt">0</span>
+							</div>
+							<div></div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn-purple edit-mode-el" onclick="saveUserDetail()">변경하기</button>
+					<button type="button" class="btn-white-red">비활성화</button>
+				</div>
+			</div>
+		</div>
 		<script th:src="@{/js/admin/userMng.js}"></script>
 	</div>
 

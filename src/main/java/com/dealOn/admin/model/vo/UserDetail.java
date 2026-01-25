@@ -7,7 +7,7 @@ public class UserDetail {
     // user 테이블
     private int userNo;
     private String id;
-    private String pw;
+    private String pwd;
     private String phone;
     private String email;
     private String nickname;

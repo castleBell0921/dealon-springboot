@@ -25,9 +25,9 @@ function openUserDetail(userNo) {
             setField('Nickname', data.nickname);
             setField('Email', data.email);
             setField('Phone', data.phone);
-            setField('CreateDate', data.createDate);
+            // setField('Birth', data.createDate);
             setField('Id', data.id);
-            setField('Pwd', data.pwd ? data.pwd : '********'); // 실제 비밀번호 혹은 마스킹
+            // setField('Pwd', data.pwd ? data.pwd : '********'); // 실제 비밀번호 혹은 마스킹
 
             document.getElementById('statReg').innerText = data.regPCnt;
             document.getElementById('statSell').innerText = data.sellPCnt;

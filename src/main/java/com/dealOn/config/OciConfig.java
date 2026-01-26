@@ -1,31 +1,53 @@
 package com.dealOn.config;
 
-import com.oracle.bmc.ConfigFileReader;
-import com.oracle.bmc.auth.AuthenticationDetailsProvider;
-import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
-import com.oracle.bmc.objectstorage.ObjectStorage;
-import com.oracle.bmc.objectstorage.ObjectStorageClient;
+import java.io.IOException;
+import java.nio.file.Paths;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
+import com.oracle.bmc.Region;
+import com.oracle.bmc.auth.AuthenticationDetailsProvider;
+import com.oracle.bmc.auth.SimpleAuthenticationDetailsProvider;
+import com.oracle.bmc.auth.SimplePrivateKeySupplier;
+import com.oracle.bmc.objectstorage.ObjectStorage;
+import com.oracle.bmc.objectstorage.ObjectStorageClient;
 
 @Configuration
 public class OciConfig {
 
-    // application.properties에 설정한 정보들을 기반으로
-    // OCI SDK의 ObjectStorage 객체를 생성해서 Spring Bean으로 등록해주는 메소드.
     @Bean
     public ObjectStorage objectStorageClient() throws IOException {
-        // OCI SDK는 기본적으로 ~/.oci/config 경로의 설정 파일을 읽어서 인증 정보를 구성합니다.
-        // 이 방식이 application.properties에 직접 키를 넣는 것보다 보안상 권장됩니다.
-        // 1. OCI 설정 파일 로드
-        final ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
+        // Dotenv가 설정한 값 읽기
+        String tenantId = System.getProperty("OCI_TENANCY_OCID");
+        String userId = System.getProperty("OCI_USER_OCID");
+        String fingerprint = System.getProperty("OCI_FINGERPRINT");
+        String regionId = System.getProperty("OCI_REGION");
+        String privateKeyPath = System.getProperty("OCI_PRIVATE_KEY_PATH");
 
-        // 2. 인증 정보 제공자 생성
-        final AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
+        // [경로 처리 핵심 로직]
+        String absoluteKeyPath;
+        if (privateKeyPath.startsWith("~")) {
+            // 서버(리눅스): ~를 홈 디렉토리로 변경
+            absoluteKeyPath = privateKeyPath.replace("~", System.getProperty("user.home"));
+        } else if (privateKeyPath.contains(":") || privateKeyPath.startsWith("/")) {
+            // 로컬(윈도우 D:/) 또는 서버 절대 경로: 그대로 사용
+            absoluteKeyPath = privateKeyPath;
+        } else {
+            // 상대 경로일 경우 현재 작업 디렉토리 기준 절대 경로로 변환
+            absoluteKeyPath = Paths.get(privateKeyPath).toAbsolutePath().toString();
+        }
 
-        // 3. 인증 정보를 사용해 ObjectStorage 클라이언트 생성
-        return ObjectStorageClient.builder().build(provider);
+        AuthenticationDetailsProvider provider = SimpleAuthenticationDetailsProvider.builder()
+                .tenantId(tenantId)
+                .userId(userId)
+                .fingerprint(fingerprint)
+                .region(Region.fromRegionId(regionId))
+                .privateKeySupplier(new SimplePrivateKeySupplier(absoluteKeyPath))
+                .build();
+
+        return ObjectStorageClient.builder()
+                .region(Region.fromRegionId(regionId))
+                .build(provider);
     }
 }

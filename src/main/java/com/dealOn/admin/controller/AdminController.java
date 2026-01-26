@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import com.dealOn.admin.model.vo.UserDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import com.dealOn.product.model.mapper.ProductMapper;
 import com.dealOn.product.model.service.ProductService;
 import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.user.model.vo.User;
+import com.dealOn.admin.model.vo.UserList;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -45,9 +48,23 @@ public class AdminController {
 	}
 	
 	@GetMapping("userMng")
-	public String joinUsrMng(HttpServletRequest request, Model model) {
-		model.addAttribute("requestURI",request.getRequestURI());
+	public String joinUsrMng(@RequestParam(value = "page", defaultValue = "1") int currentPage, HttpServletRequest request, Model model) {
+		int listCount = adminService.selectUserListCount();
+
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 10);
+
+		List<UserList> userList = adminService.selectUserList(pi);
+
+		model.addAttribute("userList", userList);
+		model.addAttribute("pi", pi);
+
 		return "admin/userMng";
+	}
+
+	@ResponseBody
+	@GetMapping("/user/detail")
+	public UserDetail getUserDetail(@RequestParam("userNo") int userNo) {
+		return adminService.selectUserDetail(userNo);
 	}
 	
 	@GetMapping("/productMng")

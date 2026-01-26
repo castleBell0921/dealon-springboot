@@ -24,6 +24,8 @@ import com.dealOn.product.model.mapper.ProductMapper;
 import com.dealOn.product.model.vo.AddProductVO;
 import com.dealOn.product.model.vo.ProductVO;
 
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -197,11 +199,12 @@ public class ProductService {
 
 	public String analyzeImageWithAI(MultipartFile image) {
 
+		// 다른 서버에 요청을 보내려고 사용
 		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
+		
 		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 
 		ByteArrayResource resource = null;

@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
+# flask -> python 서버 프레임워크, request -> 요청 데이터, jsonify -> JSON 응답 
 from flask_cors import CORS
+#cors -> 자바/프론트에서 호출 가능하게 허용
 from transformers import ViTImageProcessor, ViTForImageClassification
 from PIL import Image
 import torch
@@ -130,6 +132,7 @@ def get_confidence(logits):
 @app.route("/analyze-image", methods=["POST"])
 def analyze_image():
     if "image" not in request.files:
+        #request.files -> formData로 전송된 파일들
         return jsonify({"error": "image file required"}), 400
 
     image = Image.open(request.files["image"]).convert("RGB")

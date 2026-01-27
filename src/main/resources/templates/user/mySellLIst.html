@@ -17,10 +17,10 @@
 <div class="app-container">
 	<input type="hidden" id ="userNo" th:value="${session.loginUser.userNo}">
 	<div th:replace="~{common/header :: header}"></div>
-	<div th:replace="~{common/searchBar :: searchBar}"></div>
+	<div th:replace="~{common/searchbar :: searchbar}"></div>
 
 	<div class="my-page-container">
-		<div th:replace="~{user/sideBar :: sidebar}"></div>
+		<div th:replace="~{user/sidebar :: sidebar}"></div>
 
 
 		<main class="my-main-content">

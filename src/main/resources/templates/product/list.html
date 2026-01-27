@@ -12,11 +12,11 @@
 <body>
 <div class="app-container">
   <div th:replace="~{common/header :: header}"></div>
-  <div th:replace="~{common/searchBar :: searchBar}"></div>
+  <div th:replace="~{common/searcbbar :: searchbar}"></div>
 	
 	<input type="hidden" id="userNo" th:value="${loginUser != null ? loginUser.userNo : 'guest'}">
   <div class="all-product-container">
-    <div th:replace="~{common/filterSidebar :: filterSidebar(categories=${categories}, filters=${filters})}"></div>
+    <div th:replace="~{common/filtersidebar :: filtersidebar(categories=${categories}, filters=${filters})}"></div>
 
     <main class="list-main-content">
       <section class="product-section">
@@ -64,7 +64,7 @@
       </section>
     </main>
     
-    <div th:replace="~{common/RecentViewed :: RecentViewed}"></div>
+    <div th:replace="~{common/recentviewed :: recentviewed}"></div>
   </div>
 </div>
 <div th:replace="~{common/footer :: footer}"></div> 

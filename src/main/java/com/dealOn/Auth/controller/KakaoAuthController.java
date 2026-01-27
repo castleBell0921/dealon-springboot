@@ -52,7 +52,8 @@ public class KakaoAuthController {
 						URLEncoder.encode(socialId, StandardCharsets.UTF_8)
 
 				);
-				return "redirect:https://localhost:9090/user/terms?" + signUpParams + "&msg=yes";
+				return "redirect:/user/terms?" + signUpParams + "&msg=yes";
+
 			} else {
 				// DB에 있으면 자동 로그인
 				session.setAttribute("loginUser", user);
@@ -64,7 +65,7 @@ public class KakaoAuthController {
 
 		} catch (Exception e) {
 			String errorMsg = URLEncoder.encode("카카오 로그인 실패", StandardCharsets.UTF_8);
-			return "redirect:https://localhost:9090/?loginError=" + errorMsg;
+			return "redirect:/?loginError=" + errorMsg;
 		}
 				
 	}

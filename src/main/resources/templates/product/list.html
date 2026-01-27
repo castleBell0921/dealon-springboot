@@ -12,7 +12,7 @@
 <body>
 <div class="app-container">
   <div th:replace="~{common/header :: header}"></div>
-  <div th:replace="~{common/searcbbar :: searchbar}"></div>
+  <div th:replace="~{common/searchbar :: searchbar}"></div>
 	
 	<input type="hidden" id="userNo" th:value="${loginUser != null ? loginUser.userNo : 'guest'}">
   <div class="all-product-container">

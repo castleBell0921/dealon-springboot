@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			const protocol = location.protocol === "https:" ? "wss:" : "ws:";
 
-			if (location.hostname === "localhost" || location.hostname === "dealon.duckdns.org") {
+			if (location.hostname === "localhost") {
 			    // 👉 로컬 개발 환경
 			    wsUrl = `${protocol}//localhost:9090/ws/chat?chatNo=${chatNo}&userNo=${loginUserNo}`;
 			} else {

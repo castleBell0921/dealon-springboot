@@ -66,6 +66,39 @@ public class AdminController {
 	public UserDetail getUserDetail(@RequestParam("userNo") int userNo) {
 		return adminService.selectUserDetail(userNo);
 	}
+
+	@GetMapping("/user/search")
+	@ResponseBody
+	public Map<String, Object> searchUsers(
+			@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+			@RequestParam(value = "page", defaultValue = "1") int currentPage) {
+
+		int listCount;
+		List<UserList> userList;
+		int boardLimit = 10; // 페이지당 10명
+
+		// 검색어 유무에 따른 분기
+		if (keyword == null || keyword.trim().isEmpty()) {
+			listCount = adminService.selectUserListCount();
+			PageInfo pi = Pagination.getPageInfo(currentPage, listCount, boardLimit);
+			userList = adminService.selectUserList(pi);
+
+			Map<String, Object> result = new HashMap<>();
+			result.put("userList", userList);
+			result.put("pi", pi);
+			return result;
+		}
+
+		// 검색 로직
+		listCount = adminService.getSearchUserCount(keyword);
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, boardLimit);
+		userList = adminService.searchUsers(keyword, pi);
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("userList", userList);
+		result.put("pi", pi);
+		return result;
+	}
 	
 	@GetMapping("/productMng")
 	public String joinProductMng(
@@ -192,11 +225,7 @@ public class AdminController {
 	    	//신고 하는 중
 			result = adminService.reportUser(chatInfo, data);
 	    }
-	    
-	    
-		
-		
-			
+
 		return result;
 	}
 

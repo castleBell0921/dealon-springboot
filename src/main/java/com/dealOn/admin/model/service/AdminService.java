@@ -82,4 +82,16 @@ public class AdminService {
 		return adminMapper.selectUserDetail(userNo);
 	}
 
+	// 검색된 유저 수 조회
+	public int getSearchUserCount(String keyword) {
+		return adminMapper.getSearchUserCount(keyword);
+	}
+
+	// 검색된 유저 목록 조회
+	public List<UserList> searchUsers(String keyword, PageInfo pi) {
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
+		return adminMapper.searchUsers(keyword, rowBounds);
+	}
+
 }

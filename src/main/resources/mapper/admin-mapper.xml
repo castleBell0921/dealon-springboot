@@ -193,4 +193,25 @@
 	<select id="selectUserListCount" resultType="_int">
 		SELECT COUNT(*) FROM MNG_USER_LIST
 	</select>
+
+	<select id="getSearchUserCount" resultType="int">
+		SELECT COUNT(*)
+		FROM MNG_USER_LIST
+		WHERE (
+				  LOWER(NICKNAME) LIKE LOWER('%' || #{keyword} || '%')
+					  OR LOWER(NAME) LIKE LOWER('%' || #{keyword} || '%')
+				  )
+	</select>
+
+	<select id="searchUsers" resultType="com.dealOn.admin.model.vo.UserList">
+		SELECT *
+		FROM MNG_USER_LIST
+		WHERE (
+				  LOWER(NICKNAME) LIKE LOWER('%' || #{keyword} || '%')
+					  OR LOWER(NAME) LIKE LOWER('%' || #{keyword} || '%')
+				  )
+		ORDER BY PK DESC
+	</select>
+
+
 </mapper>

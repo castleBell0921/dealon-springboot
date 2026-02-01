@@ -38,4 +38,7 @@ public interface AdminMapper {
 	int selectUserListCount();
 	List<UserList> selectUserList(RowBounds rowBounds); // RowBounds 파라미터 추가
 	UserDetail selectUserDetail(int userNo);
+
+	int getSearchUserCount(@Param("keyword") String keyword);
+	List<UserList> searchUsers(@Param("keyword") String keyword, RowBounds rowBounds);
 }

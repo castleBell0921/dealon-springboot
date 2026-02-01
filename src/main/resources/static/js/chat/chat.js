@@ -1,28 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
 	
 	function sendMessage(socket, chatInfo, loginUserNo, messageInput, messageList) {
-	       const message = messageInput.value.trim();
-	       if (!message) return;
+	   const message = messageInput.value.trim();
+	   if (!message) return;
 
-	       const now = new Date();
-	       const koreaTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (9 * 60 * 60000));
-	       const formattedTime = koreaTime.toISOString();
+	   const now = new Date();
+	   const koreaTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (9 * 60 * 60000));
+	   const formattedTime = koreaTime.toISOString();
 
-	       const chatData = { chatNo: chatInfo.chatNo, senderNo: loginUserNo, message, timestamp: formattedTime };
+	   const chatData = { 
+	     chatNo: chatInfo.chatNo, 
+	     senderNo: loginUserNo, 
+	     message, 
+	     timestamp: formattedTime 
+	   };
 
-	       if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(chatData));
-
-	       const noMessageEl = messageList.querySelector('.no-message');
-	       if (noMessageEl) noMessageEl.remove();
-
-	       const time = new Date(chatData.timestamp).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
-	       const newMsgHTML = `<li class="message"><div class="timestamp">${time}</div><div class="message-bubble">${message}</div></li>`;
-	       messageList.insertAdjacentHTML('beforeend', newMsgHTML);
-
-	       scrollToBottom(messageList.closest('.chat-view-panel'));
-	       updateChatList(chatInfo.chatNo);
-	       messageInput.value = '';
+	   if (socket.readyState === WebSocket.OPEN) {
+	      socket.send(JSON.stringify(chatData));  // 👉 보내기만!
 	   }
+
+	   messageInput.value = '';  // 입력창만 비우기
+	}
+
 
 	// url에서 현재 채팅방 가져오기
 	function getCurrentChatNoFromUrl() {

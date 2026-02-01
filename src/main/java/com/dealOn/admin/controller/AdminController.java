@@ -8,6 +8,7 @@ import java.util.Map;
 import com.dealOn.admin.model.vo.UserDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,7 @@ public class AdminController {
 	private final ChatService chatService;
 	private final ProductService productService;
 	private final AdminService adminService;
+	private final PasswordEncoder passwordEncoder;
 	
 	@GetMapping("main")
 	public String admAcc(HttpServletRequest request, Model model) {
@@ -230,5 +232,40 @@ public class AdminController {
 	}
 
 
+	@PostMapping("/user/toggleStatus")
+	@ResponseBody
+	public ResponseEntity<String> toggleUserStatus(@RequestBody Map<String, Object> req) {
+		int userNo = Integer.parseInt(req.get("userNo").toString());
+		String newStatus = req.get("newStatus").toString(); // 'Y' or 'N'
+
+		int result = adminService.updateUserStatus(userNo, newStatus);
+
+		if(result > 0) {
+			return ResponseEntity.ok("success");
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+		}
+	}
+
+	@PostMapping("/user/update")
+	@ResponseBody
+	public ResponseEntity<String> updateUser(@RequestBody UserDetail userDetail) {
+		// 비밀번호가 입력되었다면 암호화 처리
+		if (userDetail.getPwd() != null && !userDetail.getPwd().trim().isEmpty()) {
+			String encodedPwd = passwordEncoder.encode(userDetail.getPwd());
+			userDetail.setPwd(encodedPwd);
+		} else {
+			// 비밀번호를 변경하지 않는 경우 null 처리하여 Mapper에서 제외
+			userDetail.setPwd(null);
+		}
+
+		int result = adminService.updateUser(userDetail);
+
+		if (result > 0) {
+			return ResponseEntity.ok("success");
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+		}
+	}
 
 }

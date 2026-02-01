@@ -94,4 +94,13 @@ public class AdminService {
 		return adminMapper.searchUsers(keyword, rowBounds);
 	}
 
+	// 회원 상태 변경
+	public int updateUserStatus(int userNo, String status) {
+		return adminMapper.updateUserStatus(userNo, status);
+	}
+
+	// 회원 정보 수정
+	public int updateUser(UserDetail userDetail) {
+		return adminMapper.updateUser(userDetail);
+	}
 }

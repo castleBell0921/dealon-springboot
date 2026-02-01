@@ -424,12 +424,22 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 
 			// LAN IP 기반 WebSocket 연결
-			const serverIp = location.hostname;
-			const serverPort = 9090;
-			console.log(`🌐 WebSocket 연결 시도: ws://${serverIp}:${serverPort}/ws/chat?chatNo=${chatNo}`);
+			let wsUrl;
 
 			const protocol = location.protocol === "https:" ? "wss:" : "ws:";
-			socket = new WebSocket(`${protocol}//${serverIp}:${serverPort}/ws/chat?chatNo=${chatNo}&userNo=${loginUserNo}`);
+
+			if (location.hostname === "localhost" || location.hostname === "dealon.duckdns.org") {
+			    // 👉 로컬 개발 환경
+			    wsUrl = `${protocol}//localhost:9090/ws/chat?chatNo=${chatNo}&userNo=${loginUserNo}`;
+			} else {
+			    // 👉 배포 환경 (nginx + 도메인)
+			    wsUrl = `${protocol}//${location.host}/ws/chat?chatNo=${chatNo}&userNo=${loginUserNo}`;
+			}
+
+			console.log("🌐 WebSocket URL:", wsUrl);
+
+			socket = new WebSocket(wsUrl);
+
 
 
 

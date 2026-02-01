@@ -14,8 +14,12 @@
 		<div class="user-profile-header">
 			<h2 class="text-24px fw-bold">User Profile</h2>
 			<div class="search-container">
-				<input type="text" placeholder="회원 이름, 닉네임으로 검색" class="search-input">
-				<i class="fa-solid fa-magnifying-glass search-icon"></i>
+				<form id="searchForm">
+					<input type="text" name="keyword" placeholder="회원 이름, 닉네임으로 검색" class="search-input">
+					<button type="submit" class="search-btn" style="border:none; background:none;">
+						<i class="fa-solid fa-magnifying-glass search-icon"></i>
+					</button>
+				</form>
 			</div>
 		</div>
 

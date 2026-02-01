@@ -193,4 +193,42 @@
 	<select id="selectUserListCount" resultType="_int">
 		SELECT COUNT(*) FROM MNG_USER_LIST
 	</select>
+
+	<select id="getSearchUserCount" resultType="int">
+		SELECT COUNT(*)
+		FROM MNG_USER_LIST
+		WHERE (
+				  LOWER(NICKNAME) LIKE LOWER('%' || #{keyword} || '%')
+					  OR LOWER(NAME) LIKE LOWER('%' || #{keyword} || '%')
+				  )
+	</select>
+
+	<select id="searchUsers" resultType="com.dealOn.admin.model.vo.UserList">
+		SELECT *
+		FROM MNG_USER_LIST
+		WHERE (
+				  LOWER(NICKNAME) LIKE LOWER('%' || #{keyword} || '%')
+					  OR LOWER(NAME) LIKE LOWER('%' || #{keyword} || '%')
+				  )
+		ORDER BY PK DESC
+	</select>
+
+	<update id="updateUserStatus">
+		UPDATE USERS
+		SET STATE = #{status}
+		WHERE USER_NO = #{userNo}
+	</update>
+
+	<update id="updateUser" parameterType="com.dealOn.admin.model.vo.UserDetail">
+		UPDATE USERS
+		SET
+		NAME = #{name},
+		NICKNAME = #{nickname},
+		EMAIL = #{email},
+		PHONE = #{phone}
+		<if test="pwd != null">
+			, PWD = #{pwd}
+		</if>
+		WHERE USER_NO = #{userNo}
+	</update>
 </mapper>

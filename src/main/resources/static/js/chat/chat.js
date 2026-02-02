@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-	
+	let lastSentKey = null;
+		
 	function sendMessage(socket, chatInfo, loginUserNo, messageInput, messageList) {
 	   const message = messageInput.value.trim();
 	   if (!message) return;
@@ -7,13 +8,32 @@ document.addEventListener('DOMContentLoaded', () => {
 	   const now = new Date();
 	   const koreaTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (9 * 60 * 60000));
 	   const formattedTime = koreaTime.toISOString();
+	   
+	   const messageKey = chatInfo.chatNo + "_" + loginUserNo + "_" + formattedTime;
+       lastSentKey = messageKey;
 
 	   const chatData = { 
 	     chatNo: chatInfo.chatNo, 
 	     senderNo: loginUserNo, 
 	     message, 
-	     timestamp: formattedTime 
+	     timestamp: formattedTime,
+		 messageKey   
 	   };
+	   
+	   const time = new Date(formattedTime).toLocaleTimeString('ko-KR', {
+	         hour: '2-digit',
+	         minute: '2-digit',
+	         hour12: false
+	      });
+
+	      const newMsgHTML = `
+	         <li class="message" data-key="${messageKey}">
+	            <div class="timestamp">${time}</div>
+	            <div class="message-bubble">${message}</div>
+	         </li>
+	      `;
+	      messageList.insertAdjacentHTML('beforeend', newMsgHTML);
+	      scrollToBottom();
 
 	   if (socket.readyState === WebSocket.OPEN) {
 	      socket.send(JSON.stringify(chatData));  // 👉 보내기만!
@@ -205,6 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// 채팅방 렌더링 함수
 	async function loadChatRoom(chatNo) {
+		lastSentKey = null;
 		try {
 			// 채팅방 로딩 중 메시지를 표시 (기존 로직 유지)
 			if (chatViewContainer) {
@@ -457,7 +478,12 @@ document.addEventListener('DOMContentLoaded', () => {
 				const dateObj = new Date(msg.timestamp);
 				const currentDate = dateObj.toISOString().split('T')[0];
 				const formattedDate = dateObj.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
-
+				
+				if (msg.messageKey && msg.messageKey === lastSentKey) {
+				      console.log("🛑 중복 렌더링 방지");
+				      return;
+			   }
+				
 				if (lastDateMap[chatNo] !== currentDate) {
 					messageList.insertAdjacentHTML('beforeend', `<li class="date-divider">${formattedDate}</li>`);
 					lastDateMap[chatNo] = currentDate;

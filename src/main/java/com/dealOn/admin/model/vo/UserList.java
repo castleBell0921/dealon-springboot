@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class UserList {
     private int pk;            // USER_NO (PK)
+    private String name;
     private String imageurl;    // IMAGEURL
     private String nickname;    // NICKNAME
     private int trustGauge; // TRUST_GAUGE

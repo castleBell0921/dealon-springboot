@@ -36,6 +36,15 @@ public interface AdminMapper {
 	int checkReportUser(@Param("userNo") String userNo,@Param("sellerNo") String sellerNo);
 
 	int selectUserListCount();
-	List<UserList> selectUserList(RowBounds rowBounds); // RowBounds 파라미터 추가
+	List<UserList> selectUserList(RowBounds rowBounds);
 	UserDetail selectUserDetail(int userNo);
+
+	int getSearchUserCount(@Param("keyword") String keyword);
+	List<UserList> searchUsers(@Param("keyword") String keyword, RowBounds rowBounds);
+
+	// 회원 상태 변경
+	int updateUserStatus(@Param("userNo") int userNo, @Param("status") String status);
+
+	// 회원 정보 수정
+	int updateUser(UserDetail userDetail);
 }

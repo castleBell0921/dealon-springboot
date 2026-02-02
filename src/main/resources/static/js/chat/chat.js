@@ -1,45 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-	let lastSentKey = null;
-		
+	
 	function sendMessage(socket, chatInfo, loginUserNo, messageInput, messageList) {
-	   const message = messageInput.value.trim();
-	   if (!message) return;
+	    const message = messageInput.value.trim();
+	    if (!message) return;
 
-	   const now = new Date();
-	   const koreaTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (9 * 60 * 60000));
-	   const formattedTime = koreaTime.toISOString();
-	   
-	   const messageKey = chatInfo.chatNo + "_" + loginUserNo + "_" + formattedTime;
-       lastSentKey = messageKey;
+	    const now = new Date();
+	    const formattedTime = now.toISOString();
+	    
+	    // 1. 화면에 표시할 시간 포맷 (HH:mm)
+	    const displayTime = now.toLocaleTimeString('ko-KR', {
+	        hour: '2-digit', minute: '2-digit', hour12: false
+	    });
 
-	   const chatData = { 
-	     chatNo: chatInfo.chatNo, 
-	     senderNo: loginUserNo, 
-	     message, 
-	     timestamp: formattedTime,
-		 messageKey   
-	   };
-	   
-	   const time = new Date(formattedTime).toLocaleTimeString('ko-KR', {
-	         hour: '2-digit',
-	         minute: '2-digit',
-	         hour12: false
-	      });
-
-	      const newMsgHTML = `
-	         <li class="message" data-key="${messageKey}">
-	            <div class="timestamp">${time}</div>
+	    // 2. [핵심] 소켓 전송 전 화면에 즉시 렌더링 (낙관적 업데이트)
+	    const myMsgHTML = `
+	        <li class="message my-temp-msg" data-timestamp="${formattedTime}">
+	            <div class="timestamp">${displayTime}</div>
 	            <div class="message-bubble">${message}</div>
-	         </li>
-	      `;
-	      messageList.insertAdjacentHTML('beforeend', newMsgHTML);
-	      scrollToBottom();
+	        </li>
+	    `;
+	    
+	    const noMessageEl = messageList.querySelector('.no-message');
+	    if (noMessageEl) noMessageEl.remove();
+	    
+	    messageList.insertAdjacentHTML('beforeend', myMsgHTML);
+	    scrollToBottom();
 
-	   if (socket.readyState === WebSocket.OPEN) {
-	      socket.send(JSON.stringify(chatData));  // 👉 보내기만!
-	   }
+	    // 3. 서버로 전송할 데이터
+	    const chatData = { 
+	        chatNo: chatInfo.chatNo, 
+	        senderNo: loginUserNo, 
+	        message, 
+	        timestamp: formattedTime 
+	    };
 
-	   messageInput.value = '';  // 입력창만 비우기
+	    if (socket.readyState === WebSocket.OPEN) {
+	        socket.send(JSON.stringify(chatData));
+	    }
+
+	    messageInput.value = '';
 	}
 
 
@@ -225,7 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// 채팅방 렌더링 함수
 	async function loadChatRoom(chatNo) {
-		lastSentKey = null;
 		try {
 			// 채팅방 로딩 중 메시지를 표시 (기존 로직 유지)
 			if (chatViewContainer) {
@@ -479,10 +477,15 @@ document.addEventListener('DOMContentLoaded', () => {
 				const currentDate = dateObj.toISOString().split('T')[0];
 				const formattedDate = dateObj.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 				
-				if (msg.messageKey && msg.messageKey === lastSentKey) {
-				      console.log("🛑 중복 렌더링 방지");
-				      return;
-			   }
+				if (msg.senderNo == loginUserNo) {
+				        // 이미 화면에 'my-temp-msg'로 그려졌으므로, 
+				        // 추가로 그리지 않고 임시 클래스만 제거하거나 그대로 둡니다.
+				        const tempMsg = messageList.querySelector(`.my-temp-msg[data-timestamp="${msg.timestamp}"]`);
+				        if (tempMsg) {
+				            tempMsg.classList.remove('my-temp-msg'); // 확정된 메시지로 표시
+				            return; // 함수 종료 (중복 렌더링 방지)
+				        }
+				    }
 				
 				if (lastDateMap[chatNo] !== currentDate) {
 					messageList.insertAdjacentHTML('beforeend', `<li class="date-divider">${formattedDate}</li>`);

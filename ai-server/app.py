@@ -12,8 +12,10 @@ CORS(app)
 # =========================
 # 모델 로드 (서버 시작 시 1번)
 # =========================
-processor = ViTImageProcessor.from_pretrained("google/vit-base-patch16-224")
-model = ViTForImageClassification.from_pretrained("google/vit-base-patch16-224")
+processor = ViTImageProcessor.from_pretrained("facebook/deit-tiny-patch16-224")
+model = ViTForImageClassification.from_pretrained("facebook/deit-tiny-patch16-224")
+
+
 model.eval()
 
 # =========================
@@ -21,62 +23,81 @@ model.eval()
 # =========================
 CATEGORY_MAP = {
     "가구": [
-        "chair", "armchair", "sofa", "couch",
+        "chair", "armchair", "rocking chair",
+        "sofa", "couch",
         "table", "desk", "coffee table",
-        "bed", "wardrobe", "cabinet", "bookshelf"
+        "bed", "wardrobe", "cabinet", "bookshelf",
+        "dresser", "nightstand"
     ],
 
     "가전제품": [
-        "refrigerator", "microwave", "oven",
-        "washing machine", "dishwasher",
-        "air conditioner", "heater",
-        "vacuum", "fan"
+        "refrigerator", "fridge",
+        "microwave", "oven",
+        "washing machine", "washer",
+        "dishwasher",
+        "air conditioner", "ac",
+        "heater", "radiator",
+        "vacuum", "vacuum cleaner",
+        "fan"
     ],
 
     "전자기기": [
-        "laptop", "notebook", "computer", "desktop computer",
-        "monitor", "keyboard", "mouse",
-        "phone", "smartphone", "tablet",
+        "laptop", "notebook", "computer", "desktop",
+        "monitor", "screen",
+        "keyboard", "mouse",
+        "phone", "smartphone", "mobile phone",
+        "tablet",
         "camera", "digital camera",
-        "headphone", "earphone"
+        "headphone", "earphone", "earbuds"
     ],
 
     "주방용품": [
-        "pan", "frying pan", "pot",
+        "pan", "frying pan", "skillet",
+        "pot", "cooking pot",
         "knife", "kitchen knife",
         "cutting board",
         "kettle", "teapot",
-        "rice cooker"
+        "rice cooker",
+        "spoon", "fork", "plate", "bowl"
     ],
 
     "의류/잡화": [
-        "shirt", "t-shirt", "jeans", "pants",
-        "jacket", "coat", "dress",
+        "shirt", "t-shirt", "tee",
+        "jeans", "denim",
+        "pants", "trousers",
+        "jacket", "coat",
+        "dress",
         "shoe", "sneaker", "boot",
         "bag", "handbag", "backpack",
-        "hat", "cap", "wallet"
+        "hat", "cap", "wallet",
+        "purse"
     ],
 
     "반려동물용품": [
-        "dog", "puppy", "cat", "kitten",
-        "pet", "dog food", "cat food",
-        "dog bed", "cat tree",
-        "leash", "collar"
+        "dog", "puppy",
+        "cat", "kitten",
+        "pet",
+        "dog bed", "cat bed",
+        "leash", "collar",
+        "dog toy", "pet toy"
     ],
 
     "스포츠/레저": [
         "bicycle", "bike", "mountain bike",
+        "road bike",
+        "wheel", "bicycle wheel",
         "helmet",
         "soccer ball", "football",
         "basketball",
         "tennis racket",
         "golf club",
-        "skateboard"
+        "skateboard",
+        "surfboard"
     ],
 
     "취미/게임/음반": [
         "guitar", "electric guitar", "acoustic guitar",
-        "piano", "keyboard instrument",
+        "piano", "keyboard",
         "drum",
         "gamepad", "joystick",
         "video game console",
@@ -87,28 +108,33 @@ CATEGORY_MAP = {
         "apple", "banana", "orange",
         "bread", "pizza", "hamburger",
         "cake", "chocolate",
-        "bottle", "wine bottle"
+        "bottle", "wine bottle",
+        "beer bottle"
     ],
 
     "생활용품": [
         "toothbrush", "toothpaste",
         "soap", "shampoo",
         "towel", "tissue",
-        "cleaning spray"
+        "cleaning spray",
+        "mop", "broom"
     ],
 
     "뷰티/미용": [
         "cosmetic", "lipstick",
         "perfume", "lotion",
-        "cream", "makeup"
+        "cream", "makeup",
+        "nail polish"
     ],
 
     "중고차": [
         "car", "sedan", "suv", "jeep",
         "truck", "pickup",
-        "sports car"
+        "sports car",
+        "convertible"
     ]
 }
+
 
 
 # =========================
@@ -144,11 +170,13 @@ def analyze_image():
     logits = outputs.logits
     idx = logits.argmax(-1).item()
     raw_label = model.config.id2label[idx]
+    print("🔥 RAW LABEL:", raw_label)   # ← 이거 추가!
     confidence = get_confidence(logits)
+    print("confidenc: ", confidence)
 
-    if confidence < 0.25:
+    if confidence < 0.05:
         final_category = "기타"
-    else:
+    else:   
         final_category = map_label_to_category(raw_label)
 
     return jsonify({

@@ -1,6 +1,7 @@
 package com.dealOn.product.model.service;
 
 import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,7 @@ import com.dealOn.product.model.mapper.ProductMapper;
 import com.dealOn.product.model.vo.AddProductVO;
 import com.dealOn.product.model.vo.ProductVO;
 
-import io.vavr.collection.HashSet;
-import io.vavr.collection.Set;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -197,16 +197,18 @@ public class ProductService {
 		return productMapper.getMyWishList(userNo);
 	}
 
-	public String analyzeImageWithAI(MultipartFile image) {
+	public String analyzeImageWithAI(MultipartFile image, HttpServletRequest request) {
 
 		// 다른 서버에 요청을 보내려고 사용
+		String aiServerUrl = getAiServerUrl(request);
+
 		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 		
 		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-
+			
 		ByteArrayResource resource = null;
 		try {
 			resource = new ByteArrayResource(image.getBytes()) {
@@ -223,10 +225,20 @@ public class ProductService {
 
 		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:5001/analyze-image", requestEntity,
+		ResponseEntity<Map> response = restTemplate.postForEntity(aiServerUrl, requestEntity,
 				Map.class);
 
 		return response.getBody().get("category").toString();
 	}
+	
+	private String getAiServerUrl(HttpServletRequest request) {
+	    String serverName = request.getServerName();
+
+	    if ("localhost".equals(serverName)) {
+	        return "http://localhost:5001/analyze-image";
+	    }
+	    return "https://dealon.duckdns.org/api/analyze";
+	}
+
 
 }

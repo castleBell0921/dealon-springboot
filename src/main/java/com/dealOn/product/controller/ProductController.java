@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale.Category;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,6 +32,7 @@ import com.dealOn.user.controller.UserController;
 import com.dealOn.user.model.service.UserService;
 import com.dealOn.user.model.vo.User;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -352,10 +352,10 @@ public class ProductController {
     
     @PostMapping("/ai/category")
     @ResponseBody
-    public Map<String, Object> analyzeCategory(@RequestParam("image") MultipartFile image) {
+    public Map<String, Object> analyzeCategory(@RequestParam("image") MultipartFile image, HttpServletRequest request) { 
 
         // 1. Python AI 서버에서 카테고리 문자열 받기
-        String aiCategoryName = productService.analyzeImageWithAI(image);
+        String aiCategoryName = productService.analyzeImageWithAI(image, request);
         // 예: "전자기기", "가구", "기타"
 
         // 2. DB에 있는 전체 카테고리 조회

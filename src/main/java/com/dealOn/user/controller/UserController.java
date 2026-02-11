@@ -311,7 +311,7 @@ public class UserController {
 		List<ProductVO> list = pService.getMySellList(userNo);
 		model.addAttribute("productList", list);
 		model.addAttribute("requestURI",request.getRequestURI());
-		return "/mySellList";
+		return "mySellList";
 	}
 	
 	@GetMapping("/reviewDetails/{reviewNo}")
@@ -355,7 +355,7 @@ public class UserController {
 		}
 		List<ProductVO> list = pService.getBuyerNo(userNo);
 		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
-		return "/myBuyList";
+		return "myBuyList";
 	}
 	
 	@GetMapping("/myWishList")
@@ -366,7 +366,7 @@ public class UserController {
 		}
 		List<ProductVO> list = pService.getMyWishList(userNo);
 		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
-		return "/myWishList";
+		return "myWishList";
 	}
 	@GetMapping("terms")
 	public String terms() {

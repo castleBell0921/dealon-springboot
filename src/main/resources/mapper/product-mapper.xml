@@ -551,4 +551,9 @@
         	  P.STATUS = 'Y'
         ORDER BY P.CREATE_DATE DESC
     </select>
+    <update id="upProduct">
+    	update product
+    	set create_date = sysdate
+    	where no = #{productNo}
+    </update>
 </mapper>

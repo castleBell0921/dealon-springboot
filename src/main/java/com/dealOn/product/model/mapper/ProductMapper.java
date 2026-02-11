@@ -48,4 +48,5 @@ public interface ProductMapper {
 	List<ProductVO> getMySellList(String userNo);
 	List<ProductVO> getBuyerNo(String userNo);
 	List<ProductVO> getMyWishList(String userNo);
+	int upProduct(int productNo);
 }

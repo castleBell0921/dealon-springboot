@@ -1,4 +1,32 @@
 document.addEventListener("DOMContentLoaded", function() {
+	const btn = document.querySelector('.upProduct');
+	const createDate = btn.dataset.date;
+
+	const now = new Date();
+	const postDate = new Date(createDate);
+	
+	const nextUpDate = new Date(postDate);
+	nextUpDate.setDate(postDate.getDate() + 5); // 🔥 핵심: +5일 계산
+	
+	const smallText = document.getElementById("up-next-date");
+
+
+
+	if (now - postDate < 5 * 24 * 60 * 60 * 1000) { // 5일
+	    btn.disabled = true;
+	    btn.classList.add("sellProduct"); // 스타일용
+		
+		const yyyy = nextUpDate.getFullYear();
+        const mm = String(nextUpDate.getMonth() + 1).padStart(2, "0");
+        const dd = String(nextUpDate.getDate()).padStart(2, "0");
+		
+		smallText.textContent = `⏳ 다음 끌어올리기 가능: ${yyyy}-${mm}-${dd}`;
+
+	} else {
+		smallText.textContent = "끌어올리기가 가능합니다.";
+	}
+
+	
     const slider = document.querySelector('.slider-images');
     if (slider && slider.children.length > 1) {
         const prevBtn = document.querySelector('.prev-btn');
@@ -60,8 +88,33 @@ document.addEventListener("DOMContentLoaded", function() {
 
         el.textContent = result;
     });
-
-
+	const upProduct = document.querySelector('.upProduct');
+	upProduct.addEventListener('click', async()=>{
+		
+		if (upProduct.classList.contains("sellProduct")) {
+		       alert("아직 5일이 지나지 않아 끌어올릴 수 없습니다.");
+		       return;   // ⭐ 여기서 차단
+		   }
+		   
+		try{
+			const response = await fetch('/product/upProduct', {
+				method: 'POST',
+				headers: {
+					"Content-Type" : "application/json"
+				},
+				body: JSON.stringify(productNo)
+			});
+			
+			if(response.ok){
+				alert('끌어올리기에 성공했습니다!');
+			} else{
+				alert('글올 실패 ㅠㅠ');
+			}
+		}catch(err){
+			console.error('submit error: ' + err);
+			alert('오류 발생');
+		}
+	});
 });
 
 function toggleWishlist(productNo) {

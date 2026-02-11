@@ -240,5 +240,9 @@ public class ProductService {
 	    return "https://dealon.duckdns.org/api/analyze";
 	}
 
+	public int upProduct(int productNo) {
+		return productMapper.upProduct(productNo);
+	}
+
 
 }

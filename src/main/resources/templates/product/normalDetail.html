@@ -104,8 +104,18 @@
 								<div class="action-buttons-container"
 									th:if="${product.productState != 'S'}">
 									<div class="chat-wish-wrapper">
-										<button class="chat-button text-16px sellerChatBtn">판매자에게
-											채팅하기</button>
+										<button th:if="${loginUser == null || loginUser.userNo != product.userNo}" 
+												class="chat-button text-16px sellerChatBtn">판매자에게 채팅하기</button>
+										<div class="up-wrapper">		
+											<button th:if="${loginUser != null && loginUser.userNo == product.userNo}" 
+													class="chat-button text-16px upProduct"
+													th:data-date="${product.createDate}">
+													끌어올리기
+											</button>
+											<p class="small-text" id="up-next-date"></p>
+										</div>
+										
+										
 										<button type="button" class="wishlist-btn" id="wishlist-btn"
 											th:classappend="${isWishlisted} ? 'active' : ''"
 											th:onclick="|toggleWishlist(${product.productNo})|">

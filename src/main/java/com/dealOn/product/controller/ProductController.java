@@ -1,5 +1,6 @@
 package com.dealOn.product.controller;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,12 +80,17 @@ public class ProductController {
     @GetMapping("/detail/{productNo}")
     public String getProductDetail(@PathVariable("productNo") int productNo, Model model, HttpSession session) {
         ProductVO product = productService.getProductDetail(productNo);
-        User loginUser = (User)session.getAttribute("loginUser");
-        System.out.println("product: " + product);        
-        User productUser = uService.getProductUser(product);
+        
         if (product == null) {
             return "redirect:/product/list";
         }
+        
+
+
+        User loginUser = (User)session.getAttribute("loginUser");
+        System.out.println("product: " + product);        
+        User productUser = uService.getProductUser(product);
+        
         boolean isWishlisted = false;
         if (loginUser != null) {
             isWishlisted = productService.isWishlisted(Integer.parseInt(loginUser.getUserNo()), productNo);
@@ -379,5 +386,14 @@ public class ProductController {
             "categoryNo", matchedCategory.getNo(),
             "categoryName", matchedCategory.getName()
         );
+    }
+    @PostMapping("/upProduct")
+    public ResponseEntity<?> upProduct(@RequestBody int productNo){
+    	int result = productService.upProduct(productNo);
+    	if(result > 0) {
+        	return ResponseEntity.ok().build();
+    	} else {
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+    	}
     }
 }

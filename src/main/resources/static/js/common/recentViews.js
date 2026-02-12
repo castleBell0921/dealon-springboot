@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	}
 
 	// 1) 로그인 유저일 경우: DB에서 최근 본 상품 가져와 localStorage에 반영하고 렌더
-	if (userNo !== 'guest') {
+	if (userNo != 'guest') {
 		try {
 			const res = await fetch(`/common/recent-view/${userNo}`);
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -48,13 +48,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		if (userNo === 'guest') {
 			list = safeParse(sessionStorage.getItem(storageKey));
-			list = list.filter(item => item.no !== productNo);
+			list = list.filter(item => item.no != productNo);
 			list.unshift({ no: productNo, name: productName, image: productImage });
 			if (list.length > 4) list = list.slice(0, 4);
 			sessionStorage.setItem(storageKey, JSON.stringify(list));
 		} else {
 			list = safeParse(localStorage.getItem(storageKey));
-			list = list.filter(item => item.no !== productNo);
+			list = list.filter(item => item.no != productNo);
 			list.unshift({ no: productNo, name: productName, image: productImage });
 			if (list.length > 4) list = list.slice(0, 4);
 			localStorage.setItem(storageKey, JSON.stringify(list));
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	// 간단한 XSS 방지용 이스케이프
 	function escapeHtml(str) {
-		if (typeof str !== 'string') return '';
+		if (typeof str != 'string') return '';
 		return str.replace(/[&<>"]/g, ch => {
 			switch (ch) {
 				case '&': return '&amp;';

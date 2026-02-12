@@ -300,7 +300,8 @@
         JOIN IMAGES IMG ON ENTITY_ID = P.NO
         LEFT JOIN CATEGORY C ON P.CATEGORY = C.NO
         LEFT JOIN USERS U ON P.USER_NO = U.USER_NO
-        WHERE P.STATUS = 'Y'
+        WHERE P.STATUS = 'Y' AND
+        NP.STATE = 'A'
         <if test="category != null and category != ''">
             AND P.CATEGORY = (SELECT NO FROM CATEGORY WHERE NAME = #{category})
         </if>
@@ -336,7 +337,8 @@
         JOIN NORMAL NP ON P.NO = NP.NO2
         JOIN IMAGES IMG ON ENTITY_ID = P.NO
         LEFT JOIN CATEGORY C ON P.CATEGORY = C.NO
-        WHERE P.STATUS = 'Y'
+        WHERE P.STATUS = 'Y' AND
+        NP.STATE = 'A'
         <if test="category != null and category != ''">
             AND P.CATEGORY = (SELECT NO FROM CATEGORY WHERE NAME = #{category})
         </if>
@@ -373,7 +375,8 @@
         JOIN NORMAL NP ON P.NO = NP.NO2
         JOIN IMAGES IMG ON ENTITY_ID = P.NO
         LEFT JOIN CATEGORY C ON P.CATEGORY = C.NO
-        WHERE P.STATUS = 'Y'
+        WHERE P.STATUS = 'Y' AND
+        NP.STATE = 'A'
         <if test="category != null and category != ''">
             AND P.CATEGORY = (SELECT NO FROM CATEGORY WHERE NAME = #{category})
         </if>

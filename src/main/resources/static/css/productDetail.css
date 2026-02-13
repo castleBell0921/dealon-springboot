@@ -503,7 +503,7 @@
   display: flex !important;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 530px;
   height: 55px;
   border-radius: 8px;
   font-weight: 500;
@@ -651,6 +651,7 @@
     padding: 6px 10px;
     border-radius: 6px;
     display: inline-block;
+    width: 250px;
 }
 
 .up-wrapper {

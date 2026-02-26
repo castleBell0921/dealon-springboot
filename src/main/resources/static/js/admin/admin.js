@@ -19,22 +19,33 @@ document.addEventListener("DOMContentLoaded", function () {
     scaleApp();
 
 
-    // stats.html
+    // stats.html 카운트업 애니메이션
     const counters = document.querySelectorAll('.count-up');
 
     if (counters.length > 0) {
         counters.forEach(counter => {
             const target = +counter.getAttribute('data-target');
-            const duration = 2000;
+
+            let duration = 2000;
+            if (target === 0) duration = 0;
+            else if (target <= 10) duration = 600;   // 10 이하면 0.6초
+            else if (target <= 100) duration = 1200; // 100 이하면 1.2초
+            else if (target <= 500) duration = 1500; // 500 이하면 1.5초
+
             const start = 0;
             const startTime = performance.now();
 
             function updateCount(currentTime) {
+                if (duration === 0) {
+                    counter.innerText = target.toLocaleString();
+                    return;
+                }
+
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 const ease = 1 - Math.pow(1 - progress, 4); // easeOutQuart
 
-                counter.innerText = Math.floor(start + (target * ease)).toLocaleString();
+                counter.innerText = Math.round(start + (target * ease)).toLocaleString();
 
                 if (progress < 1) {
                     requestAnimationFrame(updateCount);
@@ -42,7 +53,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     counter.innerText = target.toLocaleString();
                 }
             }
-            requestAnimationFrame(updateCount);
+
+            if (target > 0) {
+                requestAnimationFrame(updateCount);
+            } else {
+                counter.innerText = "0";
+            }
         });
     }
 	

@@ -19,4 +19,5 @@ public class Report {
 	private String detail;
 	private int reporter;
 	private int violator;
+	private String status;
 }

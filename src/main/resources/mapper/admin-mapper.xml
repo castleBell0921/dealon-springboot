@@ -231,4 +231,8 @@
 		</if>
 		WHERE USER_NO = #{userNo}
 	</update>
+
+	<select id="getAdminStats" resultType="com.dealOn.admin.model.vo.AdminStats">
+		SELECT * FROM ADMIN_STATS_VIEW
+	</select>
 </mapper>

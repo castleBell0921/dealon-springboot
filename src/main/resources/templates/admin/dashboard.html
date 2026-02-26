@@ -4,7 +4,7 @@
 <th:block th:replace="~{admin/base :: layout(~{:: #stats-block}, ~{:: #main-block}, true)}">
 
   <div id="stats-block">
-    <th:block th:replace="~{admin/stats :: statsRow}"></th:block>
+    <th:block th:replace="~{admin/stats :: statsRow('dashboard')}"></th:block>
   </div>
 
   <div id="main-block" class="nDecMng">

@@ -3,6 +3,7 @@ package com.dealOn.admin.model.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.dealOn.admin.model.vo.AdminStats;
 import com.dealOn.admin.model.vo.UserDetail;
 import com.dealOn.admin.model.vo.UserList;
 import org.apache.ibatis.annotations.Mapper;
@@ -47,4 +48,6 @@ public interface AdminMapper {
 
 	// 회원 정보 수정
 	int updateUser(UserDetail userDetail);
+
+    AdminStats getAdminStats();
 }

@@ -395,9 +395,13 @@
         ORDER BY P.create_date DESC
     </select>
     <update id="updateStatus">
-    	update normal
-    	set state = #{status}
-    	where no2=#{productNo}
+        update normal
+        set state = #{status},
+            sold_date = case
+                            when #{status} = 'S' then sysdate
+                            else sold_date
+                        end
+        where no2 = #{productNo}
     </update>
     <insert id="createReview">
     	insert into review (product_no, seller_no, buyer_no,create_date)

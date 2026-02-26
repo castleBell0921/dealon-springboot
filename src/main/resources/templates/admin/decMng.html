@@ -14,9 +14,9 @@
 
 <th:block th:replace="~{admin/base :: layout(~{:: #stats-block}, ~{:: #main-block}, false)}">
 
-  <div id="stats-block">
-    <th:block th:replace="~{admin/stats :: statsRow}"></th:block>
-  </div>
+    <div id="stats-block">
+        <th:block th:replace="~{admin/stats :: statsRow('decMng')}"></th:block>
+    </div>
 
   <div id="main-block" class="decMng">
     <link rel="stylesheet" th:href="@{/css/decMng.css}">

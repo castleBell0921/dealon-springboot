@@ -72,6 +72,7 @@ public class ProductVO {
     // 일반 상품 정보
     private String productState;
     private BigDecimal price;
+    private Date soldDate;
 
     // 경매 상품 정보
     private BigDecimal startPrice;

@@ -76,4 +76,20 @@
 			  seller_no = #{userNo}) and
 			  read_status = 'N'
 	</select>
+
+	<update id="mergeVisitorLog">
+		MERGE INTO VISITOR_LOG v
+			USING (
+				SELECT TRUNC(SYSDATE) AS visit_date,
+					   #{sessionId} AS session_id,
+					   #{userNo} AS user_no
+				FROM DUAL
+			) src
+			ON (v.VISIT_DATE = src.visit_date AND v.SESSION_ID = src.session_id)
+			WHEN MATCHED THEN
+				UPDATE SET v.USER_NO = NVL(v.USER_NO, src.user_no)
+			WHEN NOT MATCHED THEN
+				INSERT (VISIT_DATE, SESSION_ID, USER_NO)
+					VALUES (src.visit_date, src.session_id, src.user_no)
+	</update>
 </mapper>

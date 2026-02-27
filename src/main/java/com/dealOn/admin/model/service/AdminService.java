@@ -3,6 +3,7 @@ package com.dealOn.admin.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.dealOn.admin.model.vo.AdminStats;
 import com.dealOn.admin.model.vo.UserDetail;
 import com.dealOn.admin.model.vo.UserList;
 import org.apache.ibatis.session.RowBounds;
@@ -102,5 +103,10 @@ public class AdminService {
 	// 회원 정보 수정
 	public int updateUser(UserDetail userDetail) {
 		return adminMapper.updateUser(userDetail);
+	}
+
+
+	public AdminStats getAdminStats() {
+		return adminMapper.getAdminStats();
 	}
 }

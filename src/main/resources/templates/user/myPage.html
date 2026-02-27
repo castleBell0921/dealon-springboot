@@ -9,6 +9,7 @@
 <link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
 <link rel="stylesheet" th:href="@{/css/myInfo.css}">
 <link rel="stylesheet" th:href="@{/css/myProduct.css}">
+<link rel="stylesheet" th:href="@{/css/footer.css}">
 </head>
 <body>
 	<div class="app-container">
@@ -22,6 +23,7 @@
 			<div th:replace="~{user/myInfo :: myInfo(${loginUser})}"></div>
 		</main>
 	</div>
+	<div th:replace="~{common/footer :: footer}"></div> 
 	<div th:if="${msg}">
 		<script th:inline="javascript">
 			alert('[[${msg}]]');

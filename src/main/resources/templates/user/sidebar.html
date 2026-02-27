@@ -25,11 +25,21 @@
 
         <nav class="sidebar-section">
             <h4 class="section-title text-28px fw-medium">내 정보</h4>
-            <ul class="sidebar-menu text-22px fw-regularㄴ">
+            <ul class="sidebar-menu text-22px fw-regular">
                 <li id="myInfoEdit"><a th:href="@{/user/editProfile}" th:classappend="${requestURI == '/user/editProfile'} ? 'active'">내 정보 수정</a></li>
             </ul>
         </nav>
+        
+        <hr style="border: 1px solid #EAEAEA;" />
+        
+        <nav class="sidebar-section">
+        	<h4 class="section-title text-28px fw-medium">문의</h4>
+        	<ul class="sidebar-menu text-22px fw-regular">
+        		<li><a th:href="@{/help/helpList}" th:classappend="${requestURI == '/help/helpList'} ? 'active'">문의내역</a></li>
+        	</ul>
+        </nav>
     </aside>
+    
 </div>
 	
 </body>

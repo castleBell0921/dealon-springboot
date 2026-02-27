@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Deal-On | 문의상세</title>
+    <link rel="stylesheet" th:href="@{/css/App.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/Home.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/help.css}">
+</head>
+<body>
+<div class="app-container">
+    <div th:replace="~{common/header :: header}"></div>
+    <div th:replace="~{common/searchbar :: searchbar}"></div>
+
+    <div class="home-page-container">
+        <div class="home-content-layout">
+            <main class="home-main-content">
+                <div class="inquiry-page-wrapper" style="padding: 20px 0;">
+                    <div class="inquiry-container">
+                        <header class="inquiry-header">
+                            <div class="header-top">
+                                <span class="category" th:text="${inquiry != null ? inquiry.category : '결제/환불'}">결제/환불</span>
+                                <span th:class="'status-badge ' + ${inquiry != null ? inquiry.status.toLowerCase() : 'answered'}"
+                                      th:text="${inquiry != null ? inquiry.status : '답변완료'}">답변완료</span>
+                            </div>
+                            <h1 class="title" th:text="${inquiry != null ? inquiry.title : ''}">문의 제목</h1>
+                            <p class="meta-info">문의일시: <span th:text="${inquiry != null ? #temporals.format(inquiry.createdAt, 'yyyy-MM-dd HH:mm') : '2024-05-20 14:00'}">2024-05-20 14:00</span></p>
+                        </header>
+						
+						<div class="main-image-section" th:if="${inquiry != null and inquiry.imageUrl != null}">
+						    <div class="image-label">첨부된 참고 이미지</div>
+						    <div class="main-image-wrapper">
+						        <img th:src="${inquiry.imageUrl}" alt="문의 대표 이미지">
+						    </div>
+						</div>
+                        <div class="inquiry-thread">
+
+						    <div th:each="detail : ${inquiryDetails}"
+						         th:class="'detail-item ' + ${detail.role == 'USER' ? 'user' : 'admin'}">
+						
+						        <div th:if="${detail.role == 'ADMIN'}" class="admin-profile">CS</div>
+						
+						        <div class="bubble">
+						            <p class="content" th:if="${detail.content != null and #strings.length(detail.content) > 0}" th:text="${detail.content}"></p>
+						
+						
+						            <span class="time"
+						                  th:text="${#temporals.format(detail.createdAt, 'HH:mm')}">
+						            </span>
+						        </div>
+						    </div>
+						</div>
+
+		
+                        <footer class="inquiry-footer">
+                            <div class="input-container">
+                                <textarea id="additionalContent" placeholder="추가 문의 내용을 입력해주세요."></textarea>
+                                <div class="button-group">
+                                    <button type="button" class="btn-submit">전송</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-resolve">문제가 해결됐어요</button>
+                        </footer>
+                    </div>
+                </div>
+            </main>
+            
+            <div th:replace="~{common/recentviewed :: recentviewed}"></div>
+        </div>
+    </div>
+
+    <div th:replace="~{common/footer :: footer}"></div>
+</div>
+
+<script th:src="@{/js/common/main.js}"></script>
+<script th:src="@{/js/user/header.js}"></script>
+<script th:src="@{/js/common/searchBar.js}"></script>
+<script th:src="@{/js/common/recentViews.js}"></script>
+</body>
+</html>

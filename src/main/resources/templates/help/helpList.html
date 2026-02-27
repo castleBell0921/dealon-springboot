@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Deal-On | 문의내역</title>
+<link rel="stylesheet" th:href="@{/css/App.css}">
+<link rel="stylesheet" th:href="@{/css/myInfo.css}">
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
+<link rel="stylesheet" th:href="@{/css/helpList.css}"> 
+<link rel="stylesheet" th:href="@{/css/footer.css}">
+</head>
+<body>
+    <div class="app-container">
+        <div th:replace="~{common/header :: header}"></div>
+        <div th:replace="~{common/searchbar :: searchbar}"></div>
+
+        <main class="main-wrap">
+            <div th:replace="~{user/sidebar :: sidebar}"></div>
+            
+            <div class="my-main-content">
+                <div class="inquiry-list-header">
+                    <h2 class="inquiry-title">1:1 문의내역</h2>
+                    <a th:href="@{/help/contact}" class="btn-new-inquiry">새 문의하기</a>
+                </div>
+
+                <div class="inquiry-list-area">
+                    <a th:each="inquiry : ${inquiryList}" 
+                       th:href="@{/help/helpPage/{id}(id=${inquiry.inquiryId})}"
+                       class="inquiry-item">
+                        
+                        <div class="inquiry-info">
+                            <div class="inquiry-top-meta">
+                                <span th:class="'status-badge ' + ${inquiry.status == 'OPEN' ? 'open' : 'answered'}"
+                                      th:text="${inquiry.status == 'OPEN' ? '답변대기' : '답변완료'}">
+                                    답변완료
+                                </span>
+                                <span class="category-text" th:text="${inquiry.category}">카테고리</span>
+                            </div>
+                            <div class="subject-text" th:text="${inquiry.title}">문의 제목</div>
+                            <div class="date-text" th:text="${#temporals.format(inquiry.createdAt, 'yyyy-MM-dd HH:mm')}">2024-05-20</div>
+                        </div>
+
+                        <div class="arrow-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                    </a>
+
+                    <div th:if="${#lists.isEmpty(inquiryList)}" class="empty-inquiry">
+                        <p>문의하신 내역이 없습니다.</p>
+                    </div>
+                </div>
+                <div class="pagination">
+				    <a class="prev" th:if="${pi.currentPage > 1}" 
+				       th:href="@{|/help/helpList?page=${pi.currentPage - 1}|}">&lt;</a>
+				
+				    <span th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}">
+				        <a th:if="${p != pi.currentPage}" 
+				           th:href="@{|/help/helpList?page=${p}|}"
+				           th:text="${p}"></a>
+				        <span th:if="${p == pi.currentPage}" 
+				              th:text="${p}" 
+				              class="active"></span>
+				    </span>
+				
+				    <a class="next" th:if="${pi.currentPage < pi.maxPage}" 
+				       th:href="@{|/help/helpList?page=${pi.currentPage + 1}|}">&gt;</a>
+				</div>
+            </div>
+        </main>
+    </div>
+    
+    <div th:replace="~{common/footer :: footer}"></div>
+
+    <script th:src="@{/js/user/header.js}"></script>
+    <script th:src="@{/js/common/searchBar.js}"></script>
+</body>
+</html>

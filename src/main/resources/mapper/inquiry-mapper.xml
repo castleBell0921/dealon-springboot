@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dealOn.inquiry.model.mapper.InquiryMapper">
+	<insert id="insertInquiry"
+	        useGeneratedKeys="true"
+	        keyProperty="inquiryId"
+	        keyColumn="INQUIRY_ID">
+	
+	    INSERT INTO inquiry (
+	        category,
+	        title,
+	        user_id,
+	        image_url,
+	        created_at
+	        
+	    )
+	    VALUES (
+	        #{category},
+	        #{title},
+	        #{userNo},
+	        #{imageUrl},
+	        sysdate
+	    )	
+	</insert>
+	<insert id="insertInquiryDetail">
+	    INSERT INTO inquiry_details
+	    (inquiry_id, writer_id, role, content, created_at)
+	    VALUES
+	    (#{inquiryId}, #{writerId}, #{role}, #{content}, sysdate)
+	</insert>
+	<select id="getInquiryDetail">
+		select * 
+		from inquiry_details
+		where inquiry_id = #{inquiryId}
+		order by created_at asc
+	</select>
+	<select id="getInquiry">
+		select * 
+		from inquiry
+		where inquiry_id = #{inquiryId}
+	</select>
+	<select id="getAllInquiry">
+		select * 
+		from inquiry
+		where user_id=#{userNo}
+	</select>
+	<select id="getInquiryCount">
+		select count(*)
+		from inquiry
+		where user_id = #{userNo}
+	</select>
+</mapper>

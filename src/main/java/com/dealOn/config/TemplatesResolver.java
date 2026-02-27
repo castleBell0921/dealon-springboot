@@ -51,4 +51,18 @@ public class TemplatesResolver{
 		return cResolver;
 
 	}
+	
+	@Bean
+	public ClassLoaderTemplateResolver HelpResolver() {
+		ClassLoaderTemplateResolver cResolver = new ClassLoaderTemplateResolver();
+
+		cResolver.setPrefix("templates/help/");
+		cResolver.setSuffix(".html");
+		cResolver.setTemplateMode(TemplateMode.HTML);
+		cResolver.setCharacterEncoding("UTF-8");
+		cResolver.setCacheable(false);
+		cResolver.setCheckExistence(true);
+		return cResolver;
+
+	}
 }

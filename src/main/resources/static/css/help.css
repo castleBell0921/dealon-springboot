@@ -1,0 +1,250 @@
+.inquiry-page-wrapper {
+    --inquiry-bg: #f8fafc;
+    --inquiry-user-bubble: #ffffff;
+    --inquiry-admin-bubble: #f3e2fe;
+    --inquiry-accent: #B57EDC;
+    --inquiry-text: #334155;
+    
+    display: flex;
+    justify-content: center; /* 중앙 정렬 */
+    padding: 40px 20px;
+    background-color: #f1f5f9; /* 배경색 살짝 진하게 해서 컨테이너 부각 */
+}
+
+.inquiry-container {
+    width: 100%;
+    max-width: 850px;
+    min-height: 600px; /* 최소 높이 확보 */
+    background: #fff;
+    border-radius: 16px; /* 더 둥글게 */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* 부드러운 그림자 */
+    border: 1px solid rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+/* 헤더 */
+.inquiry-header { 
+    padding: 30px; 
+    border-bottom: 1px solid #f1f5f9; 
+    background: #fff;
+}
+.header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.category { color: #64748b; font-size: 14px; font-weight: 600; letter-spacing: -0.02em; }
+
+.status-badge { 
+    padding: 6px 14px; 
+    border-radius: 30px; 
+    font-size: 12px; 
+    font-weight: 700; 
+}
+.status-badge.answered { 
+    background: var(--inquiry-admin-bubble); 
+    color: var(--inquiry-accent); 
+}
+.status-badge.open { 
+    background: #fff7ed; 
+    color: #ea580c; 
+}
+
+.inquiry-header .title { 
+    font-size: 24px; 
+    font-weight: 800;
+    margin: 0; 
+    color: #1e293b; 
+    line-height: 1.4;
+}
+
+.meta-info { margin-top: 8px; color: #94a3b8; font-size: 13px; }
+/* 채팅 스레드 (핵심 수정) */
+.inquiry-thread { 
+    flex: 1; 
+    padding: 30px; 
+    max-height: 600px; /* 채팅 영역 최대 높이 제한 후 스크롤 */
+    overflow-y: auto; 
+    background: var(--inquiry-bg); 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    scroll-behavior: smooth;
+}
+
+/* 스크롤바 커스텀 */
+.inquiry-thread::-webkit-scrollbar { width: 6px; }
+.inquiry-thread::-webkit-scrollbar-track { background: transparent; }
+.inquiry-thread::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+.detail-item { 
+    display: flex; 
+    gap: 12px; 
+    width: 100%; /* 전체 너비 사용 */
+    margin-bottom: 10px;
+}
+.detail-item.user { justify-content: flex-end;   }
+.detail-item.admin { justify-content: flex-start; }
+
+
+
+.bubble { 
+    padding: 14px 18px; 
+    border-radius: 18px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03); 
+    position: relative;
+}
+.user .bubble { 
+    background: var(--inquiry-user-bubble); 
+    border: 1px solid #e2e8f0; 
+    border-top-right-radius: 4px; /* 오른쪽 상단만 뾰족하게 */
+    max-width: 70%; /* 메시지가 너무 길어지지 않게 제한 */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.admin .bubble { 
+    background: #f3e2fe; /* 연보라색 유지 */
+    color: #581c87;
+    border-top-left-radius: 4px; 
+    max-width: 70%;
+}
+
+.content { 
+    margin: 0; 
+    font-size: 15px; 
+    line-height: 1.6;
+    word-break: break-all; /* 영문/숫자 길어도 강제 줄바꿈 */
+    white-space: pre-wrap; /* 줄바꿈(엔터) 그대로 반영 */
+    color: #334155;
+    text-align: left; /* 말풍선 내 텍스트는 왼쪽 정렬 */
+}
+/* 5. 시간 표시 위치 조정 */
+.time { 
+    font-size: 11px; 
+    color: #94a3b8; 
+    margin-top: 6px; 
+    display: block; 
+}
+.user .time { text-align: right; } /* 고객은 오른쪽 정렬 */
+.admin .time { text-align: left; } /* 관리자는 왼쪽 정렬 */
+
+.admin-profile { 
+    width: 40px; height: 40px; 
+    background: var(--inquiry-accent); 
+    color: #fff; border-radius: 12px; /* 원형보다 스퀘어형이 더 세련됨 */
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 12px; font-weight: bold; flex-shrink: 0; 
+    box-shadow: 0 4px 10px rgba(181, 126, 220, 0.3);
+}
+
+/* 하단 입력바 */
+.inquiry-footer { padding: 25px; border-top: 1px solid #f1f5f9; background: #fff; }
+.input-container { 
+    border: 2px solid #f1f5f9; 
+    border-radius: 14px; 
+    padding: 15px; 
+    margin-bottom: 15px;
+    background: #f8fafc;
+    transition: border-color 0.2s;
+}
+.input-container textarea { 
+    width: 100%; border: none; outline: none; resize: none; 
+    height: 60px; font-size: 15px; background: transparent;
+    color: #1e293b;
+}
+
+.input-container:focus-within { border-color: var(--inquiry-accent); }
+
+.button-group { display: flex; justify-content: space-between; align-items: center; }
+.btn-submit { 
+    background: #B57EDC; 
+    color: #fff; border: none; 
+    padding: 8px 20px; border-radius: 6px; 
+    cursor: pointer; font-weight: 600; 
+}
+
+.btn-resolve { 
+    width: 100%; padding: 12px; 
+    background: #f8fafc; border: 1px solid #e2e8f0; 
+    border-radius: 8px; color: #64748b; 
+    cursor: pointer; font-size: 13px; font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-resolve:hover { background: #f1f5f9; color: #1e293b; }
+
+/* 작성 모드 추가 스타일 */
+.inquiry-form-body { padding: 30px; }
+.form-item { margin-bottom: 20px; }
+.form-item label { display: block; font-weight: bold; margin-bottom: 10px; color: #333; text-align: left; }
+.form-item select, .form-item input, .form-item textarea {
+    width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box;
+}
+.form-item textarea { height: 200px; resize: none; }
+.form-btns { display: flex; gap: 10px; margin-top: 30px; }
+.btn-back { flex: 1; padding: 15px; background: #eee; border: none; border-radius: 8px; cursor: pointer; }
+.btn-submit-main { flex: 2; padding: 15px; background: #B57EDC; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+.image-box {
+    margin-top: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #f1f5f9;
+}
+
+.image-box img {
+    display: block;
+    max-width: 100%; /* 부모 말풍선 너비를 넘지 않음 */
+    height: auto;
+    object-fit: cover;
+}
+
+.image-box img:hover {
+    transform: scale(1.03);
+}
+
+/* 메인 이미지 섹션 스타일 */
+.main-image-section {
+    padding: 20px 30px;
+    background: #fff;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: center;
+}
+
+.image-label {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.main-image-wrapper {
+    max-width: 100%;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 10px;
+    display: inline-block; /* 내용물 크기에 맞춤 */
+    border: 1px solid #e2e8f0;
+}
+
+.main-image-wrapper img {
+    max-width: 500px; /* 너무 크지 않게 조절 */
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+}
+
+/* 이메일 안내 문구 스타일 */
+.email-notice {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 10px;
+    text-align: center;
+    background: #f1f5f9;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+/* 기존 채팅 내 이미지 박스는 작게 유지 (관리자 답변용 등) */
+.inquiry-thread .image-box img {
+    max-width: 250px;
+}
+
+

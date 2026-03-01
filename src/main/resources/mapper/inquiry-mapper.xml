@@ -49,4 +49,8 @@
 		from inquiry
 		where user_id = #{userNo}
 	</select>
+	<insert id="addInquiry">
+		insert into inquiry_details(inquiry_id, writer_id, role,content, created_at)
+		values(#{inquiryId}, #{writerId}, #{role}, #{content}, sysdate)
+	</insert>
 </mapper>

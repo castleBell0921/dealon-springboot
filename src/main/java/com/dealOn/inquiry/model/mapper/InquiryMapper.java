@@ -23,5 +23,7 @@ public interface InquiryMapper {
 	List<InquiryVO> getAllInquiry(Map<String, Object> map, RowBounds rowBounds);
 
 	int getInquiryCount(String userNo);
+
+	int addInquiry(InquiryDetailVO detail);
 	
 }

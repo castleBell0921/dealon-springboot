@@ -56,12 +56,13 @@
 
 		
                         <footer class="inquiry-footer">
-                            <div class="input-container">
-                                <textarea id="additionalContent" placeholder="추가 문의 내용을 입력해주세요."></textarea>
-                                <div class="button-group">
-                                    <button type="button" class="btn-submit">전송</button>
-                                </div>
-                            </div>
+                        		<input type="hidden" id="inquiryId" th:value="${inquiry.inquiryId}">
+	                            <div class="input-container">
+	                                <textarea id="additionalContent" name = "addContent" placeholder="추가 문의 내용을 입력해주세요."></textarea>
+	                                <div class="button-group">
+	                                    <button type="button" class="btn-submit">전송</button>
+	                                </div>
+	                            </div>
                             <button type="button" class="btn-resolve">문제가 해결됐어요</button>
                         </footer>
                     </div>
@@ -79,5 +80,6 @@
 <script th:src="@{/js/user/header.js}"></script>
 <script th:src="@{/js/common/searchBar.js}"></script>
 <script th:src="@{/js/common/recentViews.js}"></script>
+<script th:src="@{/js/inquiry/inquiry.js}"></script>
 </body>
 </html>

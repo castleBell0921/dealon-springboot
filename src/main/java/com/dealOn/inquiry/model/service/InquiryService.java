@@ -104,6 +104,10 @@ public class InquiryService {
 		return iMapper.getInquiryCount(userNo);
 	}
 
+	public int addInquiry(InquiryDetailVO detail) {
+		return iMapper.addInquiry(detail);
+	}
+
 	
 
 }

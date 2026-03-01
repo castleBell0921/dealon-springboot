@@ -269,5 +269,9 @@ public class AdminController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
 		}
 	}
-
+	
+	@GetMapping("/inquiry")
+	public String inquiryList() {
+		return "admin/inquiryList";
+	}
 }

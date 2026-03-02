@@ -124,8 +124,10 @@ public class InquiryController {
 	public ResponseEntity<?> addInquiry (@RequestBody InquiryDetailVO detail,HttpSession session){
 		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
 		if(!userNo.equals("0")) {
-			detail.setRole("USER");
-		}
+	        detail.setRole("USER");
+	    } else {
+	        detail.setRole("ADMIN"); // 관리자일 때 명시적으로 ADMIN 설정
+	    }
 		detail.setWriterId((Integer.parseInt(userNo)));
 		int result = iService.addInquiry(detail);
 		

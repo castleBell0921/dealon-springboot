@@ -1,0 +1,21 @@
+.admin-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+}
+
+.admin-table th,
+.admin-table td {
+	padding: 12px;
+	border-bottom: 1px solid #eee;
+	text-align: center;
+}
+
+.btn-sm-reply {
+	padding: 5px 10px;
+	background: #6f42c1;
+	color: #fff;
+	border-radius: 4px;
+	text-decoration: none;
+	font-size: 12px;
+}

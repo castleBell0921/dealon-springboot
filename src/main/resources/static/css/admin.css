@@ -170,3 +170,8 @@ a { text-decoration: none; color: inherit; }
 .report-top { display: flex; justify-content: space-between; margin-bottom: 8px; }
 .report-top .date { color: #888; }
 .report-text { color: #555; line-height: 1.4; word-break: keep-all; }
+
+/* 답변 상태 배지 스타일 */
+.status-badge.open {  color: #ff5722; }      /* 대기: 주황 */
+.status-badge.answered {  color: #4caf50; }  /* 완료: 초록 */
+

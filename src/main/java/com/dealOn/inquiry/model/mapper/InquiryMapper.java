@@ -25,5 +25,9 @@ public interface InquiryMapper {
 	int getInquiryCount(String userNo);
 
 	int addInquiry(InquiryDetailVO detail);
+
+	int getAllInquiryCount();
+
+	List<InquiryVO> getAllInquiryList(RowBounds rowBounds);
 	
 }

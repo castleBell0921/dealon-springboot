@@ -108,6 +108,17 @@ public class InquiryService {
 		return iMapper.addInquiry(detail);
 	}
 
+	public int getAllInquiryCount() {
+		return iMapper.getAllInquiryCount();
+	}
+
+	public List<InquiryVO> getAllInquiryList(PageInfo pi) {
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return iMapper.getAllInquiryList(rowBounds);
+	}
+
 	
 
 }

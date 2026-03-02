@@ -4,26 +4,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import com.dealOn.admin.model.vo.AdminStats;
-import com.dealOn.admin.model.vo.UserDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dealOn.admin.model.service.AdminService;
+import com.dealOn.admin.model.vo.AdminStats;
+import com.dealOn.admin.model.vo.UserDetail;
+import com.dealOn.admin.model.vo.UserList;
 import com.dealOn.chat.model.service.ChatService;
 import com.dealOn.chat.model.vo.ChatRoom;
 import com.dealOn.common.Pagination;
 import com.dealOn.common.model.vo.PageInfo;
-import com.dealOn.product.model.mapper.ProductMapper;
+import com.dealOn.inquiry.model.service.InquiryService;
+import com.dealOn.inquiry.model.vo.InquiryDetailVO;
+import com.dealOn.inquiry.model.vo.InquiryVO;
 import com.dealOn.product.model.service.ProductService;
 import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.user.model.vo.User;
-import com.dealOn.admin.model.vo.UserList;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -38,6 +46,7 @@ public class AdminController {
 	private final ProductService productService;
 	private final AdminService adminService;
 	private final PasswordEncoder passwordEncoder;
+	private final InquiryService iService;
 
 	@ModelAttribute("stats")
 	public AdminStats globalAdminStats() {
@@ -271,7 +280,35 @@ public class AdminController {
 	}
 	
 	@GetMapping("/inquiry")
-	public String inquiryList() {
+	public String inquiryList(Model model, HttpServletRequest request, @RequestParam(value = "page", defaultValue="1") int currentPage) {
+		int listCount = iService.getAllInquiryCount();
+		int boardLimit = 8;
+		
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, boardLimit);
+		
+		List<InquiryVO> inquirys = iService.getAllInquiryList(pi);
+		System.out.println(inquirys);
+		for(InquiryVO inquiry : inquirys) {
+			switch(inquiry.getCategory()) {
+				case "account":
+		    		inquiry.setCategory("계정문의");
+		    	break;
+		    	case "system":
+		    		inquiry.setCategory("시스템 문의");
+	    		break;
+		    	case "etc":
+		    		inquiry.setCategory("기타");
+		    	break;
+			}
+		}
+		model.addAttribute("inquiryList", inquirys).addAttribute("requestURI", request.getRequestURL()).addAttribute("pi", pi);
 		return "admin/inquiryList";
+	}
+	@GetMapping("/helpPage/{id}")
+	public String helpDetail(@PathVariable("id") int inquiryId, Model model) {
+		InquiryVO inquiry = iService.getInquiry(inquiryId);
+		List<InquiryDetailVO> list = iService.getInquiryDetail(inquiryId);
+		model.addAttribute("inquiryDetails", list).addAttribute("inquiry", inquiry);
+		return "admin/helpPage";
 	}
 }

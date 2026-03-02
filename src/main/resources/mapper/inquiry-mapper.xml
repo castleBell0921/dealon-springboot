@@ -9,7 +9,7 @@
 	    INSERT INTO inquiry (
 	        category,
 	        title,
-	        user_id,
+	        user_no,
 	        image_url,
 	        created_at
 	        
@@ -42,15 +42,23 @@
 	<select id="getAllInquiry">
 		select * 
 		from inquiry
-		where user_id=#{userNo}
+		where user_no=#{userNo}
 	</select>
 	<select id="getInquiryCount">
 		select count(*)
 		from inquiry
-		where user_id = #{userNo}
+		where user_no = #{userNo}
 	</select>
 	<insert id="addInquiry">
 		insert into inquiry_details(inquiry_id, writer_id, role,content, created_at)
 		values(#{inquiryId}, #{writerId}, #{role}, #{content}, sysdate)
 	</insert>
+	<select id="getAllInquiryCount">
+		select count(*)
+		from inquiry
+	</select>
+	<select id = "getAllInquiryList">
+		select *
+		from inquiry
+	</select>
 </mapper>

@@ -138,4 +138,18 @@ public class InquiryController {
 		}
 	}
 	
+	@PostMapping("/resolve")
+	public String resolveInquiry(@RequestParam("inquiryId") int inquiryId, Model model, RedirectAttributes ra) {
+		int result = iService.resolveInquiry(inquiryId);
+		
+		if(result > 0) {
+			ra.addFlashAttribute("Msg", "문의가 종료되었습니다.");
+		} else {
+			ra.addFlashAttribute("Msg", "문의가 정상적으로 종료되지 않았습니다");
+		}
+		
+		return "redirect:/";
+		
+	}
+	
 }

@@ -14,6 +14,10 @@
 		    <div class="admin-content-header">
 		        <h2>1:1 문의 관리</h2>
 		    </div>
+		    <div class="inquiry-filter">
+			    <span class="filter-btn active">진행중인 문의사항</span>
+			    <span class="filter-btn">마감된 문의사항</span>
+			</div>
 		
 		    <table class="admin-table">
 		        <thead>
@@ -29,6 +33,7 @@
 		        </thead>
 		        <tbody>
 		            <tr th:each="list : ${inquiryList}">
+		            	<input type="hidden" id="inquiryId" th:value="${list.inquiryId}">
 		                <td th:text="${list.inquiryId}">5</td>
 		                <td th:text="${list.category}">계정문의</td>
 		                <td class="text-left">
@@ -37,16 +42,27 @@
 		                <td th:text="${list.userNo}"></td>
 		                <td th:text="${#temporals.format(list.createdAt, 'yyyy-MM-dd')}">2026-02-27</td>
 		                <td>
-		                    <span th:class="'status-badge ' + ${list.status.toLowerCase()}" 
-		                          th:text="${list.status == 'OPEN' ? '답변대기' : '답변완료'}"></span>
+		                    <span class="status-badge"
+							      th:classappend="
+							        ${list.status == 'CLOSED'} ? 'CLOSED' :
+							        (${list.lastAnswerRole == 'USER'} ? 'waiting' : 'answered')"
+							      th:text="
+							        ${list.status == 'CLOSED'} ? '문의마감' :
+							        (${list.lastAnswerRole == 'USER'} ? '답변대기' : '답변완료')">
+							</span>
 		                </td>
 		                <td>
-		                    <a th:href="@{/admin/helpPage/{id}(id=${list.inquiryId})}" class="btn-sm-reply">답변하기</a>
+		                    <a th:href="@{/admin/helpPage/{id}(id=${list.inquiryId})}"
+							   th:classappend="${list.status == 'CLOSED'} ? 'disabled' : ''"
+							   class="btn-sm-reply">
+							   답변하기
+							</a>
 		                </td>
 		            </tr>
 		        </tbody>
 		    </table>
-		    <div class="pagination">
+		    
+		    <div class="pagination" id="pagination">
 				    <a class="prev" th:if="${pi.currentPage > 1}" 
 				       th:href="@{|/admin/inquiry?page=${pi.currentPage - 1}|}">&lt;</a>
 				
@@ -64,7 +80,7 @@
 				</div>
 		</div>
 	  
-	    <script th:src="@{/js/admin/productMng.js}"></script>
+	    <script th:src="@{/js/admin/inquiry.js}"></script>
 	</div>
 </th:block>
 </html>

@@ -83,4 +83,27 @@ document.addEventListener('DOMContentLoaded', () => {
         
         threadContainer.insertAdjacentHTML('beforeend', messageHtml);
     }
+	
+	const popup = document.getElementById("userPopup");
+	const popupUserNo = document.getElementById("popupUserNo");
+	const popupUsername = document.getElementById("popupUsername");
+	const popupEmail = document.getElementById("popupEmail");
+	const popupClose = document.getElementById("popupClose");
+
+	document.querySelectorAll(".user-profile").forEach(profile => {
+
+	    profile.addEventListener("click", () => {
+
+	        popupUserNo.textContent = profile.dataset.userno;
+	        popupUsername.textContent = profile.dataset.username;
+	        popupEmail.textContent = profile.dataset.email;
+
+	        popup.style.display = "flex";
+	    });
+
+	});
+
+	popupClose.addEventListener("click", () => {
+	    popup.style.display = "none";
+	});
 });

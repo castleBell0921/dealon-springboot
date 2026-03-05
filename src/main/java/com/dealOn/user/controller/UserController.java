@@ -94,6 +94,11 @@ public class UserController {
 			ra.addFlashAttribute("loginFailMessage", "아이디 또는 비밀번호가 잘못되었습니다.");
 			return "redirect:/";
 		}
+		
+		if(loginUser != null && loginUser.getUserNo().equals("0")) {
+			model.addAttribute("loginUser", loginUser);
+			return "redirect:/admin/main";
+		}
 
 		// 소셜 로그인 유저
 		if (loginUser.getSocialId() != null) {
@@ -112,6 +117,7 @@ public class UserController {
 			ra.addFlashAttribute("loginFailMessage", "아이디 또는 비밀번호가 잘못되었습니다.");
 			return "redirect:/";
 		}
+		
 	}
 
 	@GetMapping("/logout")
@@ -130,6 +136,8 @@ public class UserController {
 			ra.addFlashAttribute("logoutSuccessMessage", "로그아웃 성공!");
 			return "redirect:/";
 		}
+		
+		
 	}
 
 	@GetMapping("/myProduct")

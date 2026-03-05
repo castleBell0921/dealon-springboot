@@ -2,49 +2,52 @@ document.addEventListener('DOMContentLoaded', () => {
 	const btn = document.querySelector('.btn-submit');
 	const inquiryId = document.querySelector('#inquiryId').value;
 	const contentArea = document.querySelector('#additionalContent');	
-	const threadContainer = document.querySelector('.inquiry-thread');
-	
-	btn.addEventListener('click', async () => {
-		const content = contentArea.value;
-		
-		if(!content){
-			alert("문의 내용을 입력해주세요.");
-			return;
-		}	
-		
-		const requestData = {
-			inquiryId: inquiryId,
-			content: content
-		};
-		
-		try{
-			btn.disabled = true;
+	const threadContainer = document.querySelector('.inquiry-thread');	
+	const resolveBtn = document.querySelector('.btn-resolve');
+	const resolveForm = document.querySelector('#resolveForm');
+	if(btn != null){
+		btn.addEventListener('click', async () => {
+			const content = contentArea.value;
 			
-			const response = await fetch('/help/addInquiry', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(requestData)
-			});
+			if(!content){
+				alert("문의 내용을 입력해주세요.");
+				return;
+			}	
 			
-			if(!response.ok){
-				throw new Error('전송 실패');
+			const requestData = {
+				inquiryId: inquiryId,
+				content: content
+			};
+			
+			try{
+				btn.disabled = true;
+				
+				const response = await fetch('/help/addInquiry', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(requestData)
+				});
+				
+				if(!response.ok){
+					throw new Error('전송 실패');
+				}
+				
+				const result = await response.json();
+				
+				appendMessage(result);
+				
+				contentArea.value = '';
+				window.scrollTo(0, document.body.scrollHeight);
+			} catch (error){
+				console.error('Error:', error);
+				alert('문의 중 오류가 발생했습니다.');
+			} finally {
+				btn.disabled = false;
 			}
-			
-			const result = await response.json();
-			
-			appendMessage(result);
-			
-			contentArea.value = '';
-			window.scrollTo(0, document.body.scrollHeight);
-		} catch (error){
-			console.error('Error:', error);
-			alert('문의 중 오류가 발생했습니다.');
-		} finally {
-			btn.disabled = false;
-		}
-	});
+		});
+	}
 	
 	function appendMessage(data) {
         // 서버에서 온 시간 데이터(createdAt)가 있다면 사용하고, 없으면 현재 시간 생성
@@ -71,4 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // threadContainer(대화 목록 영역)의 가장 마지막 자식으로 추가
         threadContainer.insertAdjacentHTML('beforeend', messageHtml);
     }
+	
+	
+	resolveBtn.addEventListener('click', ()=>{
+		resolveForm.submit();
+	});
+	
 });

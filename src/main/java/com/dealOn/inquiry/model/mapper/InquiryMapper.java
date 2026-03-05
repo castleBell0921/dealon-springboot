@@ -29,5 +29,13 @@ public interface InquiryMapper {
 	int getAllInquiryCount();
 
 	List<InquiryVO> getAllInquiryList(RowBounds rowBounds);
+
+	int resolveInquiry(int inquiryId);
+
+	int setInquiryRole(InquiryVO inquiry);
+
+	List<InquiryVO> getFinishedInquiry(RowBounds rowBounds);
+
+	int getFinishedInquiryCount();
 	
 }

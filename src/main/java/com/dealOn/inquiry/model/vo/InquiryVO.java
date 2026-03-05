@@ -19,7 +19,12 @@ public class InquiryVO {
     private String status;
     private LocalDateTime createdAt;
     private String imageUrl;
+    private String lastAnswerRole;
     // 상세 메시지 목록
     private List<InquiryDetailVO> details;
+    private String uImageUrl;
+    private String email;
+    private String nickname;
+    
 
 }

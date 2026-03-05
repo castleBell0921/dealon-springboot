@@ -287,6 +287,7 @@ public class AdminController {
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, boardLimit);
 		
 		List<InquiryVO> inquirys = iService.getAllInquiryList(pi);
+		System.out.println("inquiryList: " + inquirys);
 		System.out.println(inquirys);
 		for(InquiryVO inquiry : inquirys) {
 			switch(inquiry.getCategory()) {
@@ -310,5 +311,66 @@ public class AdminController {
 		List<InquiryDetailVO> list = iService.getInquiryDetail(inquiryId);
 		model.addAttribute("inquiryDetails", list).addAttribute("inquiry", inquiry);
 		return "admin/helpPage";
+	}
+	
+	@GetMapping("/finishedInquiry")
+	@ResponseBody
+	public ResponseEntity<?> finishedInquiryList(
+	        @RequestParam(value="page", defaultValue="1") int currentPage){
+
+	    int listCount = iService.getFinishedInquiryCount();
+	    int boardLimit = 8;
+
+	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, boardLimit);
+	    List<InquiryVO> list = iService.getFinishedInquiry(pi);
+
+	    for(InquiryVO inquiry : list) {
+			switch(inquiry.getCategory()) {
+				case "account":
+		    		inquiry.setCategory("계정문의");
+		    	break;
+		    	case "system":
+		    		inquiry.setCategory("시스템 문의");
+	    		break;
+		    	case "etc":
+		    		inquiry.setCategory("기타");
+		    	break;
+			}
+		}
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("list", list);
+	    result.put("pi", pi);
+
+	    return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/inquiryList")
+	@ResponseBody
+	public ResponseEntity<?> inquiringList(
+	        @RequestParam(value="page", defaultValue="1") int currentPage){
+
+	    int listCount = iService.getAllInquiryCount();
+	    int boardLimit = 8;
+
+	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, boardLimit);
+	    List<InquiryVO> list = iService.getAllInquiryList(pi);
+	    for(InquiryVO inquiry : list) {
+			switch(inquiry.getCategory()) {
+				case "account":
+		    		inquiry.setCategory("계정문의");
+		    	break;
+		    	case "system":
+		    		inquiry.setCategory("시스템 문의");
+	    		break;
+		    	case "etc":
+		    		inquiry.setCategory("기타");
+		    	break;
+			}
+		}
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("list", list);
+	    result.put("pi", pi);
+
+	    return ResponseEntity.ok(result);
 	}
 }

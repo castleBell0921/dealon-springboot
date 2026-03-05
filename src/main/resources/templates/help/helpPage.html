@@ -14,7 +14,7 @@
 <div class="app-container">
     <div th:replace="~{common/header :: header}"></div>
     <div th:replace="~{common/searchbar :: searchbar}"></div>
-
+	<input type="hidden" id="userNo" th:value="${inquiry.userNo}">
     <div class="home-page-container">
         <div class="home-content-layout">
             <main class="home-main-content">
@@ -56,14 +56,21 @@
 
 		
                         <footer class="inquiry-footer">
+           		           <th:block th:if="${inquiry.status != 'CLOSED'}">
                         		<input type="hidden" id="inquiryId" th:value="${inquiry.inquiryId}">
 	                            <div class="input-container">
 	                                <textarea id="additionalContent" name = "addContent" placeholder="추가 문의 내용을 입력해주세요."></textarea>
+	                               
 	                                <div class="button-group">
 	                                    <button type="button" class="btn-submit">전송</button>
 	                                </div>
 	                            </div>
-                            <button type="button" class="btn-resolve">문제가 해결됐어요</button>
+	                            <form id="resolveForm" action="/help/resolve" method="post">
+	                            	<input type="hidden" name="inquiryId" th:value="${inquiry.inquiryId}">
+
+                           			<button type="button" class="btn-resolve">문제가 해결됐어요</button>
+                            	</form>
+                            </th:block>
                         </footer>
                     </div>
                 </div>

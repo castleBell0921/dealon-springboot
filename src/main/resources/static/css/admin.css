@@ -172,6 +172,47 @@ a { text-decoration: none; color: inherit; }
 .report-text { color: #555; line-height: 1.4; word-break: keep-all; }
 
 /* 답변 상태 배지 스타일 */
-.status-badge.open {  color: #ff5722; }      /* 대기: 주황 */
-.status-badge.answered {  color: #4caf50; }  /* 완료: 초록 */
+.status-badge.waiting{
+    color: red;
+}
 
+.status-badge.answered{
+    color:green;
+}
+
+.status-badge.closed{
+    color:gray;
+}
+
+.disabled{
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+.inquiry-filter{
+    display:flex;
+    gap:12px;
+    margin:10px 0 20px 0;
+}
+
+.filter-btn{
+    padding:6px 14px;
+    font-size:14px;
+    border-radius:20px;
+    background:#f2f2f2;
+    color:#555;
+    cursor:pointer;
+    transition:all 0.2s ease;
+}
+
+.filter-btn:hover{
+    background:#e5e5e5;
+}
+
+.filter-btn.active{
+    background:#6c5ce7;
+    color:white;
+    font-weight:600;
+}

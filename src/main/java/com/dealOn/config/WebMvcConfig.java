@@ -1,10 +1,12 @@
 package com.dealOn.config;
 
-import com.dealOn.common.interceptor.VisitorLogInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.dealOn.admin.controller.AdminInterceptor;
+import com.dealOn.common.interceptor.VisitorLogInterceptor;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -17,5 +19,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(visitorLogInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/css/**", "/js/**", "/image/**", "/error");
+        
+        registry.addInterceptor(new AdminInterceptor())
+        .addPathPatterns("/admin/**")
+        .addPathPatterns("help/**");
     }
+    
+    
 }

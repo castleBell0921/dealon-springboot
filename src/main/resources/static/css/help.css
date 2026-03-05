@@ -125,13 +125,26 @@
 .user .time { text-align: right; } /* 고객은 오른쪽 정렬 */
 .admin .time { text-align: left; } /* 관리자는 왼쪽 정렬 */
 
-.admin-profile { 
-    width: 40px; height: 40px; 
-    background: var(--inquiry-accent); 
-    color: #fff; border-radius: 12px; /* 원형보다 스퀘어형이 더 세련됨 */
-    display: flex; align-items: center; justify-content: center; 
-    font-size: 12px; font-weight: bold; flex-shrink: 0; 
-    box-shadow: 0 4px 10px rgba(181, 126, 220, 0.3);
+.user-profile, .admin-profile{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.user-profile{
+    background:#4b7bec;
+    color:white;
+}
+
+.admin-profile{
+    background:#2f3640;
+    color:white;
 }
 
 /* 하단 입력바 */
@@ -247,4 +260,83 @@
     max-width: 250px;
 }
 
+button:disabled{
+    background:#ccc;
+    cursor:not-allowed;
+}
 
+.user-popup{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    backdrop-filter: blur(3px);
+}
+
+.popup-content{
+    background:white;
+    width:320px;
+    border-radius:12px;
+    padding:24px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.popup-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:16px;
+}
+
+.popup-profile img{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.popup-name{
+    font-weight:600;
+    font-size:16px;
+}
+
+.popup-email{
+    font-size:13px;
+    color:#777;
+}
+
+.popup-body{
+    border-top:1px solid #eee;
+    padding-top:12px;
+    margin-top:12px;
+}
+
+.info-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+}
+
+.popup-close{
+    margin-top:18px;
+    width:100%;
+    padding:8px;
+    border:none;
+    border-radius:6px;
+    background:#6c63ff;
+    color:white;
+    cursor:pointer;
+}
+
+.user-profile img{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    object-fit:cover;
+    cursor:pointer;
+}

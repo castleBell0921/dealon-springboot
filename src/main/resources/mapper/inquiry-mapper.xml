@@ -11,7 +11,8 @@
 	        title,
 	        user_no,
 	        image_url,
-	        created_at
+	        created_at,
+	        last_answer_role
 	        
 	    )
 	    VALUES (
@@ -19,7 +20,8 @@
 	        #{title},
 	        #{userNo},
 	        #{imageUrl},
-	        sysdate
+	        sysdate,
+	        default
 	    )	
 	</insert>
 	<insert id="insertInquiryDetail">
@@ -35,8 +37,9 @@
 		order by created_at asc
 	</select>
 	<select id="getInquiry">
-		select * 
-		from inquiry
+		select i.image_url, i.last_answer_role, i.inquiry_id, i.user_no, i.category, i.title, i.status, i.created_at, u.imageurl as uImageUrl, u.nickname, u.email
+		from inquiry i 
+			 join users u on i.user_no = u.user_no
 		where inquiry_id = #{inquiryId}
 	</select>
 	<select id="getAllInquiry">
@@ -56,9 +59,32 @@
 	<select id="getAllInquiryCount">
 		select count(*)
 		from inquiry
+		where status='OPEN'
 	</select>
 	<select id = "getAllInquiryList">
 		select *
 		from inquiry
+		where status= 'OPEN'
 	</select>
+	<update id="resolveInquiry">
+		update inquiry
+		set status = 'CLOSED'
+		where inquiry_id = #{inquiryId}
+	</update>
+	<update id="setInquiryRole">
+		update inquiry
+		set last_answer_role = #{lastAnswerRole}
+		where inquiry_id = #{inquiryId}
+	</update>
+	<select id="getFinishedInquiry">
+		select * 
+		from inquiry
+		where status='CLOSED'
+	</select>
+	<select id="getFinishedInquiryCount">
+		select count(*)
+		from inquiry
+		where status='CLOSED'
+	</select>
+		
 </mapper>

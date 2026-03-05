@@ -105,7 +105,12 @@ public class InquiryService {
 	}
 
 	public int addInquiry(InquiryDetailVO detail) {
-		return iMapper.addInquiry(detail);
+		InquiryVO inquiry = new InquiryVO();
+		inquiry.setLastAnswerRole(detail.getRole());
+		inquiry.setInquiryId(detail.getInquiryId());
+		int result = iMapper.addInquiry(detail);
+		int result2 = iMapper.setInquiryRole(inquiry);
+		return result * result2;
 	}
 
 	public int getAllInquiryCount() {
@@ -118,6 +123,24 @@ public class InquiryService {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		return iMapper.getAllInquiryList(rowBounds);
 	}
+
+	public int resolveInquiry(int inquiryId) {
+		return iMapper.resolveInquiry(inquiryId);
+	}
+
+	public List<InquiryVO> getFinishedInquiry(PageInfo pi) {
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return iMapper.getFinishedInquiry(rowBounds);
+	}
+
+	public int getFinishedInquiryCount() {
+		
+		return iMapper.getFinishedInquiryCount();
+	}
+
+	
 
 	
 

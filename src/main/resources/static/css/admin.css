@@ -22,6 +22,7 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     background-color: #fff;
     overflow: hidden;
+    margin: 0 auto;
 }
 
 /* --- 좌측 사이드바 --- */

@@ -1,17 +1,17 @@
 /* 1. 레이아웃 정렬 */
-.main-wrap {
-    display: flex;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    align-items: flex-start;
-}
+/*.main-wrap {*/
+/*    display: flex;*/
+/*    max-width: 1200px;*/
+/*    margin: 0 auto;*/
+/*    padding: 40px 20px;*/
+/*    align-items: flex-start;*/
+/*}*/
 
-.my-main-content {
-    flex: 1;
-    margin-left: 30px; /* 사이드바와의 간격 */
-    min-width: 0;      /* 플렉스 밀림 방지 */
-}
+/*.my-main-content {*/
+/*    flex: 1;*/
+/*    margin-left: 30px; !* 사이드바와의 간격 *!*/
+/*    min-width: 0;      !* 플렉스 밀림 방지 *!*/
+/*}*/
 
 /* 2. 타이틀 영역 */
 .inquiry-list-header {

@@ -1,22 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     // 1920 초과시 화면크기 스케일링
-    function scaleApp() {
-        const baseWidth = 1945;
-        const windowWidth = window.innerWidth;
-        const scaler = document.getElementById('app-scaler');
-
-        if (!scaler) return;
-
-        const scale = windowWidth / baseWidth;
-
-        scaler.style.transform = `scale(${scale})`;
-        scaler.style.height = `${window.innerHeight / scale}px`;
-        scaler.style.width = `${baseWidth}px`;
-    }
-
-    window.addEventListener('resize', scaleApp);
-    scaleApp();
+    // function scaleApp() {
+    //     const baseWidth = 1945;
+    //     const windowWidth = window.innerWidth;
+    //     const scaler = document.getElementById('app-scaler');
+    //
+    //     if (!scaler) return;
+    //
+    //     const scale = windowWidth / baseWidth;
+    //
+    //     scaler.style.transform = `scale(${scale})`;
+    //     scaler.style.height = `${window.innerHeight / scale}px`;
+    //     scaler.style.width = `${baseWidth}px`;
+    // }
+    //
+    // window.addEventListener('resize', scaleApp);
+    // scaleApp();
 
 
     // stats.html 카운트업 애니메이션

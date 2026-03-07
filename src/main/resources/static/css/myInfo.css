@@ -1,10 +1,25 @@
 /* src/main/resources/static/css/profile.css */
-.main-wrap {
+/*.main-wrap {*/
+/*	display: flex;*/
+/*	max-width: 1500px; !* 현재 좁다면 이 값을 더 큰 값(예: 1400px, 1600px)으로 설정 *!*/
+/*	margin: 40px 0rem; !* 상하 여백 확대 *!*/
+/*	gap: 50px; !* 사이드바와 메인 영역 간격 확대 *!*/
+/*	align-items: flex-start;*/
+/*}*/
+
+.my-page-container {
 	display: flex;
-	max-width: 1500px; /* 현재 좁다면 이 값을 더 큰 값(예: 1400px, 1600px)으로 설정 */
-	margin: 40px 0rem; /* 상하 여백 확대 */
-	gap: 50px; /* 사이드바와 메인 영역 간격 확대 */
+	max-width: 1500px;
+	margin: 40px auto;
+	gap: 50px;
 	align-items: flex-start;
+	min-height: 80rem;
+}
+
+.my-main-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 /* 프로필 카드 (avatar + meta) */

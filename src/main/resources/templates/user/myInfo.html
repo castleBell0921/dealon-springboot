@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>내 정보 수정</title>
+<script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" th:href="@{/css/App.css}">
 <link rel="stylesheet" th:href="@{/css/common.css}">
 <link rel="stylesheet" th:href="@{/css/myInfoSideBar.css}">
@@ -16,12 +17,12 @@
 		<div th:replace="~{common/header :: header}"></div>
 		<div th:replace="~{common/searchbar :: searchbar}"></div>
 
-		<main class="main-wrap">
+		<div class="my-page-container">
 			<!-- 사이드바 -->
 			<div th:replace="~{user/sidebar :: sidebar}"></div>
 
 			<!-- 프로필/폼 영역 -->
-			<section class="profile-area">
+			<main class="my-main-content">
 				<!-- 내 정보 수정 폼 -->
 				<div class="profile-form-card">
 					<h1>내 정보 수정</h1>
@@ -91,8 +92,8 @@
 					</form>
 				</div>
 
-			</section>
-		</main>
+			</main>
+		</div>
 	</div>
 	<div th:if="${msg}">
 		<script th:inline="javascript">

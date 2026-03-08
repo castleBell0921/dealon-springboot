@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dealOn.admin.model.vo.AdminStats;
+import com.dealOn.admin.model.vo.ChartDataVO;
 import com.dealOn.admin.model.vo.UserDetail;
 import com.dealOn.admin.model.vo.UserList;
 import org.apache.ibatis.session.RowBounds;
@@ -108,5 +109,31 @@ public class AdminService {
 
 	public AdminStats getAdminStats() {
 		return adminMapper.getAdminStats();
+	}
+
+
+
+
+	// 대시보드 차트
+	public List<ChartDataVO> getCategoryChartData() {
+		return adminMapper.getCategoryChartData();
+	}
+
+	public List<ChartDataVO> getStateChartData() {
+		return adminMapper.getStateChartData();
+	}
+
+	public Map<String, String> getVisitorDateRange() {
+		return adminMapper.getVisitorDateRange();
+	}
+
+	public List<ChartDataVO> getVisitorChartData(String type, String year, String month) {
+		if ("monthly".equals(type)) {
+			return adminMapper.getMonthlyVisitorChart(year);
+		} else {
+			// 주간 조회일 경우 (YYYY-MM 형식으로 전달)
+			String yearMonth = year + "-" + String.format("%02d", Integer.parseInt(month));
+			return adminMapper.getWeeklyVisitorChart(yearMonth);
+		}
 	}
 }

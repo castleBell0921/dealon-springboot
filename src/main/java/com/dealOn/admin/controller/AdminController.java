@@ -373,4 +373,33 @@ public class AdminController {
 
 	    return ResponseEntity.ok(result);
 	}
+
+	@GetMapping("/api/dashboard/charts")
+	@ResponseBody
+	public Map<String, Object> getDashboardChartData(
+			@RequestParam(value = "type", defaultValue = "weekly") String type,
+			@RequestParam(value = "year", required = false) String year,
+			@RequestParam(value = "month", required = false) String month) {
+
+		Map<String, Object> response = new HashMap<>();
+
+		// 카테고리 및 상태 데이터
+		response.put("categoryData", adminService.getCategoryChartData());
+		response.put("stateData", adminService.getStateChartData());
+
+		// 방문자 데이터 범위 (최초 접속 기록 ~ 현재)
+		Map<String, String> dateRange = adminService.getVisitorDateRange();
+		response.put("dateRange", dateRange);
+
+		// 초기 로드 시 파라미터가 없으면 현재 날짜 기준으로 세팅
+		if (year == null || year.isEmpty()) {
+			year = dateRange.get("MAX_DATE").split("-")[0];
+			month = dateRange.get("MAX_DATE").split("-")[1];
+		}
+
+		// 방문자 차트 데이터
+		response.put("visitorData", adminService.getVisitorChartData(type, year, month));
+
+		return response;
+	}
 }

@@ -69,7 +69,7 @@
 	                        <footer class="inquiry-footer">
 	                        		<input type="hidden" id="inquiryId" th:value="${inquiry.inquiryId}">
 		                            <div class="input-container">
-		                                <textarea id="additionalContent" name = "addContent" placeholder="추가 문의 내용을 입력해주세요."></textarea>
+		                                <textarea id="additionalContent" name = "addContent" placeholder="답변 내용을 입력해주세요."></textarea>
 		                                <div class="button-group">
 		                                    <button th:disabled="${inquiry.status == 'CLOSED'}" type="button" class="btn-submit">전송</button>
 		                                </div>

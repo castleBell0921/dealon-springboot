@@ -53,7 +53,7 @@ public class TemplatesResolver{
 	}
 	
 	@Bean
-	public ClassLoaderTemplateResolver HelpResolver() {
+	public ClassLoaderTemplateResolver helpResolver() {
 		ClassLoaderTemplateResolver cResolver = new ClassLoaderTemplateResolver();
 
 		cResolver.setPrefix("templates/help/");
@@ -65,4 +65,6 @@ public class TemplatesResolver{
 		return cResolver;
 
 	}
+	
+	
 }

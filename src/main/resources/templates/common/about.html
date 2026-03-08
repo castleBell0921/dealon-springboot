@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>개발자 소개</title>
+
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<link rel="stylesheet" th:href="@{/css/App.css}">
+<link rel="stylesheet" th:href="@{/css/footer.css}">
+<link rel="stylesheet" th:href="@{/css/about.css}">
+<link rel="stylesheet" th:href="@{/css/Home.css}">
+
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <div th:replace="~{common/header :: header}"></div>
+    <div th:replace="~{common/searchbar :: searchbar}"></div>
+
+    <div class="about-container">
+
+        <h1 class="about-title">DealOn 개발 팀</h1>
+        <p class="about-desc">
+            DealOn 서비스를 개발한 팀원 소개입니다.
+        </p>
+
+        <div class="team-grid">
+
+            <!-- 개발자 1 -->
+            <div class="team-card">
+
+                <img src="/images/profile/dev1.png" class="dev-img">
+
+                <h3>황성현</h3>
+                <p class="role">FullStack Developer</p>
+
+                <a href="https://github.com/tjdgusghkd" target="_blank" class="github-btn">
+                    GitHub 보기
+                </a>
+
+            </div>
+
+
+            <!-- 개발자 2 -->
+            <div class="team-card">
+
+                <img src="/images/profile/dev2.png" class="dev-img">
+
+                <h3>권태혁</h3>
+                <p class="role">FullStack Developer</p>
+
+                <a href="https://github.com/HandsomeSalgu" target="_blank" class="github-btn">
+                    GitHub 보기
+                </a>
+
+            </div>
+
+
+            <!-- 개발자 3 -->
+            <div class="team-card">
+
+                <img src="/images/profile/dev3.png" class="dev-img">
+
+                <h3>문성종</h3>
+                <p class="role">FullStack Developer</p>
+
+
+                <a href="https://github.com/castleBell0921" target="_blank" class="github-btn">
+                    GitHub 보기
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div th:replace="~{common/footer :: footer}"></div>
+
+</div>
+
+</body>
+</html>

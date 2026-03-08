@@ -1,0 +1,86 @@
+/* 컨테이너 */
+.terms-page-container {
+    background: #fff;
+    padding: 60px 40px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* 제목 영역 */
+.terms-page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    text-align: center;
+}
+
+/* 섹션 설정 */
+.terms-section {
+    margin-bottom: 35px;
+}
+
+.terms-section h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+/* 강조를 위한 포인트 (필요시 사용) */
+.terms-section h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background-color: #3b82f6; /* Deal-On 포인트 컬러로 변경 가능 */
+    margin-right: 10px;
+    border-radius: 2px;
+}
+
+/* 본문 텍스트 */
+.terms-section p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+    word-break: keep-all; /* 한글 줄바꿈 최적화 */
+}
+
+/* 리스트 스타일 */
+.terms-section ul {
+    list-style: none;
+    padding-left: 5px;
+}
+
+.terms-section li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.terms-section li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #888;
+    font-weight: bold;
+}
+
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    .terms-page-container {
+        padding: 30px 20px;
+        margin-top: 10px;
+    }
+    .terms-page-title {
+        font-size: 1.5rem;
+    }
+}

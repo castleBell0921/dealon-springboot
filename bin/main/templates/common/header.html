@@ -23,8 +23,10 @@
 			</div>
 		</th:block>
 		<th:block th:if="${session.loginUser != null && session.loginUser.userNo == '0'}">
-			<a th:href="@{/admin/main}"><button class="admin-button text-14px fw-medium">관리자 접속 버튼</button></a>
-			<button type="button" id="logoutButton">로그아웃</button>
+			<div class="topbar-actions">
+				<a th:href="@{/admin/main}"><button class="admin-button text-14px">관리자 접속 버튼</button></a>
+				<button type="button" id="logoutButton">로그아웃</button>
+			</div>
 		</th:block>
 		
 		<th:block th:if="${session.loginUser != null && session.loginUser.userNo != '0'}">

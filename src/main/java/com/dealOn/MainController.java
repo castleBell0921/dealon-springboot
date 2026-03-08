@@ -79,5 +79,19 @@ public class MainController {
 		}
 		return "moreProductList";
 	}
-
+	
+	@GetMapping("/about")
+	public String aboutPage() {
+		return "common/about";
+	}
+	
+	@GetMapping("/privacy")
+	public String privacyPage() {
+		return "common/terms";
+	}
+	
+	@GetMapping("/terms")
+	public String termsPage() {
+		return "common/privacy";
+	}
 }

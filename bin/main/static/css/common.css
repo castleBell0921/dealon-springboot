@@ -1167,11 +1167,99 @@
     pointer-events: auto;
 }
 
-.admin-button{
-	background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    margin-right: 8rem;
-	
+/*.admin-button{*/
+/*	background: none;*/
+/*    border: none;*/
+/*    padding: 0;*/
+/*    cursor: pointer;*/
+/*    margin-right: 8rem;*/
+/*	*/
+/*}*/
+
+.about-container{
+
+    max-width:1200px;
+    margin:80px auto;
+    padding:40px;
+    text-align:center;
+
+}
+
+.about-title{
+
+    font-size:36px;
+    font-weight:700;
+    margin-bottom:10px;
+
+}
+
+.about-desc{
+
+    color:#666;
+    margin-bottom:60px;
+
+}
+
+.team-grid{
+
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    flex-wrap:wrap;
+
+}
+
+.team-card{
+
+    width:260px;
+    background:white;
+    border-radius:12px;
+    padding:30px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.08);
+    transition:0.3s;
+
+}
+
+.team-card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.dev-img{
+
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:15px;
+
+}
+
+.role{
+
+    color:#888;
+    font-size:14px;
+    margin-bottom:10px;
+
+}
+
+.intro{
+
+    font-size:14px;
+    color:#555;
+    margin-bottom:20px;
+
+}
+
+.github-btn{
+
+    display:inline-block;
+    padding:8px 16px;
+    background:#24292e;
+    color:white;
+    border-radius:6px;
+    text-decoration:none;
+    font-size:14px;
+
 }

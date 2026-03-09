@@ -78,3 +78,66 @@
     border: 2px dashed #ddd;
     border-radius: 8px;
 }
+
+.chart-filters {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* 드롭다운 공통 스타일 */
+.form-select {
+    appearance: none; /* 기본 화살표 제거 */
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 6px 30px 6px 12px;
+    font-size: 13px;
+    color: #444;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.form-select:hover {
+    border-color: #7ba0ff;
+    box-shadow: 0 2px 8px rgba(123, 160, 255, 0.15);
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #7ba0ff;
+    box-shadow: 0 0 0 3px rgba(123, 160, 255, 0.1);
+}
+
+/* 드롭다운 크기 미세 조정 */
+#filter-year {
+    width: 105px !important;
+}
+
+#filter-month {
+    width: 85px !important;
+}
+
+.chart-tabs {
+    display: flex;
+    gap: 15px;
+}
+
+.chart-tab {
+    padding: 5px 2px;
+    transition: color 0.2s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.chart-tab:hover {
+    color: #333;
+}
+
+.chart-tab.active {
+    color: #000;
+    border-bottom: 2px solid #333;
+}

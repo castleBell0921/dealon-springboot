@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dealOn.admin.model.vo.AdminStats;
+import com.dealOn.admin.model.vo.ChartDataVO;
 import com.dealOn.admin.model.vo.UserDetail;
 import com.dealOn.admin.model.vo.UserList;
 import org.apache.ibatis.annotations.Mapper;
@@ -50,4 +51,11 @@ public interface AdminMapper {
 	int updateUser(UserDetail userDetail);
 
     AdminStats getAdminStats();
+
+	// 대시보드 차트용
+	List<ChartDataVO> getCategoryChartData();
+	List<ChartDataVO> getStateChartData();
+	Map<String, String> getVisitorDateRange();
+	List<ChartDataVO> getMonthlyVisitorChart(@Param("year") String year);
+	List<ChartDataVO> getWeeklyVisitorChart(@Param("yearMonth") String yearMonth);
 }

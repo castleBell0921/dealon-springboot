@@ -235,4 +235,45 @@
 	<select id="getAdminStats" resultType="com.dealOn.admin.model.vo.AdminStats">
 		SELECT * FROM ADMIN_STATS_VIEW
 	</select>
+
+
+
+
+
+	<select id="getCategoryChartData" resultType="com.dealOn.admin.model.vo.ChartDataVO">
+		SELECT C.NAME AS label, COUNT(P.NO) AS value
+		FROM PRODUCT P
+			JOIN CATEGORY C ON P.CATEGORY = C.NO
+		GROUP BY C.NAME
+	</select>
+
+	<select id="getStateChartData" resultType="com.dealOn.admin.model.vo.ChartDataVO">
+		SELECT STATE AS label, COUNT(*) AS value
+		FROM NORMAL
+		WHERE STATE IN ('A', 'R', 'S', 'D')
+		GROUP BY STATE
+	</select>
+
+	<select id="getVisitorDateRange" resultType="map">
+		SELECT
+			COALESCE(TO_CHAR(MIN(VISIT_DATE), 'YYYY-MM'), TO_CHAR(SYSDATE, 'YYYY-MM')) AS "MIN_DATE",
+			COALESCE(TO_CHAR(MAX(VISIT_DATE), 'YYYY-MM'), TO_CHAR(SYSDATE, 'YYYY-MM')) AS "MAX_DATE"
+		FROM VISITOR_LOG
+	</select>
+
+	<select id="getMonthlyVisitorChart" resultType="com.dealOn.admin.model.vo.ChartDataVO">
+		SELECT TO_CHAR(VISIT_DATE, 'MM') AS label, COUNT(SESSION_ID) AS value
+		FROM VISITOR_LOG
+		WHERE TO_CHAR(VISIT_DATE, 'YYYY') = #{year}
+		GROUP BY TO_CHAR(VISIT_DATE, 'MM')
+		ORDER BY label ASC
+	</select>
+
+	<select id="getWeeklyVisitorChart" resultType="com.dealOn.admin.model.vo.ChartDataVO">
+		SELECT TO_CHAR(VISIT_DATE, 'W') AS label, COUNT(SESSION_ID) AS value
+		FROM VISITOR_LOG
+		WHERE TO_CHAR(VISIT_DATE, 'YYYY-MM') = #{yearMonth}
+		GROUP BY TO_CHAR(VISIT_DATE, 'W')
+		ORDER BY label ASC
+	</select>
 </mapper>

@@ -43,12 +43,12 @@ public class InquiryController {
 			ra.addFlashAttribute("Msg", "로그인 후 이용 가능한 기능입니다.");
 			return "redirect:/";
 		}else {
-			return "/help/firstHelp";
+			return "firstHelp";
 		}	
 	}
 	@GetMapping("/helpPage")
 	public String list() {
-		return "/help/helpPage";
+		return "helpPage";
 	}
 	
 	@PostMapping("/insertInquiry")

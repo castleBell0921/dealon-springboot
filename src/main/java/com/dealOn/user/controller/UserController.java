@@ -313,7 +313,7 @@ public class UserController {
 		return "user/sellerPage";
 	}
 	@GetMapping("/mySellList")
-	public String mySesllList(HttpSession session, Model model, HttpServletRequest request) {
+	public String mySellList(HttpSession session, Model model, HttpServletRequest request) {
 		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
 		
 		List<ProductVO> list = pService.getMySellList(userNo);

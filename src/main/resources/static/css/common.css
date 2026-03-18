@@ -320,7 +320,6 @@
 
 /* RecentViewed */
 .recent-viewed-container {
-  width: 310px;
   display: flex;
   justify-content: flex-end;
   margin-left: 5rem; /* 추가 */
@@ -1263,4 +1262,53 @@
     text-decoration:none;
     font-size:14px;
 
+}
+
+.google-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 18.1rem;
+    max-width: 320px;
+    height: 2.78rem;
+
+    border: 1px solid #dadce0;
+    border-radius: 7.1px;
+
+    background-color: white;
+    cursor: pointer;
+
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 14px;
+    color: #3c4043;
+
+    transition: box-shadow 0.2s ease;
+    
+    margin-left: 3.1rem;
+}
+
+/* .google-button:hover {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.google-button:active {
+    background-color: #f8f9fa;
+} */
+
+.google-button-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+    justify-items: flex-start;
+}
+
+.google-text {
+    font-weight: 500;
 }

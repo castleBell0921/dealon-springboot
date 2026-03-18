@@ -57,7 +57,18 @@ document.addEventListener("DOMContentLoaded", function() {
         deleteBtn.addEventListener("click", function() {
             // productNo는 normalDetail.html에서 선언한 전역변수
             if (confirm("정말로 이 상품을 삭제하시겠습니까?")) {
-                location.href = `/product/delete/${productNo}`;
+                fetch(`/product/delete/${productNo}`, {
+                    method: 'POST'
+                }).then((response) => {
+                    if (response.redirected) {
+                        location.href = response.url;
+                        return;
+                    }
+                    location.href = '/product/list';
+                }).catch((error) => {
+                    console.error('delete failed', error);
+                    alert('상품 삭제에 실패했습니다.');
+                });
             }
         });
     }

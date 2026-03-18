@@ -309,14 +309,15 @@
             AND P.SALES_LOCATION LIKE '%' || #{location} || '%'
         </if>
         <if test="minPrice != null">
-            AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &gt;= #{minPrice}
+            AND TO_NUMBER(NP.PRICE) &gt;= #{minPrice}
         </if>
         <if test="maxPrice != null">
-            AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &lt;= #{maxPrice}
+            AND TO_NUMBER(NP.PRICE) &lt;= #{maxPrice}
         </if>
         <if test="availableOnly == true">
-            AND N.STATE != 'N'
+            AND NP.STATE != 'N'
         </if>
+        ORDER BY P.create_date DESC
     </select>
     <select id="getBestProduct" resultMap="productResultMap">
         SELECT DISTINCT
@@ -346,13 +347,13 @@
             AND P.SALES_LOCATION LIKE '%' || #{location} || '%'
         </if>
         <if test="minPrice != null">
-            AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &gt;= #{minPrice}
+            AND TO_NUMBER(NP.PRICE) &gt;= #{minPrice}
         </if>
         <if test="maxPrice != null">
-            AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &lt;= #{maxPrice}
+            AND TO_NUMBER(NP.PRICE) &lt;= #{maxPrice}
         </if>
         <if test="availableOnly == true">
-            AND N.STATE != 'N'
+            AND NP.STATE != 'N'
         </if>
         ORDER BY NP.VIEWS DESC
     </select>
@@ -384,13 +385,13 @@
             AND P.SALES_LOCATION LIKE '%' || #{location} || '%'
         </if>
         <if test="minPrice != null">
-            AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &gt;= #{minPrice}
+            AND TO_NUMBER(NP.PRICE) &gt;= #{minPrice}
         </if>
         <if test="maxPrice != null">
-            AND COALESCE(TO_NUMBER(N.PRICE), TO_NUMBER(A.CURRENT_PRICE)) &lt;= #{maxPrice}
+            AND TO_NUMBER(NP.PRICE) &lt;= #{maxPrice}
         </if>
         <if test="availableOnly == true">
-            AND N.STATE != 'N'
+            AND NP.STATE != 'N'
         </if>
         ORDER BY P.create_date DESC
     </select>

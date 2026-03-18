@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	// 1) 로그인 유저일 경우: DB에서 최근 본 상품 가져와 localStorage에 반영하고 렌더
 	if (userNo != 'guest') {
 		try {
-			const res = await fetch(`/common/recent-view/${userNo}`);
+			const res = await fetch('/common/recent-view');
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 			const data = await res.json();
 			console.log('최근 본 상품(DB):', data);

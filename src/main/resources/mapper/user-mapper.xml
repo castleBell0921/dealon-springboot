@@ -61,8 +61,10 @@
 <select id="emailCheck">
 	select count(*)
 	from users
-	where email=#{email} and
-		  user_no!=#{userNo}
+	where email=#{email}
+	<if test="userNo != null">
+		  and user_no!=#{userNo}
+	</if>
 		  
 </select>
 

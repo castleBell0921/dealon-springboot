@@ -25,72 +25,102 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("common")
 public class CommonController {
-	private final CommonService cService;
+    private final CommonService cService;
 
-	@PostMapping("/recent-search")
-	public ResponseEntity<Void> recentSearch(@RequestBody Map<String, String> data, HttpSession session) {
-		HashMap<String, Object> map = new HashMap<String,Object>();
-	    String keyword = data.get("keyword");
-	    User loginUser = (User)session.getAttribute("loginUser");
-	    map.put("keyword", keyword);
-	    map.put("userNo", loginUser.getUserNo());
-	    
-	    System.out.println("최근 검색어: " + keyword);
-	    cService.recentSearchSave(map);
-	    return ResponseEntity.ok().build();
-	}
-	@GetMapping("/recent-search/{userNo}")
-	public ResponseEntity<List<Map<String, Object>>> getRecentSearch(@PathVariable("userNo") String userNo) {
-	    List<Map<String, Object>> recentList = cService.getRecentSearch(userNo);
-	    System.out.println("최근 검색어: " + recentList);
-	    return ResponseEntity.ok(recentList);
-	}
-	
-	@PostMapping("/recent-view")
-	public ResponseEntity<Void> recentView(@RequestBody Map<String, String> data, HttpSession session) {
-		User loginUser = (User)session.getAttribute("loginUser");
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		String productNo = data.get("productNo");
-		String productName = data.get("productName");
-		String productImage = data.get("productImage");
-		
-		map.put("productNo", productNo);
-		map.put("productName", productName);
-		map.put("productImage", productImage);
-		map.put("userNo", loginUser.getUserNo());
-		
-		cService.recentViewSave(map);
-		return ResponseEntity.ok().build();
-	}
-	@GetMapping("/recent-view/{userNo}")
-	public ResponseEntity<List<Map<String, Object>>> getRecentView(@PathVariable("userNo") String userNo) {
-	    List<Map<String, Object>> recentList = cService.getRecentView(userNo);
-	    System.out.println("최근 검색어: " + recentList);
-	    return ResponseEntity.ok(recentList);
-	}
-	
+    private User getLoginUser(HttpSession session) {
+        return (User) session.getAttribute("loginUser");
+    }
 
-	@GetMapping("/location")
-	public ResponseEntity<Map<String, String>> getLocation(@RequestParam("lat") double lat,
-														   @RequestParam("lng") double lng) {
-		String region = cService.getRegionFromCoordinates(lat, lng);
+    @PostMapping("/recent-search")
+    public ResponseEntity<Void> recentSearch(@RequestBody Map<String, String> data, HttpSession session) {
+        User loginUser = getLoginUser(session);
+        String keyword = data.get("keyword");
 
-		Map<String, String> response = new HashMap<>();
-		response.put("region", region);
+        if (loginUser == null) {
+            return ResponseEntity.status(401).build();
+        }
+        if (keyword == null || keyword.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
 
-		return ResponseEntity.ok(response);
-	}
-	
-	
-	@GetMapping("/myReviewState")
-	@ResponseBody
-	public List<ReviewVO> myReviewState(HttpSession session) {
-		User loginUser = (User)session.getAttribute("loginUser");
-		List<ReviewVO> data = cService.myReviewState(loginUser.getUserNo());
-		
-		System.out.println("review: " + data);
-		return data;
-	}
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("keyword", keyword);
+        map.put("userNo", loginUser.getUserNo());
+        cService.recentSearchSave(map);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/recent-search")
+    public ResponseEntity<List<Map<String, Object>>> getRecentSearch(HttpSession session) {
+        User loginUser = getLoginUser(session);
+        if (loginUser == null) {
+            return ResponseEntity.status(401).build();
+        }
+        return ResponseEntity.ok(cService.getRecentSearch(loginUser.getUserNo()));
+    }
+
+    @GetMapping("/recent-search/{userNo}")
+    public ResponseEntity<List<Map<String, Object>>> getRecentSearch(@PathVariable("userNo") String userNo, HttpSession session) {
+        User loginUser = getLoginUser(session);
+        if (loginUser == null || !loginUser.getUserNo().equals(userNo)) {
+            return ResponseEntity.status(403).build();
+        }
+        return ResponseEntity.ok(cService.getRecentSearch(userNo));
+    }
+
+    @PostMapping("/recent-view")
+    public ResponseEntity<Void> recentView(@RequestBody Map<String, String> data, HttpSession session) {
+        User loginUser = getLoginUser(session);
+        if (loginUser == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("productNo", data.get("productNo"));
+        map.put("productName", data.get("productName"));
+        map.put("productImage", data.get("productImage"));
+        map.put("userNo", loginUser.getUserNo());
+
+        cService.recentViewSave(map);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/recent-view")
+    public ResponseEntity<List<Map<String, Object>>> getRecentView(HttpSession session) {
+        User loginUser = getLoginUser(session);
+        if (loginUser == null) {
+            return ResponseEntity.status(401).build();
+        }
+        return ResponseEntity.ok(cService.getRecentView(loginUser.getUserNo()));
+    }
+
+    @GetMapping("/recent-view/{userNo}")
+    public ResponseEntity<List<Map<String, Object>>> getRecentView(@PathVariable("userNo") String userNo, HttpSession session) {
+        User loginUser = getLoginUser(session);
+        if (loginUser == null || !loginUser.getUserNo().equals(userNo)) {
+            return ResponseEntity.status(403).build();
+        }
+        return ResponseEntity.ok(cService.getRecentView(userNo));
+    }
+
+    @GetMapping("/location")
+    public ResponseEntity<Map<String, String>> getLocation(@RequestParam("lat") double lat,
+                                                           @RequestParam("lng") double lng) {
+        String region = cService.getRegionFromCoordinates(lat, lng);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("region", region);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/myReviewState")
+    @ResponseBody
+    public List<ReviewVO> myReviewState(HttpSession session) {
+        User loginUser = getLoginUser(session);
+        if (loginUser == null) {
+            return List.of();
+        }
+        return cService.myReviewState(loginUser.getUserNo());
+    }
 }

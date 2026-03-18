@@ -32,7 +32,7 @@ public class MainController {
 		filters.put("location", location);
 		filters.put("minPrice", minPrice);
 		filters.put("maxPrice", maxPrice);
-		filters.put("availableOnly", availableOnly != null);
+		filters.put("availableOnly", Boolean.TRUE.equals(availableOnly));
 		List<ProductVO> allList = pService.getAllProduct(filters);
 		List<ProductVO> topAllList = allList != null ? allList.subList(0, Math.min(20, allList.size())) : new ArrayList<>();
 		
@@ -59,7 +59,7 @@ public class MainController {
 		filters.put("location", location);
 		filters.put("minPrice", minPrice);
 		filters.put("maxPrice", maxPrice);
-		filters.put("availableOnly", availableOnly != null);
+		filters.put("availableOnly", Boolean.TRUE.equals(availableOnly));
 
 		List<CategoryVO> categories = pService.findAllCategories();
 		model.addAttribute("categories", categories);
@@ -87,11 +87,11 @@ public class MainController {
 	
 	@GetMapping("/privacy")
 	public String privacyPage() {
-		return "common/terms";
+		return "common/privacy";
 	}
 	
 	@GetMapping("/terms")
 	public String termsPage() {
-		return "common/privacy";
+		return "common/terms";
 	}
 }

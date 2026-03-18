@@ -25,8 +25,10 @@ document.addEventListener('click', async e => {
     // header.js에 정의된 함수 호출 (리뷰 작성 모드로)
     await fetchReviewDetails(reviewNo, fakeTargetItem);
 
-    // 모달 표시
-    reviewModal.style.display = 'flex';
+	reviewModal.removeAttribute('style');
+    reviewModal.style.setProperty('display', 'flex', 'important');
+    reviewModal.style.setProperty('visibility', 'visible', 'important');
+    reviewModal.style.setProperty('opacity', '1', 'important');
 	
   }
 });

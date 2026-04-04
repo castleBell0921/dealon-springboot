@@ -2,9 +2,14 @@ HELP.md
 .gradle
 .gradle/
 build/
+.gradle-user/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+.metadata/
+bootrun.out.log
+bootrun.err.log
+.temp-*
 
 ### STS ###
 .apt_generated

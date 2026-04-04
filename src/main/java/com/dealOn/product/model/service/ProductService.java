@@ -5,13 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -26,6 +24,7 @@ import com.dealOn.product.model.mapper.ProductMapper;
 import com.dealOn.product.model.vo.AddProductVO;
 import com.dealOn.product.model.vo.ProductVO;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,8 +36,6 @@ public class ProductService {
 	private final ProductMapper productMapper;
 	private final S3Service s3Service;
 
-	@Value("${app.ai.server-url}")
-	private String aiServerUrl;
 
 	public List<ProductVO> findProducts(Map<String, Object> filters) {
 		return productMapper.findProducts(filters);
@@ -200,10 +197,12 @@ public class ProductService {
 		return productMapper.getMyWishList(userNo);
 	}
 
-	public String analyzeImageWithAI(MultipartFile image) {
+	public String analyzeImageWithAI(MultipartFile image, HttpServletRequest request) {
 
 		// 다른 서버에 요청을 보내려고 사용
-		RestTemplate restTemplate = createAiRestTemplate();
+		String aiServerUrl = getAiServerUrl(request);
+
+		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -232,16 +231,17 @@ public class ProductService {
 		return response.getBody().get("category").toString();
 	}
 	
-	private RestTemplate createAiRestTemplate() {
-		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-		requestFactory.setConnectTimeout(5000);
-		requestFactory.setReadTimeout(20000);
-		return new RestTemplate(requestFactory);
-	}
+	private String getAiServerUrl(HttpServletRequest request) {
+	    String serverName = request.getServerName();
 
+	    if ("localhost".equals(serverName)) {
+	        return "http://localhost:5001/analyze-image";
+	    }
+	    return "https://dealon.duckdns.org/api/analyze";
+	}
 	public int upProduct(int productNo) {
 		return productMapper.upProduct(productNo);
 	}
-
+	
 
 }

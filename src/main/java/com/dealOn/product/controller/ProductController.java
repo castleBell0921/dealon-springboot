@@ -32,6 +32,7 @@ import com.dealOn.product.model.vo.ProductVO;
 import com.dealOn.user.model.service.UserService;
 import com.dealOn.user.model.vo.User;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -307,12 +308,12 @@ public class ProductController {
 
     @PostMapping("/ai/category")
     @ResponseBody
-    public Map<String, Object> analyzeCategory(@RequestParam("image") MultipartFile image) {
+    public Map<String, Object> analyzeCategory(@RequestParam("image") MultipartFile image, HttpServletRequest request) {
         if (image == null || image.isEmpty()) {
             return Map.of("categoryNo", 0, "categoryName", "기타");
         }
 
-        String aiCategoryName = productService.analyzeImageWithAI(image);
+        String aiCategoryName = productService.analyzeImageWithAI(image, request);
         List<CategoryVO> categoryList = productService.findAllCategories();
 
         CategoryVO matchedCategory = categoryList.stream()

@@ -176,6 +176,9 @@ public class UserController {
 			RedirectAttributes ra) {
 
 		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/";
+		}
 		
 		  // 비밀번호 변경 로직
 	    if (currentPwd != null && !currentPwd.isEmpty()
@@ -198,6 +201,9 @@ public class UserController {
 	        user.setPwd(bcrypt.encode(newPwd));
 
 	    }
+	    if (user.getPwd() == null || user.getPwd().isBlank()) {
+	    	user.setPwd(loginUser.getPwd());
+	    }
 		
 		// 파일이 있으면 S3에 업로드
 		String avatarUrl = null;
@@ -205,7 +211,8 @@ public class UserController {
 			try {
 				avatarUrl = s3Service.uploadFile(avatar);
 			} catch (IOException e) {
-				e.printStackTrace();
+				ra.addFlashAttribute("msg", "프로필 이미지 업로드에 실패했습니다.");
+				return "redirect:/user/editProfile";
 			}
 		}
 		// 서비스 레이어에 전달
@@ -313,8 +320,12 @@ public class UserController {
 		return "user/sellerPage";
 	}
 	@GetMapping("/mySellList")
-	public String mySesllList(HttpSession session, Model model, HttpServletRequest request) {
-		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+	public String mySellList(HttpSession session, Model model, HttpServletRequest request) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/";
+		}
+		String userNo = loginUser.getUserNo();
 		
 		List<ProductVO> list = pService.getMySellList(userNo);
 		model.addAttribute("productList", list);
@@ -357,10 +368,11 @@ public class UserController {
 	}
 	@GetMapping("/myBuyList")
 	public String myBuyList(HttpSession session, Model model, HttpServletRequest request) {
-		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
-		if(userNo == null) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		if(loginUser == null) {
 			return "redirect:/";
 		}
+		String userNo = loginUser.getUserNo();
 		List<ProductVO> list = pService.getBuyerNo(userNo);
 		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
 		return "myBuyList";
@@ -368,10 +380,11 @@ public class UserController {
 	
 	@GetMapping("/myWishList")
 	public String myWishList(HttpSession session, Model model, HttpServletRequest request) {
-		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
-		if(userNo == null) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		if(loginUser == null) {
 			return "redirect:/";
 		}
+		String userNo = loginUser.getUserNo();
 		List<ProductVO> list = pService.getMyWishList(userNo);
 		model.addAttribute("productList", list).addAttribute("requestURI", request.getRequestURI());
 		return "myWishList";

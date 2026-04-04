@@ -1,5 +1,6 @@
 package com.dealOn.admin.controller;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.dealOn.user.model.vo.User;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+@Component
 public class AdminInterceptor implements HandlerInterceptor {
 	
 	@Override

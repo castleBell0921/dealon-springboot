@@ -6,7 +6,7 @@ const userNo = document.querySelector('#userNo')?.value;
 const loginForm = document.querySelector('.login-form');
 const signUpBtn = document.querySelector('.login-btn');
 const kakaoBtn = document.querySelector('.kakao_button');
-const googleBtn = document.querySelector('.google_button');
+const googleBtn = document.querySelector('.google-button');
 
 // 로그인 버튼 클릭 → 로그인 모달 열기
 if (loginBtn) {
@@ -198,16 +198,17 @@ function handleReviewModalClose() {
 // 페이지 로드 시 알림 모달 자동 열기
 window.addEventListener('DOMContentLoaded', () => {
   const shouldOpen = localStorage.getItem('openNotificationModal');
-
-  if (shouldOpen === 'true') {
-    notificationModal.classList.remove('hidden');
-    notificationModal.style.display = 'flex';
-    notificationModal.style.opacity = '1';
-    notificationModal.style.visibility = 'visible';
-
-    localStorage.removeItem('openNotificationModal'); // 한 번만 열리게
-  } else {
-    notificationModal.style.display = 'none';
+if(notificationModal != null){
+	  if (shouldOpen === 'true') {
+	    notificationModal.classList.remove('hidden');
+	    notificationModal.style.display = 'flex';
+	    notificationModal.style.opacity = '1';
+	    notificationModal.style.visibility = 'visible';
+	
+	    localStorage.removeItem('openNotificationModal'); // 한 번만 열리게
+	  } else {
+	    notificationModal.style.display = 'none';
+	  }
   }
 });
 

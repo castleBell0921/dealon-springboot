@@ -43,12 +43,12 @@ public class InquiryController {
 			ra.addFlashAttribute("Msg", "로그인 후 이용 가능한 기능입니다.");
 			return "redirect:/";
 		}else {
-			return "/help/firstHelp";
+			return "firstHelp";
 		}	
 	}
 	@GetMapping("/helpPage")
 	public String list() {
-		return "/help/helpPage";
+		return "helpPage";
 	}
 	
 	@PostMapping("/insertInquiry")
@@ -57,6 +57,11 @@ public class InquiryController {
 					 @RequestParam("upfile") MultipartFile upfile,
 					 HttpSession session
 					 ) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/";
+		}
+		inquiryVO.setUserNo(Integer.parseInt(loginUser.getUserNo()));
 		
 //		System.out.println("upFileURL: " + upfile.getOriginalFilename());
 //		System.out.println("content : " + inquiryDetailVO.getContent());
@@ -92,7 +97,11 @@ public class InquiryController {
 			HttpServletRequest request,
 			@RequestParam(value = "page", defaultValue="1") int currentPage) {
 		
-		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/";
+		}
+		String userNo = loginUser.getUserNo();
 		
 		int listCount = iService.getInquiryCount(userNo);
 		int boardLimit = 5;
@@ -122,7 +131,11 @@ public class InquiryController {
 	@ResponseBody
 	@PostMapping("/addInquiry")
 	public ResponseEntity<?> addInquiry (@RequestBody InquiryDetailVO detail,HttpSession session){
-		String userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+		String userNo = loginUser.getUserNo();
 		if(!userNo.equals("0")) {
 	        detail.setRole("USER");
 	    } else {

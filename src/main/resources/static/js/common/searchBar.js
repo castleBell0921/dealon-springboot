@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	if (userNo !== 'guest') {
 		try {
-			const res = await fetch(`/common/recent-search/${userNo}`);
+			const res = await fetch('/common/recent-search');
 			console.log(res);
 			const data = await res.json(); // [{keyword: '검색어1'}, ...]
 			console.log(data);

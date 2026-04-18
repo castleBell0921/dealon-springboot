@@ -31,9 +31,7 @@ public interface AdminMapper {
 
     List<ProductVO> getProductList(RowBounds rowBounds);
 
-	int reportUser(
-			@Param("chatInfo") ChatRoom chatInfo, 
-			@Param("data") Map<String, Object> data);
+	int reportUser(Map<String, Object> data);
 
 	int checkReportUser(@Param("userNo") String userNo,@Param("sellerNo") String sellerNo);
 

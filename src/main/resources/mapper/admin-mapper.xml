@@ -155,8 +155,8 @@
         LEFT JOIN CATEGORY C ON P.CATEGORY = C.NO
         LEFT JOIN USERS U ON P.USER_NO = U.USER_NO
 	</select>
-	
-	<insert id="reportUser">
+
+	<insert id="reportUser" parameterType="map">
 		INSERT INTO REPORT (
 			PRODUCT_NO,
 			CHAT_NO,
@@ -165,16 +165,16 @@
 			REPORTER,
 			VIOLATOR
 		) VALUES (
-			#{data.productNo},
-			#{chatInfo.chatNo},		
-			#{data.reason},
-			#{data.detail},
-			#{data.loginUser.userNo},
-			#{chatInfo.sellerNo}
-		)
+					 #{productNo},
+					 #{chatNo, jdbcType=INTEGER},
+					 #{reason},
+					 #{detail},
+					 #{reporter},
+					 #{violator}
+				 )
 	</insert>
 	
-	<select id="checkReportUser">
+	<select id="checkReportUser" resultType="int">
 		SELECT COUNT(*)
 		FROM REPORT
 		WHERE REPORTER = #{userNo} AND VIOLATOR = #{sellerNo}

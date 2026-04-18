@@ -47,10 +47,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/product/getReview",
                         "/product/upProduct",
                         "/common/recent-search",
-                        "/common/recent-view"
+                        "/common/recent-view",
+                        "/admin/report"
                 );
 
         registry.addInterceptor(adminInterceptor)
-                .addPathPatterns("/admin/**");
+                .addPathPatterns("/admin/**").excludePathPatterns("/admin/report");
     }
 }

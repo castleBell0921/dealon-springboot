@@ -257,11 +257,11 @@ public class AdminController {
 			data.put("violator", violatorNo);
 
 			return String.valueOf(adminService.reportUser(data));
-
+			
 		} catch (Exception e) {
 			return "0";
 		}
-	}
+	} 
 
 
 	@PostMapping("/user/toggleStatus")

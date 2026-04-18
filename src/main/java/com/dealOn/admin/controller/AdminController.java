@@ -199,47 +199,68 @@ public class AdminController {
 	    result.put("pi", pi);
 	    return result;
 	}
-	
+
 	@PostMapping("/report")
 	@ResponseBody
-	public int reportUser(@RequestBody Map<String, Object> request, HttpSession session) {
-		
-		System.out.println("컨트롤러 옴0");
-		
+	public String reportUser(@RequestBody Map<String, Object> request, HttpSession session) {
 		User loginUser = (User) session.getAttribute("loginUser");
-		String chatNo = (String)request.get("chatNo");
-		
-		//신고 카테고리
-		String reason = (String)request.get("reason");
-		
-		//신고 내용
-		String detail = (String)request.get("detail");
-		
-		//상품 이름
-		int productNo = Integer.parseInt((String) request.get("productNo"));
-		
-		ChatRoom chatInfo = chatService.findByChatInfo(chatNo, loginUser.getUserNo());
-		
-		System.out.println("컨트롤러 옴1");
-		
-		Map<String, Object> data = new HashMap<>();
-	    data.put("loginUser", loginUser); // 신고자 객체 통째로 넣기
-	    data.put("reason", reason);
-	    data.put("detail", detail);
-	    data.put("productNo", productNo);
-		
-	    System.out.println("컨트롤러 옴2");
-	    
-	    int checkReportUser = adminService.checkReportUser(loginUser.getUserNo(), chatInfo.getSellerNo());
-	    System.out.println(checkReportUser);
-	    int result = 0;
-	    
-	    if(!(checkReportUser > 0)) {
-	    	//신고 하는 중
-			result = adminService.reportUser(chatInfo, data);
-	    }
+		if (loginUser == null) return "-1";
 
-		return result;
+		try {
+			int productNo = 0;
+			if (request.get("productNo") != null) {
+				productNo = Integer.parseInt(String.valueOf(request.get("productNo")));
+			} else {
+				return "0";
+			}
+
+			int reporterNo = Integer.parseInt(String.valueOf(loginUser.getUserNo()));
+
+			Integer chatNo = null;
+			Object chatNoObj = request.get("chatNo");
+			if (chatNoObj != null && !chatNoObj.toString().trim().isEmpty() && !"null".equals(chatNoObj.toString())) {
+				chatNo = Integer.parseInt(chatNoObj.toString());
+			}
+
+			int violatorNo = 0;
+
+			if (chatNo != null) {
+				ChatRoom chatRoom = chatService.findByChatNoIgnoreStatus(String.valueOf(chatNo));
+				if (chatRoom == null) return "0";
+
+				int chatSellerNo = Integer.parseInt(String.valueOf(chatRoom.getSellerNo()));
+				int chatBuyerNo = Integer.parseInt(String.valueOf(chatRoom.getBuyerNo()));
+
+				if (reporterNo == chatSellerNo) {
+					violatorNo = chatBuyerNo;
+				} else {
+					violatorNo = chatSellerNo;
+				}
+			} else {
+				ProductVO product = adminService.getProductDetail(productNo);
+				if (product == null) return "0";
+
+				violatorNo = Integer.parseInt(String.valueOf(product.getUserNo()));
+
+				if (violatorNo == reporterNo) return "0";
+			}
+
+			int checkReportUser = adminService.checkReportUser(String.valueOf(reporterNo), String.valueOf(violatorNo));
+			if (checkReportUser > 0) return "2";
+
+			Map<String, Object> data = new HashMap<>();
+			data.put("productNo", productNo);
+			data.put("chatNo", chatNo);
+			data.put("reason", request.get("reason") != null ? String.valueOf(request.get("reason")) : "");
+			data.put("detail", request.get("detail") != null ? String.valueOf(request.get("detail")) : "");
+			data.put("reporter", reporterNo);
+			data.put("violator", violatorNo);
+
+			return String.valueOf(adminService.reportUser(data));
+
+		} catch (Exception e) {
+			return "0";
+		}
 	}
 
 

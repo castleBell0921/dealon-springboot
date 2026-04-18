@@ -56,9 +56,8 @@ public class AdminService {
         return adminMapper.getProductList(rowBounds);
     }
 
-	public int reportUser(ChatRoom chatInfo, Map<String, Object> data) {
-		
-		return adminMapper.reportUser(chatInfo, data);
+	public int reportUser(Map<String, Object> data) {
+		return adminMapper.reportUser(data);
 	}
 
 	public int checkReportUser(String userNo, String sellerNo) {
